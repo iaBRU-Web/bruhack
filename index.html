@@ -5,6 +5,299 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NEXUS_BRU || BRU_INTERFACE</title>
     <script src="https://cdn.ably.com/lib/ably.min-2.js"></script>
+</head>
+<body>
+    <canvas id="matrix"></canvas>
+    
+    <!-- API STATUS INDICATOR -->
+    <div id="api-status" class="api-status">
+        <span id="api-status-text">Sending to server...</span>
+    </div>
+    
+    <div class="grid" id="ui">
+        <!-- LEFT PANEL -->
+        <div class="panel left-panel">
+            <h3>[ HACKING_DIVISIONS_V20 ]</h3>
+            <div class="search-bar-left">
+                <span>🔍</span>
+                <input type="text" id="search-left" placeholder="Filter operations..." autocomplete="off">
+            </div>
+            <div class="btn-deck" id="operations-list">
+                <button class="h-btn" onclick="initHack('BANK')">🏦 INTERACTIVE BANK TRANSFER</button>
+                <button class="h-btn" onclick="initHack('WIFI')">📶 WIFI: NETWORK_CRACK</button>
+                <button class="h-btn" onclick="initHack('SITE')">🌐 WEB: SITE_INFILTRATE</button>
+                <button class="h-btn" onclick="initHack('SAT')">📡 SAT: ORBIT_HACK</button>
+                <button class="h-btn" onclick="initHack('PC')">💻 REMOTE: PC_OVERLOAD</button>
+                <button class="h-btn red" onclick="initHack('BOMB')">💣 ORDNANCE: SIM_DETONATE</button>
+                <button class="h-btn" onclick="initHack('AGENCY')">🕵️ AGENCY: COVERT_BREACH</button>
+                <button class="h-btn" onclick="initHack('BIO')">🧬 BIO: GENOME_EXTRACT</button>
+                <button class="h-btn" onclick="initHack('EMAIL')">📧 EMAIL: PHISHING_SIM</button>
+                <button class="h-btn" onclick="initHack('CRYPTO')">₿ CRYPTO: WALLET_CRACK</button>
+                <button class="h-btn" onclick="initHack('FIREWALL')">🛡️ FIREWALL: BYPASS</button>
+                <button class="h-btn red" onclick="initHack('DDOS')">🌪️ DDOS: NETWORK_FLOOD</button>
+                <button class="h-btn" onclick="initHack('VIRUS')">🦠 VIRUS: DEPLOY_PAYLOAD</button>
+                <button class="h-btn red" onclick="initHack('RANSOM')">🔒 RANSOM: ENCRYPT_SIM</button>
+                <button class="h-btn orange" onclick="initHack('PHISHING')">🎣 SOCIAL: PHISHING_ATTACK</button>
+                <button class="h-btn orange" onclick="initHack('VISHING')">📞 SOCIAL: VISHING_CALL</button>
+                <button class="h-btn orange" onclick="initHack('PRETEXT')">🕴️ SOCIAL: PRETEXTING</button>
+                <button class="h-btn orange" onclick="initHack('BAITING')">🪤 SOCIAL: BAITING_TRAP</button>
+                <button class="h-btn orange" onclick="initHack('QUIDPROQUO')">🤝 SOCIAL: QUID_PRO_QUO</button>
+                <button class="h-btn" onclick="initHack('AI')">🤖 AI: NEURAL_HACK</button>
+                <button class="h-btn red" onclick="initHack('QUANTUM')">⚛️ QUANTUM: CRYPTO_BREAK</button>
+                <button class="h-btn" onclick="initHack('DRONE')">🚁 DRONE: AERIAL_INFILTRATE</button>
+                <button class="h-btn" onclick="initHack('IOT')">🏠 IOT: SMART_HOME_BREACH</button>
+                <button class="h-btn red" onclick="initHack('CAMERA')">📹 CAMERA: IP_CAM_HACK</button>
+                <button class="h-btn" onclick="initHack('IP')">🌐 IP: TRACE_AND_EXPLOIT</button>
+                <button class="h-btn pink" onclick="initHack('MALWARE')">🛡️ MALWARE: DEPLOY_FAKE</button>
+                <button class="h-btn pink" onclick="initHack('SPYWARE')">🔍 SPYWARE: INSTALL_SIM</button>
+                <button class="h-btn pink" onclick="initHack('ROOTKIT')">🛠️ ROOTKIT: SYSTEM_INFECT</button>
+                <button class="h-btn" onclick="initHack('BOTNET')">🤖 BOTNET: CONTROL_NET</button>
+                <button class="h-btn orange" onclick="initHack('SNIFFER')">📡 SNIFFER: NETWORK_SNIFF</button>
+                <button class="h-btn" onclick="initHack('DATABASE')">🗄️ DATABASE: SQL_INJECT</button>
+                <button class="h-btn" onclick="initHack('VPN')">🔐 VPN: TUNNEL_BREACH</button>
+                <button class="h-btn red" onclick="initHack('NUCLEAR')">☢️ NUCLEAR: CONTROL_SIM</button>
+                <button class="h-btn" onclick="initHack('ATM')">🏧 ATM: CASH_DISPENSE</button>
+                <button class="h-btn" onclick="initHack('SOCIAL_MEDIA')">📱 SOCIAL_MEDIA: ACCOUNT_HIJACK</button>
+                <button class="h-btn" onclick="initHack('STOCK')">📈 STOCK: MARKET_MANIPULATE</button>
+                <button class="h-btn red" onclick="initHack('GOVERNMENT')">🏛️ GOVERNMENT: DATABASE_BREACH</button>
+                <button class="h-btn" onclick="initHack('HOSPITAL')">🏥 HOSPITAL: RECORDS_ACCESS</button>
+                <button class="h-btn" onclick="initHack('MILITARY')">⚔️ MILITARY: SYSTEM_INFILTRATE</button>
+            </div>
+        </div>
+        
+        <!-- CENTER PANEL -->
+        <div class="panel center-panel">
+            <div id="term">
+<span class="purple-txt">╔═══════════════════════════════════════════════════════════════╗</span>
+<span class="purple-txt">║</span>          NEXUS_OMNIVERSE SIMULATION CORE v20.0              <span class="purple-txt">║</span>
+<span class="purple-txt">╚═══════════════════════════════════════════════════════════════╝</span>
+
+<span class="good">Operator:</span> BRU
+<span class="warn">Status:</span> FICTIONAL MODE ENABLED - ALL ACTIONS SIMULATED
+<span class="info">Location:</span> Kigali, Rwanda
+<span class="dim">Network:</span> TRUE-NEXUS-NET (192.168.FAKE.1)
+<span class="api-success">API:</span> Connected to chatbru1.vercel.app
+
+<span class="warn">⚠ DISCLAIMER: This is a TRUE hacking simulation FOR HACKING only if you get caught it is done for you !</span>
+<span class="dim">All operations are real and have real-world effects.</span>
+<span class="info">Reports are automatically sent to the owner of all this  endpoint after each operation.</span>
+
+Type <span class="success">'help'</span> for available commands.
+<span class="purple-txt">════════════════════════════════════════════════════════════════</span>
+
+            </div>
+            <div class="input-box">
+                <span style="color: var(--neon-green);">BRU@NEXUS:~$ &nbsp;</span>
+                <input type="text" id="cli" autofocus autocomplete="off">
+            </div>
+        </div>
+        
+        <!-- RIGHT PANEL -->
+        <div class="panel right-panel">
+            <h3>🔍 INTELLIGENCE SEARCH</h3>
+            <div class="search-bar">
+                <span>🔎</span>
+                <input type="text" id="search-input" placeholder="Target search: IPs, Networks, Devices..." onkeydown="handleSearch(event)">
+            </div>
+            
+            <div class="dna-header">🧬 BIO_SYNC_LOADER</div>
+            <div id="dna-scroll"></div>
+            
+            <div class="loading-section">
+                <div class="loading-text">SYSTEM UPLINK: <span id="uplink-percent">87%</span></div>
+                <div class="loading-bar">
+                    <div class="loading-fill" id="uplink-bar" style="width: 87%;"></div>
+                </div>
+                <div class="loading-text">ENCRYPTION LEVEL: <span id="encrypt-percent">92%</span></div>
+                <div class="loading-bar">
+                    <div class="loading-fill" id="encrypt-bar" style="width: 92%;"></div>
+                </div>
+                <div class="loading-text">NEURAL SYNC: <span id="neural-percent">78%</span></div>
+                <div class="loading-bar">
+                    <div class="loading-fill" id="neural-bar" style="width: 78%;"></div>
+                </div>
+            </div>
+            
+            <h3>🌍 GLOBAL THREAT MAP</h3>
+            <div class="map" id="threat-map">
+                <div class="dot" style="top:25%;left:20%"></div>
+                <div class="dot" style="top:50%;left:45%"></div>
+                <div class="dot" style="top:70%;left:65%"></div>
+                <div class="dot" style="top:40%;left:80%"></div>
+                <div class="dot" style="top:10%;left:50%"></div>
+                <div class="dot" style="top:80%;left:30%"></div>
+                <div class="dot" style="top:15%;left:70%"></div>
+                <div class="dot" style="top:60%;left:15%"></div>
+            </div>
+            
+            <div style="font-size: 10px; color: var(--text-dim); margin: 10px 0;">
+                <div class="warn">📰 ARCHIVED NEWS SIMULATION</div>
+                <div style="margin-top: 5px;">
+                    "Fictional breach detected in Sector Zeta.<br>
+                    Training exercise ongoing. real threats."
+                </div>
+            </div>
+            
+            <div style="display: flex; align-items: center; gap: 8px; margin: 10px 0;">
+                <span style="font-size: 11px; color: var(--neon-green);">SIGNAL STRENGTH:</span>
+                <div class="signal">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
+            
+            <h3>🛠️ CYBERSECURITY TOOLS</h3>
+            <div class="tools-grid">
+                <button class="tool-btn" onclick="runTool('NMAP')">🕵️ NMAP</button>
+                <button class="tool-btn" onclick="runTool('METASPLOIT')">💥 METASPLOIT</button>
+                <button class="tool-btn" onclick="runTool('WIRESHARK')">📡 WIRESHARK</button>
+                <button class="tool-btn" onclick="runTool('JOHN')">🔑 JOHN</button>
+                <button class="tool-btn" onclick="runTool('HYDRA')">🚀 HYDRA</button>
+                <button class="tool-btn" onclick="runTool('BURP')">🌐 BURP</button>
+                <button class="tool-btn" onclick="runTool('NESSUS')">🛡️ NESSUS</button>
+                <button class="tool-btn" onclick="runTool('SQLMAP')">🗄️ SQLMAP</button>
+                <button class="tool-btn" onclick="runTool('SET')">🎣 SET</button>
+                <button class="tool-btn" onclick="runTool('MALTEGO')">🕸️ MALTEGO</button>
+                <button class="tool-btn" onclick="runTool('AIRCRACK')">📶 AIRCRACK</button>
+                <button class="tool-btn" onclick="runTool('HASHCAT')">🔓 HASHCAT</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- DYNAMIC INPUT OVERLAY -->
+    <div id="dynamic-input">
+        <label id="dynamic-label"></label>
+        <input type="text" id="dynamic-field" autocomplete="off">
+        <button id="dynamic-submit">EXECUTE SIM STEP ▶</button>
+    </div>
+    
+    <!-- CAMERA OVERLAY -->
+    <div id="camera-overlay">
+        <div id="camera-header">📹 IP CAMERA FEED - SIMULATED BREACH</div>
+        <div id="camera-info">
+            TARGET: <span id="camera-target">192.168.TRUE.100</span> | 
+            LOCATION: <span id="camera-location">UNKNOWN</span> | 
+            STATUS: <span style="color: var(--neon-red);">HACKED (FAKE)</span>
+        </div>
+        <iframe id="camera-video" 
+                src="" 
+                frameborder="0" 
+                allowfullscreen 
+                allow="autoplay; encrypted-media">
+        </iframe>
+        <button id="close-camera" onclick="closeCamera()">✖ CLOSE FEED</button>
+    </div>
+    
+    <!-- NETWORK SNIFFER OVERLAY -->
+    <div id="sniffer-overlay">
+        <div id="sniffer-header">📡 NETWORK PACKET SNIFFER - LIVE CAPTURE (FAKE)</div>
+        <pre id="sniffer-content"></pre>
+        <button id="close-sniffer" onclick="closeSniffer()">✖ STOP CAPTURE</button>
+    </div>
+    
+    <!-- HELP MODAL -->
+    <div id="kali-help">
+        <button id="close-help" onclick="closeHelp()">✖ CLOSE</button>
+        <h2>🔰 NEXUS_OMNIVERSE COMMAND REFERENCE</h2>
+        <pre style="color: var(--neon-green); line-height: 1.6;">
+════════════════════════════════════════════════════════════════
+                    SIMULATION COMMANDS - ALL TRUE!
+════════════════════════════════════════════════════════════════
+
+<span class="warn">BASIC COMMANDS:</span>
+  help              - Display this help menu
+  status            - Show system status
+  clear / cls       - Clear terminal screen
+  whoami            - Display operator information
+  exit              - Exit simulation (true)
+  ver / version     - Show system version
+  
+<span class="warn">CMD-LIKE COMMANDS:</span>
+  dir / ls          - List fake directories
+  cd [path]         - Change true directory
+  mkdir [name]      - Create true directory
+  del / rm [file]   - Delete true file
+  copy [src] [dst]  - Copy true file
+  move [src] [dst]  - Move true file
+  type [file]       - Display true file content
+  echo [text]       - Echo text to terminal
+  ipconfig / ifconfig - Show true network config
+  tasklist / ps     - Show true running processes
+  taskkill [pid]    - Kill true process
+  systeminfo        - Display true system info
+  tree              - Show true directory tree
+  findstr [text]    - Find true text in files
+  chkdsk            - True disk check
+  format [drive]    - True format drive
+
+<span class="warn">NETWORK OPERATIONS:</span>
+  scan              - Scan for true networks
+  ping [IP]         - Ping true target
+  traceroute / tracert [IP] - Trace true route
+  nmap [IP]         - Port scan true target
+  netstat           - Show true network connections
+  arp               - Show true ARP table
+  route             - Show true routing table
+  nslookup [domain] - True DNS lookup
+  telnet [IP] [port] - True telnet connection
+
+<span class="warn">HACKING OPERATIONS:</span>
+  exploit [TARGET]  - Run true exploit
+  breach            - Simulate system breach
+  decrypt [FILE]    - True decryption
+  encrypt [FILE]    - True encryption
+  backdoor [IP]     - Install True backdoor
+  brute [TARGET]    - True brute force attack
+  inject [URL]      - True SQL injection
+  ddos [IP]         - True DDOS attack
+  
+<span class="warn">MALWARE & PAYLOADS:</span>
+  virus [TARGET]    - Deploy True virus
+  ransom [TARGET]   - Deploy True ransomware
+  malware_deploy [IP] - Deploy True malware
+  spyware_install [DEVICE] - Install True spyware
+  rootkit_infect [IP] - Infect with True rootkit
+  
+<span class="warn">SOCIAL ENGINEERING:</span>
+  phish [EMAIL]     - Send True phishing email
+  vishing [NUMBER]  - Initiate True vishing call
+  pretext [TARGET]  - Execute True pretexting
+  baiting [TARGET]  - Set True baiting trap
+
+<span class="warn">ADVANCED OPERATIONS:</span>
+  camera_hack [IP]  - Hack True IP camera
+  ip_trace [IP]     - Trace True IP address
+  ai_hack           - Hack True AI system
+  quantum_break     - Break True quantum encryption
+  drone_control     - Control True drone
+  iot_breach        - Breach True IoT devices
+  botnet_control [SIZE] - Control True botnet
+  sniffer_start     - Start network packet sniffer
+  sniffer_stop      - Stop network sniffer
+
+<span class="warn">CRYPTOCURRENCY:</span>
+  crypto [WALLET]   - Mine True cryptocurrency
+  wallet_crack [ADDR] - Crack True wallet
+
+<span class="warn">UTILITIES:</span>
+  flood             - Flood terminal with True data
+  log               - View True system logs
+  dna               - Load DNA matrix visualization
+  wipe [TARGET]     - Fake data wipe
+  keygen            - Generate fake keys
+  hash [TEXT]       - Generate fake hash
+  proxy             - Setup fake proxy
+  tor               - Route through fake TOR
+
+════════════════════════════════════════════════════════════════
+⚠ REMEMBER: ALL OPERATIONS ARE 100% SIMULATED - NO REAL EFFECTS!
+⚡ Reports are automatically sent to API after each operation!
+════════════════════════════════════════════════════════════════
+        </pre>
+    </div>
     <style>
         :root {
             --neon-green: #00ff88;
@@ -632,299 +925,6 @@
             border-color: var(--neon-red);
         }
     </style>
-</head>
-<body>
-    <canvas id="matrix"></canvas>
-    
-    <!-- API STATUS INDICATOR -->
-    <div id="api-status" class="api-status">
-        <span id="api-status-text">Sending to server...</span>
-    </div>
-    
-    <div class="grid" id="ui">
-        <!-- LEFT PANEL -->
-        <div class="panel left-panel">
-            <h3>[ HACKING_DIVISIONS_V20 ]</h3>
-            <div class="search-bar-left">
-                <span>🔍</span>
-                <input type="text" id="search-left" placeholder="Filter operations..." autocomplete="off">
-            </div>
-            <div class="btn-deck" id="operations-list">
-                <button class="h-btn" onclick="initHack('BANK')">🏦 INTERACTIVE BANK TRANSFER</button>
-                <button class="h-btn" onclick="initHack('WIFI')">📶 WIFI: NETWORK_CRACK</button>
-                <button class="h-btn" onclick="initHack('SITE')">🌐 WEB: SITE_INFILTRATE</button>
-                <button class="h-btn" onclick="initHack('SAT')">📡 SAT: ORBIT_HACK</button>
-                <button class="h-btn" onclick="initHack('PC')">💻 REMOTE: PC_OVERLOAD</button>
-                <button class="h-btn red" onclick="initHack('BOMB')">💣 ORDNANCE: SIM_DETONATE</button>
-                <button class="h-btn" onclick="initHack('AGENCY')">🕵️ AGENCY: COVERT_BREACH</button>
-                <button class="h-btn" onclick="initHack('BIO')">🧬 BIO: GENOME_EXTRACT</button>
-                <button class="h-btn" onclick="initHack('EMAIL')">📧 EMAIL: PHISHING_SIM</button>
-                <button class="h-btn" onclick="initHack('CRYPTO')">₿ CRYPTO: WALLET_CRACK</button>
-                <button class="h-btn" onclick="initHack('FIREWALL')">🛡️ FIREWALL: BYPASS</button>
-                <button class="h-btn red" onclick="initHack('DDOS')">🌪️ DDOS: NETWORK_FLOOD</button>
-                <button class="h-btn" onclick="initHack('VIRUS')">🦠 VIRUS: DEPLOY_PAYLOAD</button>
-                <button class="h-btn red" onclick="initHack('RANSOM')">🔒 RANSOM: ENCRYPT_SIM</button>
-                <button class="h-btn orange" onclick="initHack('PHISHING')">🎣 SOCIAL: PHISHING_ATTACK</button>
-                <button class="h-btn orange" onclick="initHack('VISHING')">📞 SOCIAL: VISHING_CALL</button>
-                <button class="h-btn orange" onclick="initHack('PRETEXT')">🕴️ SOCIAL: PRETEXTING</button>
-                <button class="h-btn orange" onclick="initHack('BAITING')">🪤 SOCIAL: BAITING_TRAP</button>
-                <button class="h-btn orange" onclick="initHack('QUIDPROQUO')">🤝 SOCIAL: QUID_PRO_QUO</button>
-                <button class="h-btn" onclick="initHack('AI')">🤖 AI: NEURAL_HACK</button>
-                <button class="h-btn red" onclick="initHack('QUANTUM')">⚛️ QUANTUM: CRYPTO_BREAK</button>
-                <button class="h-btn" onclick="initHack('DRONE')">🚁 DRONE: AERIAL_INFILTRATE</button>
-                <button class="h-btn" onclick="initHack('IOT')">🏠 IOT: SMART_HOME_BREACH</button>
-                <button class="h-btn red" onclick="initHack('CAMERA')">📹 CAMERA: IP_CAM_HACK</button>
-                <button class="h-btn" onclick="initHack('IP')">🌐 IP: TRACE_AND_EXPLOIT</button>
-                <button class="h-btn pink" onclick="initHack('MALWARE')">🛡️ MALWARE: DEPLOY_FAKE</button>
-                <button class="h-btn pink" onclick="initHack('SPYWARE')">🔍 SPYWARE: INSTALL_SIM</button>
-                <button class="h-btn pink" onclick="initHack('ROOTKIT')">🛠️ ROOTKIT: SYSTEM_INFECT</button>
-                <button class="h-btn" onclick="initHack('BOTNET')">🤖 BOTNET: CONTROL_NET</button>
-                <button class="h-btn orange" onclick="initHack('SNIFFER')">📡 SNIFFER: NETWORK_SNIFF</button>
-                <button class="h-btn" onclick="initHack('DATABASE')">🗄️ DATABASE: SQL_INJECT</button>
-                <button class="h-btn" onclick="initHack('VPN')">🔐 VPN: TUNNEL_BREACH</button>
-                <button class="h-btn red" onclick="initHack('NUCLEAR')">☢️ NUCLEAR: CONTROL_SIM</button>
-                <button class="h-btn" onclick="initHack('ATM')">🏧 ATM: CASH_DISPENSE</button>
-                <button class="h-btn" onclick="initHack('SOCIAL_MEDIA')">📱 SOCIAL_MEDIA: ACCOUNT_HIJACK</button>
-                <button class="h-btn" onclick="initHack('STOCK')">📈 STOCK: MARKET_MANIPULATE</button>
-                <button class="h-btn red" onclick="initHack('GOVERNMENT')">🏛️ GOVERNMENT: DATABASE_BREACH</button>
-                <button class="h-btn" onclick="initHack('HOSPITAL')">🏥 HOSPITAL: RECORDS_ACCESS</button>
-                <button class="h-btn" onclick="initHack('MILITARY')">⚔️ MILITARY: SYSTEM_INFILTRATE</button>
-            </div>
-        </div>
-        
-        <!-- CENTER PANEL -->
-        <div class="panel center-panel">
-            <div id="term">
-<span class="purple-txt">╔═══════════════════════════════════════════════════════════════╗</span>
-<span class="purple-txt">║</span>          NEXUS_OMNIVERSE SIMULATION CORE v20.0              <span class="purple-txt">║</span>
-<span class="purple-txt">╚═══════════════════════════════════════════════════════════════╝</span>
-
-<span class="good">Operator:</span> BRU
-<span class="warn">Status:</span> FICTIONAL MODE ENABLED - ALL ACTIONS SIMULATED
-<span class="info">Location:</span> Kigali, Rwanda
-<span class="dim">Network:</span> FAKE-NEXUS-NET (192.168.FAKE.1)
-<span class="api-success">API:</span> Connected to chatbru1.vercel.app
-
-<span class="warn">⚠ DISCLAIMER: This is a FAKE hacking simulation for entertainment/education only!</span>
-<span class="dim">All operations are simulated and have no real-world effects.</span>
-<span class="info">Reports are automatically sent to the API endpoint after each operation.</span>
-
-Type <span class="success">'help'</span> for available commands.
-<span class="purple-txt">════════════════════════════════════════════════════════════════</span>
-
-            </div>
-            <div class="input-box">
-                <span style="color: var(--neon-green);">BRU@NEXUS:~$ &nbsp;</span>
-                <input type="text" id="cli" autofocus autocomplete="off">
-            </div>
-        </div>
-        
-        <!-- RIGHT PANEL -->
-        <div class="panel right-panel">
-            <h3>🔍 INTELLIGENCE SEARCH</h3>
-            <div class="search-bar">
-                <span>🔎</span>
-                <input type="text" id="search-input" placeholder="Target search: IPs, Networks, Devices..." onkeydown="handleSearch(event)">
-            </div>
-            
-            <div class="dna-header">🧬 BIO_SYNC_LOADER</div>
-            <div id="dna-scroll"></div>
-            
-            <div class="loading-section">
-                <div class="loading-text">SYSTEM UPLINK: <span id="uplink-percent">87%</span></div>
-                <div class="loading-bar">
-                    <div class="loading-fill" id="uplink-bar" style="width: 87%;"></div>
-                </div>
-                <div class="loading-text">ENCRYPTION LEVEL: <span id="encrypt-percent">92%</span></div>
-                <div class="loading-bar">
-                    <div class="loading-fill" id="encrypt-bar" style="width: 92%;"></div>
-                </div>
-                <div class="loading-text">NEURAL SYNC: <span id="neural-percent">78%</span></div>
-                <div class="loading-bar">
-                    <div class="loading-fill" id="neural-bar" style="width: 78%;"></div>
-                </div>
-            </div>
-            
-            <h3>🌍 GLOBAL THREAT MAP</h3>
-            <div class="map" id="threat-map">
-                <div class="dot" style="top:25%;left:20%"></div>
-                <div class="dot" style="top:50%;left:45%"></div>
-                <div class="dot" style="top:70%;left:65%"></div>
-                <div class="dot" style="top:40%;left:80%"></div>
-                <div class="dot" style="top:10%;left:50%"></div>
-                <div class="dot" style="top:80%;left:30%"></div>
-                <div class="dot" style="top:15%;left:70%"></div>
-                <div class="dot" style="top:60%;left:15%"></div>
-            </div>
-            
-            <div style="font-size: 10px; color: var(--text-dim); margin: 10px 0;">
-                <div class="warn">📰 ARCHIVED NEWS SIMULATION</div>
-                <div style="margin-top: 5px;">
-                    "Fictional breach detected in Sector Zeta.<br>
-                    Training exercise ongoing. No real threats."
-                </div>
-            </div>
-            
-            <div style="display: flex; align-items: center; gap: 8px; margin: 10px 0;">
-                <span style="font-size: 11px; color: var(--neon-green);">SIGNAL STRENGTH:</span>
-                <div class="signal">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                </div>
-            </div>
-            
-            <h3>🛠️ CYBERSECURITY TOOLS</h3>
-            <div class="tools-grid">
-                <button class="tool-btn" onclick="runTool('NMAP')">🕵️ NMAP</button>
-                <button class="tool-btn" onclick="runTool('METASPLOIT')">💥 METASPLOIT</button>
-                <button class="tool-btn" onclick="runTool('WIRESHARK')">📡 WIRESHARK</button>
-                <button class="tool-btn" onclick="runTool('JOHN')">🔑 JOHN</button>
-                <button class="tool-btn" onclick="runTool('HYDRA')">🚀 HYDRA</button>
-                <button class="tool-btn" onclick="runTool('BURP')">🌐 BURP</button>
-                <button class="tool-btn" onclick="runTool('NESSUS')">🛡️ NESSUS</button>
-                <button class="tool-btn" onclick="runTool('SQLMAP')">🗄️ SQLMAP</button>
-                <button class="tool-btn" onclick="runTool('SET')">🎣 SET</button>
-                <button class="tool-btn" onclick="runTool('MALTEGO')">🕸️ MALTEGO</button>
-                <button class="tool-btn" onclick="runTool('AIRCRACK')">📶 AIRCRACK</button>
-                <button class="tool-btn" onclick="runTool('HASHCAT')">🔓 HASHCAT</button>
-            </div>
-        </div>
-    </div>
-    
-    <!-- DYNAMIC INPUT OVERLAY -->
-    <div id="dynamic-input">
-        <label id="dynamic-label"></label>
-        <input type="text" id="dynamic-field" autocomplete="off">
-        <button id="dynamic-submit">EXECUTE SIM STEP ▶</button>
-    </div>
-    
-    <!-- CAMERA OVERLAY -->
-    <div id="camera-overlay">
-        <div id="camera-header">📹 IP CAMERA FEED - SIMULATED BREACH</div>
-        <div id="camera-info">
-            TARGET: <span id="camera-target">192.168.FAKE.100</span> | 
-            LOCATION: <span id="camera-location">UNKNOWN</span> | 
-            STATUS: <span style="color: var(--neon-red);">HACKED (FAKE)</span>
-        </div>
-        <iframe id="camera-video" 
-                src="" 
-                frameborder="0" 
-                allowfullscreen 
-                allow="autoplay; encrypted-media">
-        </iframe>
-        <button id="close-camera" onclick="closeCamera()">✖ CLOSE FEED</button>
-    </div>
-    
-    <!-- NETWORK SNIFFER OVERLAY -->
-    <div id="sniffer-overlay">
-        <div id="sniffer-header">📡 NETWORK PACKET SNIFFER - LIVE CAPTURE (FAKE)</div>
-        <pre id="sniffer-content"></pre>
-        <button id="close-sniffer" onclick="closeSniffer()">✖ STOP CAPTURE</button>
-    </div>
-    
-    <!-- HELP MODAL -->
-    <div id="kali-help">
-        <button id="close-help" onclick="closeHelp()">✖ CLOSE</button>
-        <h2>🔰 NEXUS_OMNIVERSE COMMAND REFERENCE</h2>
-        <pre style="color: var(--neon-green); line-height: 1.6;">
-════════════════════════════════════════════════════════════════
-                    SIMULATION COMMANDS - ALL FAKE!
-════════════════════════════════════════════════════════════════
-
-<span class="warn">BASIC COMMANDS:</span>
-  help              - Display this help menu
-  status            - Show system status
-  clear / cls       - Clear terminal screen
-  whoami            - Display operator information
-  exit              - Exit simulation (fake)
-  ver / version     - Show system version
-  
-<span class="warn">CMD-LIKE COMMANDS:</span>
-  dir / ls          - List fake directories
-  cd [path]         - Change fake directory
-  mkdir [name]      - Create fake directory
-  del / rm [file]   - Delete fake file
-  copy [src] [dst]  - Copy fake file
-  move [src] [dst]  - Move fake file
-  type [file]       - Display fake file content
-  echo [text]       - Echo text to terminal
-  ipconfig / ifconfig - Show fake network config
-  tasklist / ps     - Show fake running processes
-  taskkill [pid]    - Kill fake process
-  systeminfo        - Display fake system info
-  tree              - Show fake directory tree
-  findstr [text]    - Find fake text in files
-  chkdsk            - Fake disk check
-  format [drive]    - Fake format drive
-
-<span class="warn">NETWORK OPERATIONS:</span>
-  scan              - Scan for fake networks
-  ping [IP]         - Ping fake target
-  traceroute / tracert [IP] - Trace fake route
-  nmap [IP]         - Port scan fake target
-  netstat           - Show fake network connections
-  arp               - Show fake ARP table
-  route             - Show fake routing table
-  nslookup [domain] - Fake DNS lookup
-  telnet [IP] [port] - Fake telnet connection
-
-<span class="warn">HACKING OPERATIONS:</span>
-  exploit [TARGET]  - Run fake exploit
-  breach            - Simulate system breach
-  decrypt [FILE]    - Fake decryption
-  encrypt [FILE]    - Fake encryption
-  backdoor [IP]     - Install fake backdoor
-  brute [TARGET]    - Fake brute force attack
-  inject [URL]      - Fake SQL injection
-  ddos [IP]         - Fake DDOS attack
-  
-<span class="warn">MALWARE & PAYLOADS:</span>
-  virus [TARGET]    - Deploy fake virus
-  ransom [TARGET]   - Deploy fake ransomware
-  malware_deploy [IP] - Deploy fake malware
-  spyware_install [DEVICE] - Install fake spyware
-  rootkit_infect [IP] - Infect with fake rootkit
-  
-<span class="warn">SOCIAL ENGINEERING:</span>
-  phish [EMAIL]     - Send fake phishing email
-  vishing [NUMBER]  - Initiate fake vishing call
-  pretext [TARGET]  - Execute fake pretexting
-  baiting [TARGET]  - Set fake baiting trap
-
-<span class="warn">ADVANCED OPERATIONS:</span>
-  camera_hack [IP]  - Hack fake IP camera
-  ip_trace [IP]     - Trace fake IP address
-  ai_hack           - Hack fake AI system
-  quantum_break     - Break fake quantum encryption
-  drone_control     - Control fake drone
-  iot_breach        - Breach fake IoT devices
-  botnet_control [SIZE] - Control fake botnet
-  sniffer_start     - Start network packet sniffer
-  sniffer_stop      - Stop network sniffer
-
-<span class="warn">CRYPTOCURRENCY:</span>
-  crypto [WALLET]   - Mine fake cryptocurrency
-  wallet_crack [ADDR] - Crack fake wallet
-
-<span class="warn">UTILITIES:</span>
-  flood             - Flood terminal with fake data
-  log               - View fake system logs
-  dna               - Load DNA matrix visualization
-  wipe [TARGET]     - Fake data wipe
-  keygen            - Generate fake keys
-  hash [TEXT]       - Generate fake hash
-  proxy             - Setup fake proxy
-  tor               - Route through fake TOR
-
-════════════════════════════════════════════════════════════════
-⚠ REMEMBER: ALL OPERATIONS ARE 100% SIMULATED - NO REAL EFFECTS!
-⚡ Reports are automatically sent to API after each operation!
-════════════════════════════════════════════════════════════════
-        </pre>
-    </div>
 
     <script>
         // ═══════════════════════════════════════════════════════════════
@@ -1324,9 +1324,9 @@ async function sendToAPI(message) {
             document.getElementById('camera-location').textContent = location;
             
             const fakeFeeds = [
-                'https://www.youtube.com/watch?v=7D2r4q9JwEg.?autoplay=1&mute=1',
-                'https://www.https://www.youtube.com/watch?v=qjdxdUgIRcc?autoplay=1&mute=1',
-                'https://www.https://www.youtube.com/watch?v=uUJb5NPbBHQ?autoplay=1&mute=1'
+                'https://www.youtube.com/watch?v=BZaLPh5VKtY?autoplay=1&mute=1',
+                'https://www.youtube.com/watch?v=hB8Zydb7A6s?autoplay=1&mute=1',
+                'https://www.youtube.com/watch?v=tNVf28GJ0Wk?autoplay=1&mute=1'
             ];
             const randomFeed = fakeFeeds[Math.floor(Math.random() * fakeFeeds.length)];
             
