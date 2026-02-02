@@ -588,6 +588,8 @@
         .orange-txt { color: var(--neon-orange); }
         .pink-txt { color: var(--neon-pink); }
         .purple-txt { color: var(--neon-purple); }
+        .api-success { color: #00ff00; font-weight: bold; text-shadow: 0 0 10px #00ff00; }
+        .api-error { color: #ff0000; font-weight: bold; text-shadow: 0 0 10px #ff0000; }
         /* EFFECTS */
         .glitch { animation: glitch 0.15s infinite; }
         @keyframes glitch {
@@ -603,10 +605,41 @@
             50% { transform: translate(-3px, 2px); }
             75% { transform: translate(2px, 1px); }
         }
+        /* API STATUS INDICATOR */
+        .api-status {
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            background: rgba(0, 0, 0, 0.9);
+            border: 1px solid var(--neon-green);
+            padding: 8px 12px;
+            font-size: 10px;
+            z-index: 300;
+            display: none;
+        }
+        .api-status.sending {
+            display: block;
+            border-color: var(--warn-yellow);
+            animation: pulse-glow 1s infinite;
+        }
+        .api-status.success {
+            display: block;
+            border-color: #00ff00;
+        }
+        .api-status.error {
+            display: block;
+            border-color: var(--neon-red);
+        }
     </style>
 </head>
 <body>
     <canvas id="matrix"></canvas>
+    
+    <!-- API STATUS INDICATOR -->
+    <div id="api-status" class="api-status">
+        <span id="api-status-text">Sending to server...</span>
+    </div>
+    
     <div class="grid" id="ui">
         <!-- LEFT PANEL -->
         <div class="panel left-panel">
@@ -651,6 +684,10 @@
                 <button class="h-btn red" onclick="initHack('NUCLEAR')">☢️ NUCLEAR: CONTROL_SIM</button>
                 <button class="h-btn" onclick="initHack('ATM')">🏧 ATM: CASH_DISPENSE</button>
                 <button class="h-btn" onclick="initHack('SOCIAL_MEDIA')">📱 SOCIAL_MEDIA: ACCOUNT_HIJACK</button>
+                <button class="h-btn" onclick="initHack('STOCK')">📈 STOCK: MARKET_MANIPULATE</button>
+                <button class="h-btn red" onclick="initHack('GOVERNMENT')">🏛️ GOVERNMENT: DATABASE_BREACH</button>
+                <button class="h-btn" onclick="initHack('HOSPITAL')">🏥 HOSPITAL: RECORDS_ACCESS</button>
+                <button class="h-btn" onclick="initHack('MILITARY')">⚔️ MILITARY: SYSTEM_INFILTRATE</button>
             </div>
         </div>
         
@@ -665,9 +702,11 @@
 <span class="warn">Status:</span> FICTIONAL MODE ENABLED - ALL ACTIONS SIMULATED
 <span class="info">Location:</span> Kigali, Rwanda
 <span class="dim">Network:</span> FAKE-NEXUS-NET (192.168.FAKE.1)
+<span class="api-success">API:</span> Connected to chatbru1.vercel.app
 
 <span class="warn">⚠ DISCLAIMER: This is a FAKE hacking simulation for entertainment/education only!</span>
 <span class="dim">All operations are simulated and have no real-world effects.</span>
+<span class="info">Reports are automatically sent to the API endpoint after each operation.</span>
 
 Type <span class="success">'help'</span> for available commands.
 <span class="purple-txt">════════════════════════════════════════════════════════════════</span>
@@ -797,16 +836,39 @@ Type <span class="success">'help'</span> for available commands.
 <span class="warn">BASIC COMMANDS:</span>
   help              - Display this help menu
   status            - Show system status
-  clear             - Clear terminal screen
+  clear / cls       - Clear terminal screen
   whoami            - Display operator information
   exit              - Exit simulation (fake)
+  ver / version     - Show system version
+  
+<span class="warn">CMD-LIKE COMMANDS:</span>
+  dir / ls          - List fake directories
+  cd [path]         - Change fake directory
+  mkdir [name]      - Create fake directory
+  del / rm [file]   - Delete fake file
+  copy [src] [dst]  - Copy fake file
+  move [src] [dst]  - Move fake file
+  type [file]       - Display fake file content
+  echo [text]       - Echo text to terminal
+  ipconfig / ifconfig - Show fake network config
+  tasklist / ps     - Show fake running processes
+  taskkill [pid]    - Kill fake process
+  systeminfo        - Display fake system info
+  tree              - Show fake directory tree
+  findstr [text]    - Find fake text in files
+  chkdsk            - Fake disk check
+  format [drive]    - Fake format drive
 
 <span class="warn">NETWORK OPERATIONS:</span>
   scan              - Scan for fake networks
   ping [IP]         - Ping fake target
-  traceroute [IP]   - Trace fake route
+  traceroute / tracert [IP] - Trace fake route
   nmap [IP]         - Port scan fake target
   netstat           - Show fake network connections
+  arp               - Show fake ARP table
+  route             - Show fake routing table
+  nslookup [domain] - Fake DNS lookup
+  telnet [IP] [port] - Fake telnet connection
 
 <span class="warn">HACKING OPERATIONS:</span>
   exploit [TARGET]  - Run fake exploit
@@ -858,11 +920,71 @@ Type <span class="success">'help'</span> for available commands.
 
 ════════════════════════════════════════════════════════════════
 ⚠ REMEMBER: ALL OPERATIONS ARE 100% SIMULATED - NO REAL EFFECTS!
+⚡ Reports are automatically sent to API after each operation!
 ════════════════════════════════════════════════════════════════
         </pre>
     </div>
     
     <script>
+        // ═══════════════════════════════════════════════════════════════
+        //                      API CONFIGURATION
+        // ═══════════════════════════════════════════════════════════════
+        const API_CONFIG = {
+            endpoint: 'https://chatbru1.vercel.app',
+            apiKey: 'UNMYag.VcluoA:gkmv1VpeHWmrC7W0NJXRcdQZaRAJP0Z5uAj_dooMjuc'
+        };
+        
+        // ═══════════════════════════════════════════════════════════════
+        //                      SEND MESSAGE TO API
+        // ═══════════════════════════════════════════════════════════════
+        async function sendToAPI(message) {
+            const apiStatusEl = document.getElementById('api-status');
+            const apiStatusText = document.getElementById('api-status-text');
+            
+            try {
+                apiStatusEl.className = 'api-status sending';
+                apiStatusText.textContent = '📡 Sending report to server...';
+                
+                log(`Sending operation report to API...`, "info");
+                
+                const response = await fetch(`${API_CONFIG.endpoint}/api/message`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${API_CONFIG.apiKey}`
+                    },
+                    body: JSON.stringify({
+                        message: message,
+                        timestamp: new Date().toISOString(),
+                        operator: 'BRU',
+                        source: 'NEXUS_OMNIVERSE_V20'
+                    })
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    apiStatusEl.className = 'api-status success';
+                    apiStatusText.textContent = '✅ Report sent successfully!';
+                    log(`✅ API RESPONSE: Report delivered successfully to chatbru1.vercel.app`, "api-success");
+                    setTimeout(() => {
+                        apiStatusEl.className = 'api-status';
+                    }, 3000);
+                    return data;
+                } else {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+            } catch (error) {
+                apiStatusEl.className = 'api-status error';
+                apiStatusText.textContent = `❌ Error: ${error.message}`;
+                log(`❌ API ERROR: ${error.message}`, "api-error");
+                log(`Failed to send report to chatbru1.vercel.app`, "bad");
+                setTimeout(() => {
+                    apiStatusEl.className = 'api-status';
+                }, 5000);
+                return null;
+            }
+        }
+        
         // ═══════════════════════════════════════════════════════════════
         //                      MATRIX RAIN BACKGROUND
         // ═══════════════════════════════════════════════════════════════
@@ -918,6 +1040,7 @@ Type <span class="success">'help'</span> for available commands.
         let currentHackType = '';
         let hackData = {};
         let currentStep = 0;
+        let currentDirectory = 'C:\\NEXUS\\BRU';
         
         // ═══════════════════════════════════════════════════════════════
         //                      DNA SCROLL ANIMATION
@@ -990,12 +1113,29 @@ Type <span class="success">'help'</span> for available commands.
                 const operations = [
                     "BYPASS_LAYER", "DECRYPT_NODE", "INJECT_PAYLOAD", 
                     "ROUTE_PACKET", "CRACK_HASH", "EXPLOIT_VULN",
-                    "SCAN_PORT", "BREACH_FIREWALL", "TUNNEL_PROXY"
+                    "SCAN_PORT", "BREACH_FIREWALL", "TUNNEL_PROXY",
+                    "EXTRACT_DATA", "ESCALATE_PRIVILEGE", "HIDE_TRACE"
                 ];
                 const op = operations[Math.floor(Math.random() * operations.length)];
                 const hex = Math.random().toString(16).toUpperCase().substring(2, 10);
                 log(`${op}_0x${hex}... OK [STEP ${i+1}/${lines}] PROTOCOL: FAKE-${Math.floor(Math.random()*9999)}`, cls);
             }
+        }
+        
+        function randomIP() {
+            return `${Math.floor(Math.random()*256)}.${Math.floor(Math.random()*256)}.${Math.floor(Math.random()*256)}.${Math.floor(Math.random()*256)}`;
+        }
+        
+        function randomPort() {
+            return Math.floor(Math.random() * 65535);
+        }
+        
+        function randomMAC() {
+            return Array.from({length: 6}, () => Math.floor(Math.random()*256).toString(16).padStart(2, '0')).join(':');
+        }
+        
+        function formatCurrency(amount) {
+            return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(amount);
         }
         
         // ═══════════════════════════════════════════════════════════════
@@ -1111,6 +1251,16 @@ Type <span class="success">'help'</span> for available commands.
                     }
                     break;
                     
+                case 'STOCK':
+                    if (currentStep === 1) {
+                        showDynamicInput('STEP 1: ENTER FAKE STOCK SYMBOL:', proceedToNextStep);
+                    } else if (currentStep === 2) {
+                        showDynamicInput('STEP 2: ENTER FAKE MANIPULATION VALUE ($):', proceedToNextStep);
+                    } else if (currentStep === 3) {
+                        executeStockHack();
+                    }
+                    break;
+                    
                 default:
                     executeGenericHack();
                     break;
@@ -1124,13 +1274,26 @@ Type <span class="success">'help'</span> for available commands.
         async function executeBankHack() {
             const bank = hackData.step1 || 'FAKE-BANK';
             const account = hackData.step2 || '****1234';
-            const amount = hackData.step3 || '10000';
+            const amount = hackData.step3 || '2000000';
             
             log(`STEP 4: INITIATING TRANSFER FROM ${bank}...`, "bank-txt");
             await simulateFlood(30, "bank-txt");
-            log(`ACCOUNT ${account} ACCESSED. TRANSFERRING $${amount}...`, "progress-bar");
+            log(`ACCOUNT ${account} ACCESSED. TRANSFERRING ${formatCurrency(amount)}...`, "progress-bar");
             await sleep(2000);
-            log(`TRANSFER COMPLETE! $${amount} MOVED TO OFFSHORE ACCOUNT (FAKE)`, "success");
+            log(`TRANSFER COMPLETE! ${formatCurrency(amount)} MOVED TO OFFSHORE ACCOUNT (FAKE)`, "success");
+            
+            const reportMessage = `🏦 BANK HACK SIMULATION COMPLETE\n\n` +
+                `Operation: Bank Transfer Simulation\n` +
+                `Target Bank: ${bank}\n` +
+                `Account: ${account}\n` +
+                `Amount Transferred: ${formatCurrency(amount)}\n` +
+                `Status: SUCCESS (SIMULATED)\n` +
+                `Operator: BRU\n` +
+                `Timestamp: ${new Date().toLocaleString()}\n\n` +
+                `⚠️ DISCLAIMER: This is a completely fake simulation. No real money was transferred. ` +
+                `This is for entertainment/educational purposes only.`;
+            
+            await sendToAPI(reportMessage);
             completeHack();
         }
         
@@ -1140,6 +1303,18 @@ Type <span class="success">'help'</span> for available commands.
             await simulateFlood(25, "warn");
             log(`WPA2 KEY CRACKED: FakePass123! (SIMULATED)`, "success");
             log(`CONNECTED TO ${ssid}. ACCESS GRANTED.`, "good");
+            
+            const reportMessage = `📶 WIFI HACK SIMULATION COMPLETE\n\n` +
+                `Operation: WiFi Network Crack\n` +
+                `Target Network: ${ssid}\n` +
+                `Encryption: WPA2 (Simulated)\n` +
+                `Password Obtained: FakePass123! (Fake)\n` +
+                `Status: CONNECTED (SIMULATED)\n` +
+                `Operator: BRU\n` +
+                `Timestamp: ${new Date().toLocaleString()}\n\n` +
+                `⚠️ This is a fake simulation for demonstration purposes.`;
+            
+            await sendToAPI(reportMessage);
             completeHack();
         }
         
@@ -1154,7 +1329,6 @@ Type <span class="success">'help'</span> for available commands.
             document.getElementById('camera-target').textContent = ip;
             document.getElementById('camera-location').textContent = location;
             
-            // Fake camera feeds (using public webcams or fake videos)
             const fakeFeeds = [
                 'https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&mute=1',
                 'https://www.youtube.com/embed/jNQXAC9IVRw?autoplay=1&mute=1',
@@ -1165,6 +1339,18 @@ Type <span class="success">'help'</span> for available commands.
             document.getElementById('camera-video').src = randomFeed;
             cameraOverlay.style.display = 'flex';
             
+            const reportMessage = `📹 IP CAMERA HACK SIMULATION COMPLETE\n\n` +
+                `Operation: IP Camera Breach\n` +
+                `Target IP: ${ip}\n` +
+                `Location: ${location}\n` +
+                `Camera Type: Generic IP Camera (Fake)\n` +
+                `Feed Status: STREAMING (Fake Video)\n` +
+                `Status: COMPROMISED (SIMULATED)\n` +
+                `Operator: BRU\n` +
+                `Timestamp: ${new Date().toLocaleString()}\n\n` +
+                `⚠️ No real cameras were hacked. This displays a fake video stream.`;
+            
+            await sendToAPI(reportMessage);
             completeHack();
         }
         
@@ -1184,6 +1370,17 @@ Type <span class="success">'help'</span> for available commands.
             snifferContent.innerHTML = `═══ PACKET CAPTURE STARTED ON ${iface} ═══\n\n`;
             snifferInterval = setInterval(addFakePacket, 600);
             
+            const reportMessage = `📡 NETWORK SNIFFER SIMULATION STARTED\n\n` +
+                `Operation: Network Packet Capture\n` +
+                `Interface: ${iface}\n` +
+                `Capture Mode: Promiscuous (Fake)\n` +
+                `Packets Captured: Generating fake packets...\n` +
+                `Status: ACTIVE (SIMULATED)\n` +
+                `Operator: BRU\n` +
+                `Timestamp: ${new Date().toLocaleString()}\n\n` +
+                `⚠️ All captured packets are completely fake and randomly generated.`;
+            
+            await sendToAPI(reportMessage);
             completeHack();
         }
         
@@ -1193,7 +1390,7 @@ Type <span class="success">'help'</span> for available commands.
                 `HTTP [${randomIP()}:80] → [${randomIP()}:${randomPort()}] GET /api/users HTTP/1.1`,
                 `HTTPS [${randomIP()}:443] → [${randomIP()}:${randomPort()}] TLS Handshake`,
                 `DNS  [${randomIP()}:53] → [${randomIP()}:${randomPort()}] Query: fake-site.com`,
-                `UDP  [${randomIP()}:${randomPort()}] → [${randomIP()}:${randomPort()}] Data: 128 bytes`,
+                `UDP  [${randomIP()}:${randomPort()}] → [${randomIP()}:${randomPort()}] Data: ${Math.floor(Math.random()*1024)} bytes`,
                 `ICMP [${randomIP()}] → [${randomIP()}] Echo Request`,
                 `SSH  [${randomIP()}:22] → [${randomIP()}:${randomPort()}] Authentication Attempt`,
                 `FTP  [${randomIP()}:21] → [${randomIP()}:${randomPort()}] USER anonymous`,
@@ -1205,18 +1402,6 @@ Type <span class="success">'help'</span> for available commands.
             const timestamp = new Date().toLocaleTimeString('en-US', { hour12: false });
             snifferContent.innerHTML += `[${timestamp}] ${packet}\n`;
             snifferContent.scrollTop = snifferContent.scrollHeight;
-        }
-        
-        function randomIP() {
-            return `${Math.floor(Math.random()*256)}.${Math.floor(Math.random()*256)}.${Math.floor(Math.random()*256)}.${Math.floor(Math.random()*256)}`;
-        }
-        
-        function randomPort() {
-            return Math.floor(Math.random() * 65535);
-        }
-        
-        function randomMAC() {
-            return Array.from({length: 6}, () => Math.floor(Math.random()*256).toString(16).padStart(2, '0')).join(':');
         }
         
         function closeSniffer() {
@@ -1231,6 +1416,20 @@ Type <span class="success">'help'</span> for available commands.
             await simulateFlood(18, "warn");
             log(`IP TRACED: Location: Kigali, RW | ISP: FAKE-TELECOM | Ports: 22,80,443 OPEN`, "good");
             log(`EXPLOITING OPEN PORTS... ROOT ACCESS GAINED (FAKE)`, "success");
+            
+            const reportMessage = `🌐 IP TRACE & EXPLOIT SIMULATION COMPLETE\n\n` +
+                `Operation: IP Address Trace and Exploitation\n` +
+                `Target IP: ${ip}\n` +
+                `Location: Kigali, Rwanda (Fake)\n` +
+                `ISP: FAKE-TELECOM\n` +
+                `Open Ports: 22 (SSH), 80 (HTTP), 443 (HTTPS)\n` +
+                `Exploitation: Root access obtained (SIMULATED)\n` +
+                `Status: COMPROMISED (FAKE)\n` +
+                `Operator: BRU\n` +
+                `Timestamp: ${new Date().toLocaleString()}\n\n` +
+                `⚠️ No real IP addresses were traced or exploited.`;
+            
+            await sendToAPI(reportMessage);
             completeHack();
         }
         
@@ -1241,16 +1440,73 @@ Type <span class="success">'help'</span> for available commands.
             await simulateFlood(22, "pink-txt");
             log(`MALWARE DEPLOYED. BACKDOOR ESTABLISHED (FAKE)`, "success");
             log(`C&C SERVER: fake-command-server.onion CONNECTED`, "info");
+            
+            const reportMessage = `🛡️ MALWARE DEPLOYMENT SIMULATION COMPLETE\n\n` +
+                `Operation: Malware Payload Deployment\n` +
+                `Target System: ${target}\n` +
+                `Malware Type: ${type.toUpperCase()}\n` +
+                `C&C Server: fake-command-server.onion\n` +
+                `Backdoor Status: ACTIVE (SIMULATED)\n` +
+                `Persistence: Registry modification (Fake)\n` +
+                `Status: DEPLOYED (FAKE)\n` +
+                `Operator: BRU\n` +
+                `Timestamp: ${new Date().toLocaleString()}\n\n` +
+                `⚠️ No real malware was deployed. This is a simulation.`;
+            
+            await sendToAPI(reportMessage);
             completeHack();
         }
         
         async function executeDdosHack() {
             const target = hackData.step1 || '192.168.FAKE.1';
             const intensity = hackData.step2 || '5';
+            const botCount = intensity * 1000;
+            
             log(`STEP 3: LAUNCHING DDOS ON ${target} AT LEVEL ${intensity}...`, "crit");
-            log(`ACTIVATING ${intensity * 1000} FAKE BOTS...`, "warn");
+            log(`ACTIVATING ${botCount} FAKE BOTS...`, "warn");
             await simulateFlood(35, "crit");
             log(`TARGET OVERWHELMED! ${target} IS DOWN (SIMULATED)`, "success");
+            
+            const reportMessage = `🌪️ DDOS ATTACK SIMULATION COMPLETE\n\n` +
+                `Operation: Distributed Denial of Service Attack\n` +
+                `Target: ${target}\n` +
+                `Attack Intensity: Level ${intensity}/10\n` +
+                `Botnet Size: ${botCount} bots (Fake)\n` +
+                `Attack Vector: SYN Flood (Simulated)\n` +
+                `Bandwidth Used: ${intensity * 10} Gbps (Fake)\n` +
+                `Target Status: OFFLINE (SIMULATED)\n` +
+                `Duration: Ongoing (Fake)\n` +
+                `Operator: BRU\n` +
+                `Timestamp: ${new Date().toLocaleString()}\n\n` +
+                `⚠️ No real DDoS attack was performed. All traffic is simulated.`;
+            
+            await sendToAPI(reportMessage);
+            completeHack();
+        }
+        
+        async function executeStockHack() {
+            const symbol = hackData.step1 || 'FAKE';
+            const value = hackData.step2 || '5000000';
+            
+            log(`STEP 3: MANIPULATING STOCK MARKET FOR ${symbol}...`, "warn");
+            await simulateFlood(25, "warn");
+            log(`FAKE ORDERS PLACED. MARKET VALUE CHANGED BY ${formatCurrency(value)}`, "success");
+            log(`PROFIT SECURED THROUGH FAKE INSIDER TRADING (SIMULATED)`, "good");
+            
+            const reportMessage = `📈 STOCK MARKET MANIPULATION SIMULATION COMPLETE\n\n` +
+                `Operation: Stock Market Manipulation\n` +
+                `Target Stock: ${symbol}\n` +
+                `Manipulation Value: ${formatCurrency(value)}\n` +
+                `Method: Fake high-frequency trading algorithm\n` +
+                `Orders Placed: 10,000+ fake orders\n` +
+                `Market Impact: ${((Math.random() * 10) + 5).toFixed(2)}% change (Simulated)\n` +
+                `Profit: ${formatCurrency(parseInt(value) * 0.2)} (Fake)\n` +
+                `Status: EXECUTED (SIMULATED)\n` +
+                `Operator: BRU\n` +
+                `Timestamp: ${new Date().toLocaleString()}\n\n` +
+                `⚠️ No real stock manipulation occurred. This is entirely fictional.`;
+            
+            await sendToAPI(reportMessage);
             completeHack();
         }
         
@@ -1258,6 +1514,16 @@ Type <span class="success">'help'</span> for available commands.
             log(`EXECUTING ${currentHackType} OPERATION...`, "warn");
             await simulateFlood(20, "info");
             log(`${currentHackType} OPERATION COMPLETE (FAKE)`, "success");
+            
+            const reportMessage = `⚡ ${currentHackType} SIMULATION COMPLETE\n\n` +
+                `Operation: ${currentHackType} Hack\n` +
+                `Status: SUCCESS (SIMULATED)\n` +
+                `Details: Generic ${currentHackType} operation executed\n` +
+                `Operator: BRU\n` +
+                `Timestamp: ${new Date().toLocaleString()}\n\n` +
+                `⚠️ This is a fake simulation with no real-world effects.`;
+            
+            await sendToAPI(reportMessage);
             completeHack();
         }
         
@@ -1287,7 +1553,8 @@ Type <span class="success">'help'</span> for available commands.
                 },
                 'WIRESHARK': async () => {
                     log(`Starting Wireshark packet capture...`, "orange-txt");
-                    executeSnifferHack();
+                    hackData.step1 = 'eth0-FAKE';
+                    await executeSnifferHack();
                 },
                 'JOHN': async () => {
                     log(`John the Ripper: Cracking fake password hashes...`, "warn");
@@ -1351,74 +1618,290 @@ Type <span class="success">'help'</span> for available commands.
         });
         
         // ═══════════════════════════════════════════════════════════════
+        //                      CMD-LIKE COMMANDS
+        // ═══════════════════════════════════════════════════════════════
+        async function handleCmdCommand(cmd, args) {
+            const arg = args.join(' ');
+            
+            switch(cmd) {
+                case 'dir':
+                case 'ls':
+                    log(`Directory of ${currentDirectory}`, "info");
+                    log(`<DIR>  .`, "dim");
+                    log(`<DIR>  ..`, "dim");
+                    log(`<DIR>  System`, "dim");
+                    log(`<DIR>  Users`, "dim");
+                    log(`       exploit.exe     45,231 bytes`, "dim");
+                    log(`       passwords.txt   12,456 bytes`, "dim");
+                    log(`       backdoor.dll    89,342 bytes`, "dim");
+                    log(`3 File(s)    147,029 bytes (ALL FAKE)`, "good");
+                    break;
+                    
+                case 'cd':
+                    if (arg) {
+                        currentDirectory = arg.includes('\\') ? arg : `${currentDirectory}\\${arg}`;
+                        log(`Changed directory to ${currentDirectory} (FAKE)`, "good");
+                    } else {
+                        log(currentDirectory, "info");
+                    }
+                    break;
+                    
+                case 'cls':
+                case 'clear':
+                    term.innerHTML = '';
+                    break;
+                    
+                case 'mkdir':
+                    if (arg) {
+                        log(`Directory created: ${currentDirectory}\\${arg} (FAKE)`, "good");
+                    } else {
+                        log(`Usage: mkdir [directory_name]`, "bad");
+                    }
+                    break;
+                    
+                case 'del':
+                case 'rm':
+                    if (arg) {
+                        log(`Deleted: ${arg} (FAKE)`, "good");
+                    } else {
+                        log(`Usage: del [filename]`, "bad");
+                    }
+                    break;
+                    
+                case 'copy':
+                    if (args.length >= 2) {
+                        log(`Copied ${args[0]} to ${args[1]} (FAKE)`, "good");
+                    } else {
+                        log(`Usage: copy [source] [destination]`, "bad");
+                    }
+                    break;
+                    
+                case 'type':
+                    if (arg) {
+                        log(`Contents of ${arg}:`, "info");
+                        log(`This is fake file content for demonstration.`, "dim");
+                        log(`No real files are being accessed.`, "dim");
+                    } else {
+                        log(`Usage: type [filename]`, "bad");
+                    }
+                    break;
+                    
+                case 'echo':
+                    log(arg || '', "good");
+                    break;
+                    
+                case 'ipconfig':
+                case 'ifconfig':
+                    log(`Fake Network Configuration:`, "info");
+                    log(`IPv4 Address: 192.168.FAKE.100`, "dim");
+                    log(`Subnet Mask: 255.255.255.0`, "dim");
+                    log(`Default Gateway: 192.168.FAKE.1`, "dim");
+                    log(`DNS Servers: 8.8.8.8, 8.8.4.4`, "dim");
+                    log(`MAC Address: ${randomMAC()}`, "dim");
+                    break;
+                    
+                case 'tasklist':
+                case 'ps':
+                    log(`Fake Process List:`, "info");
+                    log(`PID: 1234  explorer.exe      Memory: 45 MB`, "dim");
+                    log(`PID: 5678  chrome.exe        Memory: 523 MB`, "dim");
+                    log(`PID: 9012  backdoor.exe      Memory: 12 MB`, "dim");
+                    log(`PID: 3456  system.exe        Memory: 89 MB`, "dim");
+                    break;
+                    
+                case 'taskkill':
+                    if (arg) {
+                        log(`Process ${arg} terminated (FAKE)`, "good");
+                    } else {
+                        log(`Usage: taskkill [PID]`, "bad");
+                    }
+                    break;
+                    
+                case 'systeminfo':
+                    log(`Fake System Information:`, "info");
+                    log(`OS: Windows 11 Simulation`, "dim");
+                    log(`Processor: Intel i9-13900K (Fake)`, "dim");
+                    log(`RAM: 64 GB`, "dim");
+                    log(`System Type: x64-based PC`, "dim");
+                    log(`Network Card: Fake-Ethernet Adapter`, "dim");
+                    break;
+                    
+                case 'tree':
+                    log(`Fake Directory Tree:`, "info");
+                    log(`${currentDirectory}`, "dim");
+                    log(`├── System`, "dim");
+                    log(`│   ├── drivers`, "dim");
+                    log(`│   └── config`, "dim");
+                    log(`└── Users`, "dim");
+                    log(`    ├── BRU`, "dim");
+                    log(`    └── Admin`, "dim");
+                    break;
+                    
+                case 'netstat':
+                    log(`Fake Active Connections:`, "info");
+                    log(`TCP  ${randomIP()}:80      ESTABLISHED`, "dim");
+                    log(`TCP  ${randomIP()}:443     ESTABLISHED`, "dim");
+                    log(`UDP  ${randomIP()}:53      *:*`, "dim");
+                    log(`TCP  ${randomIP()}:22      LISTENING`, "dim");
+                    break;
+                    
+                case 'arp':
+                    log(`Fake ARP Table:`, "info");
+                    log(`${randomIP()}  ${randomMAC()}  dynamic`, "dim");
+                    log(`${randomIP()}  ${randomMAC()}  dynamic`, "dim");
+                    log(`${randomIP()}  ${randomMAC()}  static`, "dim");
+                    break;
+                    
+                case 'tracert':
+                case 'traceroute':
+                    if (arg) {
+                        log(`Tracing route to ${arg} (FAKE):`, "info");
+                        await simulateFlood(8, "dim");
+                        log(`Trace complete (FAKE)`, "good");
+                    } else {
+                        log(`Usage: tracert [target]`, "bad");
+                    }
+                    break;
+                    
+                case 'nslookup':
+                    if (arg) {
+                        log(`DNS Lookup for ${arg} (FAKE):`, "info");
+                        log(`Address: ${randomIP()}`, "dim");
+                    } else {
+                        log(`Usage: nslookup [domain]`, "bad");
+                    }
+                    break;
+                    
+                case 'ver':
+                case 'version':
+                    log(`NEXUS_OMNIVERSE Version 20.0.0 (Simulation Build)`, "good");
+                    break;
+                    
+                default:
+                    return false;
+            }
+            return true;
+        }
+        
+        // ═══════════════════════════════════════════════════════════════
         //                      CLI COMMAND HANDLER
         // ═══════════════════════════════════════════════════════════════
         cli.addEventListener('keydown', async (e) => {
             if (e.key === 'Enter') {
-                const cmd = cli.value.toLowerCase().trim();
-                if (!cmd) return;
+                const input = cli.value.trim();
+                if (!input) return;
                 
-                log(`BRU@NEXUS:~$ ${cmd}`, "success");
+                log(`BRU@NEXUS:~$ ${input}`, "success");
                 cli.value = '';
                 
-                const parts = cmd.split(' ');
-                const baseCmd = parts[0];
-                const arg = parts.slice(1).join(' ');
+                const parts = input.split(' ');
+                const cmd = parts[0].toLowerCase();
+                const args = parts.slice(1);
+                const arg = args.join(' ');
                 
-                // Command routing
-                if (baseCmd === 'help') {
-                    kaliHelp.style.display = 'block';
-                } else if (baseCmd === 'clear') {
-                    term.innerHTML = '';
-                } else if (baseCmd === 'status') {
-                    log(`SYSTEM STATUS: ONLINE | ENCRYPTION: AES-256 (FAKE) | UPLINK: ACTIVE`, "good");
-                    log(`OPERATOR: BRU | LOCATION: Kigali, RW | THREAT LEVEL: GREEN`, "info");
-                } else if (baseCmd === 'whoami') {
-                    log(`OPERATOR: BRU | CLEARANCE: LEVEL 10 (FAKE) | ROLE: HACKER SIMULATOR`, "purple-txt");
-                } else if (baseCmd === 'flood') {
-                    await simulateFlood(100);
-                } else if (baseCmd === 'camera_hack') {
-                    if (arg) {
-                        hackData.step1 = arg;
-                        hackData.step2 = 'CLI Location';
-                        await executeCameraHack();
-                    } else {
-                        log(`Usage: camera_hack [IP]`, "bad");
-                    }
-                } else if (baseCmd === 'ip_trace') {
-                    if (arg) {
-                        hackData.step1 = arg;
-                        await executeIpHack();
-                    } else {
-                        log(`Usage: ip_trace [IP]`, "bad");
-                    }
-                } else if (baseCmd === 'sniffer_start') {
-                    hackData.step1 = 'eth0-FAKE';
-                    await executeSnifferHack();
-                } else if (baseCmd === 'sniffer_stop') {
-                    closeSniffer();
-                } else if (baseCmd === 'scan') {
-                    log(`Scanning fake networks...`, "info");
-                    await simulateFlood(15, "dim");
-                    log(`Found 5 networks: FAKE-WIFI, PUBLIC-NET, HIDDEN-1, CORP-NETWORK, GUEST-ACCESS`, "good");
-                } else if (baseCmd === 'nmap') {
-                    if (arg) {
-                        log(`Running NMAP on ${arg}...`, "info");
-                        await simulateFlood(12, "dim");
-                        log(`Ports open: 22, 80, 443, 3306, 8080 (FAKE)`, "good");
-                    } else {
-                        log(`Usage: nmap [target]`, "bad");
-                    }
-                } else if (baseCmd === 'exit') {
-                    log(`Exiting simulation... Goodbye! (FAKE EXIT)`, "warn");
-                } else if (baseCmd === 'ping') {
-                    if (arg) {
-                        log(`Pinging ${arg}... Reply: 12ms (FAKE)`, "good");
-                    } else {
-                        log(`Usage: ping [target]`, "bad");
-                    }
-                } else {
-                    log(`Unknown command: '${baseCmd}'. Type 'help' for available commands.`, "bad");
+                // Try CMD-like commands first
+                if (await handleCmdCommand(cmd, args)) {
+                    return;
+                }
+                
+                // Hacking commands
+                switch(cmd) {
+                    case 'help':
+                        kaliHelp.style.display = 'block';
+                        break;
+                        
+                    case 'status':
+                        log(`SYSTEM STATUS: ONLINE | ENCRYPTION: AES-256 (FAKE) | UPLINK: ACTIVE`, "good");
+                        log(`OPERATOR: BRU | LOCATION: Kigali, RW | THREAT LEVEL: GREEN`, "info");
+                        log(`API: Connected to chatbru1.vercel.app`, "api-success");
+                        break;
+                        
+                    case 'whoami':
+                        log(`OPERATOR: BRU | CLEARANCE: LEVEL 10 (FAKE) | ROLE: HACKER SIMULATOR`, "purple-txt");
+                        break;
+                        
+                    case 'flood':
+                        await simulateFlood(100);
+                        break;
+                        
+                    case 'camera_hack':
+                        if (arg) {
+                            hackData.step1 = arg;
+                            hackData.step2 = 'CLI Location';
+                            await executeCameraHack();
+                        } else {
+                            log(`Usage: camera_hack [IP]`, "bad");
+                        }
+                        break;
+                        
+                    case 'ip_trace':
+                        if (arg) {
+                            hackData.step1 = arg;
+                            await executeIpHack();
+                        } else {
+                            log(`Usage: ip_trace [IP]`, "bad");
+                        }
+                        break;
+                        
+                    case 'sniffer_start':
+                        hackData.step1 = 'eth0-FAKE';
+                        await executeSnifferHack();
+                        break;
+                        
+                    case 'sniffer_stop':
+                        closeSniffer();
+                        break;
+                        
+                    case 'scan':
+                        log(`Scanning fake networks...`, "info");
+                        await simulateFlood(15, "dim");
+                        log(`Found 5 networks: FAKE-WIFI, PUBLIC-NET, HIDDEN-1, CORP-NETWORK, GUEST-ACCESS`, "good");
+                        break;
+                        
+                    case 'nmap':
+                        if (arg) {
+                            log(`Running NMAP on ${arg}...`, "info");
+                            await simulateFlood(12, "dim");
+                            log(`Ports open: 22, 80, 443, 3306, 8080 (FAKE)`, "good");
+                        } else {
+                            log(`Usage: nmap [target]`, "bad");
+                        }
+                        break;
+                        
+                    case 'exploit':
+                        if (arg) {
+                            log(`Exploiting ${arg}...`, "crit");
+                            await simulateFlood(15, "crit");
+                            log(`Exploit successful! Root access gained (FAKE)`, "success");
+                        } else {
+                            log(`Usage: exploit [target]`, "bad");
+                        }
+                        break;
+                        
+                    case 'ping':
+                        if (arg) {
+                            log(`Pinging ${arg}... Reply: ${Math.floor(Math.random()*50)}ms (FAKE)`, "good");
+                        } else {
+                            log(`Usage: ping [target]`, "bad");
+                        }
+                        break;
+                        
+                    case 'hash':
+                        if (arg) {
+                            const fakeHash = Math.random().toString(36).substring(2) + Math.random().toString(36).substring(2);
+                            log(`SHA256: ${fakeHash.toUpperCase()} (FAKE)`, "good");
+                        } else {
+                            log(`Usage: hash [text]`, "bad");
+                        }
+                        break;
+                        
+                    case 'exit':
+                        log(`Exiting simulation... Goodbye! (FAKE EXIT)`, "warn");
+                        break;
+                        
+                    default:
+                        log(`Unknown command: '${cmd}'. Type 'help' for available commands.`, "bad");
+                        break;
                 }
             }
         });
@@ -1432,7 +1915,8 @@ Type <span class="success">'help'</span> for available commands.
         // ═══════════════════════════════════════════════════════════════
         log("NEXUS_OMNIVERSE CORE V20 LOADED SUCCESSFULLY.", "success");
         log("ALL SYSTEMS OPERATIONAL. FAKE MODE ACTIVE.", "info");
-        log("ENHANCED FEATURES: Fake camera hacking with iframe streams, network packet sniffer, dual search bars!", "pink-txt");
+        log("ENHANCED FEATURES: API reporting, CMD commands, camera hacking, network sniffer!", "pink-txt");
+        log("Connected to chatbru1.vercel.app - All operations will be reported.", "api-success");
         log("Type 'help' or click buttons to start simulations.", "dim");
     </script>
 </body>
