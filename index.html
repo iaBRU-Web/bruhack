@@ -1,203 +1,261 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>SIMULATION GRID // BRU</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <title>NEXUS-AI // CORE_SIM_V4</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        :root {
+            --neon-green: #00ff88;
+            --alert-red: #ff0044;
+            --info-blue: #00aaff;
+            --matrix-bg: rgba(0, 0, 0, 0.9);
+        }
 
-<style>
-body {
-    margin: 0;
-    background: black;
-    color: #00ffcc;
-    font-family: Consolas, monospace;
-    overflow: hidden;
-}
+        body {
+            margin: 0;
+            background: #000;
+            color: var(--neon-green);
+            font-family: 'Courier New', Courier, monospace;
+            overflow: hidden;
+            text-transform: uppercase;
+        }
 
-.container {
-    display: grid;
-    grid-template-columns: 22% 56% 22%;
-    height: 100vh;
-}
+        canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: -1;
+            opacity: 0.4;
+        }
 
-/* LEFT */
-.left {
-    padding: 10px;
-    border-right: 1px solid #022;
-    background: rgba(0,0,0,0.8);
-}
-.left h3 { color: #00aaff; }
+        .interface {
+            display: grid;
+            grid-template-columns: 280px 1fr 300px;
+            height: 100vh;
+            border: 2px solid #111;
+        }
 
-.target {
-    margin-bottom: 10px;
-    padding: 8px;
-    border-left: 4px solid #00ff88;
-    background: rgba(0,255,200,0.08);
-    cursor: pointer;
-}
+        /* SIDEBARS */
+        .panel {
+            background: rgba(0, 5, 5, 0.85);
+            border: 1px solid #222;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            overflow-y: auto;
+        }
 
-/* SIGNAL */
-.signal span {
-    display: inline-block;
-    width: 4px;
-    margin-right: 2px;
-    background: lime;
-    animation: pulse 1s infinite;
-}
-.signal span:nth-child(1){height:6px}
-.signal span:nth-child(2){height:10px;animation-delay:.2s}
-.signal span:nth-child(3){height:14px;animation-delay:.4s}
-.signal span:nth-child(4){height:18px;animation-delay:.6s}
-@keyframes pulse { 50% { opacity: 0.2; } }
+        h2 { font-size: 14px; border-bottom: 1px solid var(--neon-green); padding-bottom: 5px; color: var(--info-blue); }
 
-/* CENTER */
-.center {
-    padding: 10px;
-    display: flex;
-    flex-direction: column;
-}
-#terminal {
-    flex: 1;
-    overflow-y: auto;
-    font-size: 13px;
-}
-#cmd {
-    background: black;
-    border: none;
-    color: #00ffcc;
-    font-family: Consolas, monospace;
-    font-size: 14px;
-    outline: none;
-}
+        .node {
+            padding: 10px;
+            border: 1px solid #333;
+            background: rgba(0, 255, 136, 0.05);
+            cursor: pointer;
+            transition: 0.3s;
+        }
 
-/* RIGHT */
-.right {
-    padding: 10px;
-    border-left: 1px solid #300;
-    background: rgba(0,0,0,0.8);
-}
-.right h3 { color: #ff0044; }
+        .node:hover { background: rgba(0, 255, 136, 0.2); border-color: var(--neon-green); }
 
-.video {
-    margin-top: 10px;
-    padding: 6px;
-    background: #020202;
-    border: 1px solid #222;
-    font-size: 12px;
-}
+        /* CENTER TERMINAL */
+        .terminal-container {
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.6);
+        }
 
-/* LOG COLORS */
-.info { color: #00aaff; }
-.warn { color: #ffaa00; }
-.good { color: #00ff55; }
-.bad  { color: #ff0033; }
-.dim  { color: #777; }
-</style>
+        #terminal-log {
+            flex: 1;
+            overflow-y: auto;
+            font-size: 13px;
+            line-height: 1.5;
+            margin-bottom: 20px;
+            padding-right: 10px;
+        }
+
+        .input-line {
+            display: flex;
+            align-items: center;
+            background: #000;
+            border: 1px solid #333;
+            padding: 10px;
+        }
+
+        #cmd-input {
+            background: transparent;
+            border: none;
+            color: var(--neon-green);
+            flex: 1;
+            outline: none;
+            font-family: inherit;
+            font-size: 16px;
+        }
+
+        /* MAP/SAT */
+        .map-box {
+            height: 150px;
+            background: repeating-linear-gradient(0deg, #000, #000 2px, #020 2px, #020 4px);
+            position: relative;
+            border: 1px solid #444;
+        }
+
+        .ping {
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            background: var(--alert-red);
+            border-radius: 50%;
+            box-shadow: 0 0 10px var(--alert-red);
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse { 0% { transform: scale(1); opacity: 1; } 100% { transform: scale(4); opacity: 0; } }
+
+        /* FX */
+        .shake { animation: shakeEffect 0.2s infinite; }
+        @keyframes shakeEffect { 0% { transform: translate(1px, 1px); } 50% { transform: translate(-2px, -1px); } 100% { transform: translate(1px, 1px); } }
+        
+        .type-green { color: var(--neon-green); }
+        .type-red { color: var(--alert-red); font-weight: bold; }
+        .type-blue { color: var(--info-blue); }
+    </style>
 </head>
-
 <body>
 
-<div class="container">
+<canvas id="matrix"></canvas>
 
-<!-- LEFT -->
-<div class="left">
-<h3>🌐 FICTIONAL TARGETS</h3>
+<div class="interface" id="ui-core">
+    <div class="panel">
+        <h2>[ NETWORK_NODES ]</h2>
+        <div class="node" onclick="execute('scan wifi_77_alpha')">WIFI: ALPHA_77 (SECURED)</div>
+        <div class="node" onclick="execute('scan bank_vault')">BANK: ATLAS_MAIN_FRAME</div>
+        <div class="node" onclick="execute('scan satellite')">SAT: ORBIT_LINK_V2</div>
+        <div class="node" onclick="execute('scan genome')">BIO: GENOME_DATA_X</div>
+        
+        <h2 style="margin-top:20px;">[ SYSTEM_STATUS ]</h2>
+        <div style="font-size: 11px;">
+            CPU: 98%<br>
+            RAM: 14.2TB/SIM<br>
+            ENCRYPTION: AES-X99<br>
+            UPLINK: ACTIVE
+        </div>
+    </div>
 
-<div class="target">🏳 NOVARIS REPUBLIC CORE
-<div class="signal"><span></span><span></span><span></span><span></span></div>
-</div>
+    <div class="terminal-container">
+        <div id="terminal-log">
+            [SYS] NEXUS-AI BOOT SEQUENCE COMPLETE...<br>
+            [SYS] OPERATOR: BRU RECOGNIZED.<br>
+            [SYS] RUNNING IN FULL SIMULATION MODE.<br>
+            --------------------------------------------<br>
+            Type 'HELP' to list simulation protocols.<br><br>
+        </div>
+        <div class="input-line">
+            <span>BRU@NEXUS:~$ &nbsp;</span>
+            <input type="text" id="cmd-input" autofocus autocomplete="off">
+        </div>
+    </div>
 
-<div class="target">🏦 HELIX GLOBAL BANK
-<div class="signal"><span></span><span></span><span></span></div>
-</div>
-
-<div class="target">🧬 GENEX DNA VAULT
-<div class="signal"><span></span><span></span><span></span><span></span></div>
-</div>
-
-<div class="target">🛰 ORBITAL AGENCY NODE
-<div class="signal"><span></span><span></span></div>
-</div>
-</div>
-
-<!-- CENTER -->
-<div class="center">
-<div id="terminal">
-SIMULATION GRID v1.0<br>
-Operator: <span class="good">BRU</span><br>
-Mode: <span class="warn">FICTIONAL / CINEMATIC</span><br>
-Type <span class="warn">help</span> to list commands.<br><br>
-</div>
-<input id="cmd" placeholder="bru@simgrid:~$" autofocus>
-</div>
-
-<!-- RIGHT -->
-<div class="right">
-<h3>📺 NEWS FEED (SIM)</h3>
-<div class="video">
-[ Fictional Broadcast ]<br>
-“Earlier today, authorities in the Novaris region confirmed a major incident.
-No further details have been released.”<br><br>
-<span class="dim">Archived footage – dramatization</span>
-</div>
-</div>
-
+    <div class="panel">
+        <h2>[ GLOBAL_TRACKING ]</h2>
+        <div class="map-box">
+            <div class="ping" style="top:30%; left:40%;"></div>
+            <div class="ping" style="top:70%; left:20%;"></div>
+            <div class="ping" style="top:50%; left:80%;"></div>
+        </div>
+        <h2>[ LIVE_LOGS ]</h2>
+        <div id="live-feed" style="font-size: 10px; color: #555;">
+            > INCOMING PACKET: 0x882...<br>
+            > HANDSHAKE REQUEST...<br>
+            > SIMULATING IP: 192.168.X.X<br>
+        </div>
+    </div>
 </div>
 
 <script>
-const term = document.getElementById("terminal");
-const cmd = document.getElementById("cmd");
+    /* MATRIX BACKGROUND */
+    const canvas = document.getElementById('matrix');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    const letters = "01010101ABCDEFHIJKLMNOPQRSTUVWXYZ";
+    const fontSize = 14;
+    const columns = canvas.width / fontSize;
+    const drops = Array.from({ length: columns }).fill(1);
 
-function log(t,c="info"){
-    term.innerHTML += `<div class="${c}">${t}</div>`;
-    term.scrollTop = term.scrollHeight;
-}
+    function drawMatrix() {
+        ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle = "#0f8";
+        ctx.font = fontSize + "px monospace";
+        drops.forEach((y, i) => {
+            const text = letters[Math.floor(Math.random() * letters.length)];
+            ctx.fillText(text, i * fontSize, y * fontSize);
+            if (y * fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
+            drops[i]++;
+        });
+    }
+    setInterval(drawMatrix, 50);
 
-cmd.addEventListener("keydown",e=>{
-    if(e.key==="Enter"){
-        const v = cmd.value.trim().toLowerCase();
-        log("bru@simgrid:~$ "+v,"warn");
-        cmd.value="";
-        run(v);
-    }
-});
+    /* TERMINAL LOGIC */
+    const log = document.getElementById('terminal-log');
+    const input = document.getElementById('cmd-input');
+    const ui = document.getElementById('ui-core');
 
-function run(v){
-    if(v==="help"){
-        log("COMMANDS:", "good");
-        log("scan        → scan fictional targets");
-        log("dna-load    → simulate DNA algorithm");
-        log("event       → trigger fictional incident");
-        log("status      → system state");
+    function print(text, type = 'type-green') {
+        const div = document.createElement('div');
+        div.className = type;
+        div.innerHTML = `> ${text}`;
+        log.appendChild(div);
+        log.scrollTop = log.scrollHeight;
     }
-    else if(v==="scan"){
-        ["Mapping nodes…","Decrypting layers…","Access tokens loaded…"]
-        .forEach((s,i)=>setTimeout(()=>log(s),i*600));
+
+    input.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+            const val = input.value.trim().toLowerCase();
+            print(`BRU@SIM:~$ ${val}`, 'type-blue');
+            input.value = '';
+            execute(val);
+        }
+    });
+
+    function execute(cmd) {
+        if (cmd === 'help') {
+            print("AVAILABLE PROTOCOLS:");
+            print("SCAN [TARGET] - Analyze fictional entity");
+            print("BREACH - Initiate simulated system override");
+            print("SATELLITE - Sync with fictional orbital grid");
+            print("CLEAR - Wipe terminal display");
+        } 
+        else if (cmd.startsWith('scan')) {
+            print(`INITIALIZING SCAN ON: ${cmd.split(' ')[1] || 'GENERAL_GRID'}`);
+            setTimeout(() => print("BYPASSING FIREWALL... [||||||----] 60%"), 500);
+            setTimeout(() => print("EXTRACTING FAKE DATA... SUCCESS"), 1200);
+            setTimeout(() => print(`RESULT: ${Math.random().toString(16).substr(2, 8).toUpperCase()} - ACCESS GRANTED`), 1800);
+        }
+        else if (cmd === 'breach') {
+            ui.classList.add('shake');
+            print("!!! WARNING: SYSTEM BREACH INITIATED !!!", "type-red");
+            let count = 5;
+            const timer = setInterval(() => {
+                print(`OVERRIDE COMPLETING IN ${count}...`, "type-red");
+                count--;
+                if (count < 0) {
+                    clearInterval(timer);
+                    ui.classList.remove('shake');
+                    print("SIMULATED DATASET SEIZED.", "type-green");
+                }
+            }, 800);
+        }
+        else if (cmd === 'clear') {
+            log.innerHTML = '';
+        }
+        else {
+            print("ERROR: COMMAND NOT RECOGNIZED BY NEXUS-CORE.", "type-red");
+        }
     }
-    else if(v==="dna-load"){
-        ["Sequencing DNA…","Running bio-algorithms…","Genome pattern matched…"]
-        .forEach((s,i)=>setTimeout(()=>log(s,"info"),i*600));
-        setTimeout(()=>log("DNA MODULE COMPLETE","good"),2000);
-    }
-    else if(v==="event"){
-        let i=5;
-        const c=setInterval(()=>{
-            log("SIMULATED EVENT IN "+i,"bad");
-            i--;
-            if(i<0){
-                clearInterval(c);
-                log("⚠ FICTIONAL INCIDENT REGISTERED","good");
-                log("NEWS FEED UPDATED","warn");
-            }
-        },700);
-    }
-    else if(v==="status"){
-        log("All systems running in simulation mode.","good");
-    }
-    else{
-        log("Unknown command. Type help.","bad");
-    }
-}
 </script>
 
 </body>
