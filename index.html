@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NEXUS_OMNIVERSE // SIMULATION_CORE_V19 // BRU_INTERFACE</title>
+    <title>NEXUS_OMNIVERSE // SIMULATION_CORE_V20 // BRU_INTERFACE</title>
     <style>
         :root {
             --neon-green: #00ff88;
@@ -356,7 +356,7 @@
             width: 100%;
             height: 80%;
             border: 1px solid var(--neon-green);
-            filter: contrast(120%) brightness(90%);
+            filter: contrast(120%) brightness(90%) sepia(0.2) hue-rotate(180deg); /* Enhanced fake camera effect */
         }
         #close-camera {
             margin-top: 10px;
@@ -403,6 +403,48 @@
         #close-help:hover {
             background: #00b3cc;
         }
+        /* Network Sniffer Overlay */
+        #sniffer-overlay {
+            position: fixed;
+            top: 30%;
+            left: 30%;
+            width: 40%;
+            height: 40%;
+            background: rgba(0, 0, 0, 0.95);
+            border: 2px solid var(--neon-orange);
+            z-index: 20;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            box-shadow: 0 0 40px var(--neon-orange);
+            animation: sniffer-packet 1s infinite;
+            overflow: auto;
+        }
+        @keyframes sniffer-packet {
+            0% { border-color: var(--neon-orange); box-shadow: 0 0 10px var(--neon-orange); }
+            50% { border-color: #ffcc66; box-shadow: 0 0 30px #ffcc66; }
+            100% { border-color: var(--neon-orange); box-shadow: 0 0 10px var(--neon-orange); }
+        }
+        #sniffer-content {
+            width: 100%;
+            height: 80%;
+            color: var(--neon-green);
+            font-size: 12px;
+            white-space: pre-wrap;
+        }
+        #close-sniffer {
+            margin-top: 10px;
+            background: var(--neon-orange);
+            color: var(--bg-black);
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        #close-sniffer:hover {
+            background: #ff9933;
+        }
     </style>
 </head>
 <body>
@@ -410,7 +452,7 @@
     <div class="grid" id="ui">
         <!-- LEFT PANEL: Hacking Divisions -->
         <div class="panel left-panel">
-            <h3>[ HACKING_DIVISIONS_V19 ]</h3>
+            <h3>[ HACKING_DIVISIONS_V20 ]</h3>
             <div class="btn-deck">
                 <button class="h-btn" onclick="initHack('BANK')">🏦 INTERACTIVE BANK TRANSFER</button>
                 <button class="h-btn" onclick="initHack('WIFI')">📶 WIFI: NETWORK_CRACK</button>
@@ -441,12 +483,13 @@
                 <button class="h-btn pink" onclick="initHack('SPYWARE')">🔍 SPYWARE: INSTALL_SIM</button>
                 <button class="h-btn pink" onclick="initHack('ROOTKIT')">🛠️ ROOTKIT: SYSTEM_INFECT</button>
                 <button class="h-btn" onclick="initHack('BOTNET')">🤖 BOTNET: CONTROL_NET</button>
+                <button class="h-btn orange" onclick="initHack('SNIFFER')">📡 SNIFFER: NETWORK_SNIFF</button>
             </div>
         </div>
         <!-- CENTER PANEL: Terminal -->
         <div class="panel">
             <div id="term">
-                SIMULATION CORE v19.0<br>
+                SIMULATION CORE v20.0<br>
                 Operator: <span class="good">BRU</span><br>
                 Status: <span class="warn">FICTIONAL MODE ENABLED</span><br>
                 Type <span class="warn">help</span> for commands.<br><br>
@@ -506,6 +549,12 @@
         <iframe id="camera-video" src="https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&mute=1" frameborder="0" allowfullscreen></iframe> <!-- Fake video example -->
         <button id="close-camera" onclick="closeCamera()">CLOSE CAMERA</button>
     </div>
+    <!-- NETWORK SNIFFER OVERLAY -->
+    <div id="sniffer-overlay">
+        <h3 style="color: var(--neon-orange);">SIM NETWORK SNIFFER (FAKE PACKETS)</h3>
+        <pre id="sniffer-content"></pre>
+        <button id="close-sniffer" onclick="closeSniffer()">CLOSE SNIFFER</button>
+    </div>
     <!-- KALI-LIKE HELP MODAL -->
     <div id="kali-help">
         <button id="close-help" onclick="closeHelp()">X</button>
@@ -562,10 +611,12 @@ ai_hack - Fake AI hack
 quantum_break - Fake quantum break
 drone_control - Fake drone control
 iot_breach - Fake IOT breach
-malware_deploy - Fake malware deploy
-spyware_install - Fake spyware install
-rootkit_infect - Fake rootkit infect
-botnet_control - Fake botnet control
+malware_deploy [IP] - Fake malware deploy
+spyware_install [DEVICE] - Fake spyware install
+rootkit_infect [IP] - Fake rootkit infect
+botnet_control [SIZE] - Fake botnet control
+sniffer_start - Fake network sniffer start
+sniffer_stop - Stop sniffer
 
 All commands are simulated - no real effects!
         </pre>
@@ -602,10 +653,13 @@ All commands are simulated - no real effects!
         const dynamicField = document.getElementById('dynamic-field');
         const dynamicSubmit = document.getElementById('dynamic-submit');
         const cameraOverlay = document.getElementById('camera-overlay');
+        const snifferOverlay = document.getElementById('sniffer-overlay');
+        const snifferContent = document.getElementById('sniffer-content');
         const kaliHelp = document.getElementById('kali-help');
         const spinChars = ["|", "/", "-", "\\"];
         let sIdx = 0;
         setInterval(() => { sIdx = (sIdx + 1) % 4; }, 100);
+        let snifferInterval;
 
         // DNA SCROLL UPDATE
         function updateDNA() {
@@ -720,6 +774,13 @@ All commands are simulated - no real effects!
                         executeBotnetHack();
                     }
                     break;
+                case 'SNIFFER':
+                    if (currentStep === 1) {
+                        showDynamicInput('STEP 1: ENTER SIM NETWORK INTERFACE (e.g., eth0-FAKE):', proceedToNextStep);
+                    } else if (currentStep === 2) {
+                        executeSnifferHack();
+                    }
+                    break;
                 // Add more if needed
             }
             currentStep++;
@@ -740,11 +801,6 @@ All commands are simulated - no real effects!
         function closeCamera() {
             cameraOverlay.style.display = 'none';
             log(`CAMERA FEED CLOSED. CONNECTION TERMINATED.`, "dim");
-            completeCameraCleanup();
-        }
-
-        function completeCameraCleanup() {
-            // Optional: Reset iframe src to stop video
             document.getElementById('camera-video').src = '';
         }
 
@@ -757,42 +813,40 @@ All commands are simulated - no real effects!
             completeHack();
         }
 
-        // NEW FAKE TOOLS EXECUTE
-        async function executeMalwareHack() {
-            const ip = hackData.step1 || '192.168.MAL.IP';
-            log(`STEP 2: DEPLOYING MALWARE TO ${ip}...`, "bad");
-            await simulateFlood(22, "bad");
-            log(`MALWARE INSTALLED. SYSTEM COMPROMISED.`, "crit");
+        // EXECUTE SNIFFER HACK
+        async function executeSnifferHack() {
+            const iface = hackData.step1 || 'eth0-FAKE';
+            log(`STEP 2: STARTING NETWORK SNIFFER ON INTERFACE ${iface}...`, "orange-txt");
+            await simulateFlood(15, "orange-txt");
+            log(`SNIFFER ACTIVE. CAPTURING FAKE PACKETS...`, "success");
+            snifferOverlay.style.display = 'flex';
+            snifferContent.innerHTML = '';
+            snifferInterval = setInterval(addFakePacket, 500);
             completeHack();
         }
 
-        async function executeSpywareHack() {
-            const device = hackData.step1 || 'TARGET-DEVICE-FAKE';
-            log(`STEP 2: INSTALLING SPYWARE ON ${device}...`, "warn");
-            await simulateFlood(18, "warn");
-            log(`SPYWARE ACTIVE. MONITORING STARTED.`, "success");
-            completeHack();
+        function addFakePacket() {
+            const fakePackets = [
+                "TCP [SRC: 192.168.1.100:45678] [DST: 8.8.8.8:53] DNS QUERY FAKE.COM",
+                "UDP [SRC: 10.0.0.5:12345] [DST: 172.16.0.1:80] HTTP GET /FAKE",
+                "ICMP [SRC: 192.168.FAKE.1] [DST: 192.168.FAKE.2] PING ECHO",
+                "TCP [SRC: 172.217.5.174:443] [DST: 192.168.1.50:56789] HTTPS DATA",
+                "UDP [SRC: 239.255.255.250:1900] [DST: MULTICAST] SSDP DISCOVERY"
+            ];
+            const packet = fakePackets[Math.floor(Math.random() * fakePackets.length)];
+            snifferContent.innerHTML += packet + '\n';
+            snifferContent.scrollTop = snifferContent.scrollHeight;
         }
 
-        async function executeRootkitHack() {
-            const ip = hackData.step1 || '192.168.ROOT.IP';
-            log(`STEP 2: INFECTING SYSTEM AT ${ip} WITH ROOTKIT...`, "crit");
-            await simulateFlood(25, "crit");
-            log(`ROOTKIT EMBEDDED. KERNEL CONTROLLED.`, "bad");
-            completeHack();
-        }
-
-        async function executeBotnetHack() {
-            const size = hackData.step1 || '5000 BOTS';
-            log(`STEP 2: ACTIVATING BOTNET OF ${size}...`, "info");
-            await simulateFlood(30, "info");
-            log(`BOTNET ONLINE. READY FOR COMMANDS.`, "good");
-            completeHack();
+        function closeSniffer() {
+            snifferOverlay.style.display = 'none';
+            clearInterval(snifferInterval);
+            log(`SNIFFER STOPPED. PACKET CAPTURE TERMINATED.`, "dim");
         }
 
         // ... (Other execute functions remain the same) ...
 
-        // CLI INPUT HANDLER
+        // CLI INPUT HANDLER - Added sniffer commands
         cli.addEventListener('keydown', (e) => {
             if (e.key === 'Enter') {
                 const cmd = cli.value.toLowerCase().trim();
@@ -818,36 +872,12 @@ All commands are simulated - no real effects!
                     } else {
                         log("Usage: ip_trace [IP]", "bad");
                     }
-                } else if (baseCmd === 'malware_deploy') {
-                    if (arg) {
-                        hackData.step1 = arg;
-                        executeMalwareHack();
-                    } else {
-                        log("Usage: malware_deploy [IP]", "bad");
-                    }
-                } else if (baseCmd === 'spyware_install') {
-                    if (arg) {
-                        hackData.step1 = arg;
-                        executeSpywareHack();
-                    } else {
-                        log("Usage: spyware_install [DEVICE]", "bad");
-                    }
-                } else if (baseCmd === 'rootkit_infect') {
-                    if (arg) {
-                        hackData.step1 = arg;
-                        executeRootkitHack();
-                    } else {
-                        log("Usage: rootkit_infect [IP]", "bad");
-                    }
-                } else if (baseCmd === 'botnet_control') {
-                    if (arg) {
-                        hackData.step1 = arg;
-                        executeBotnetHack();
-                    } else {
-                        log("Usage: botnet_control [SIZE]", "bad");
-                    }
+                } else if (baseCmd === 'sniffer_start') {
+                    executeSnifferHack();
+                } else if (baseCmd === 'sniffer_stop') {
+                    closeSniffer();
                 } 
-                // ... (Other commands remain) ...
+                // ... (Other commands) ...
                 else {
                     log("Unknown sim command. Try 'help'.", "bad");
                 }
@@ -874,9 +904,9 @@ All commands are simulated - no real effects!
         }
 
         // INITIAL LOGS
-        log("NEXUS_OMNIVERSE CORE V19 LOADED. ENHANCED ANIMATIONS & FEATURES: ACTIVE.");
+        log("NEXUS_OMNIVERSE CORE V20 LOADED. ENHANCED ANIMATIONS & FEATURES: ACTIVE.");
         log("OPERATOR: BRU. SIMULATION AWAITING INPUT. ALL DATA FAKE FOR MOVIE USE.");
-        log("NEW: ENHANCED CAMERA VISUALS WITH SCAN LINES & STATIC, MORE FAKE TOOLS!", "pink-txt");
+        log("NEW: FAKE NETWORK SNIFFER WITH LIVE PACKET CAPTURE, ENHANCED CAMERA EFFECTS!", "pink-txt");
     </script>
 </body>
 </html>
