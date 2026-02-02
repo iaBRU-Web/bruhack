@@ -2,26 +2,18 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>TECHGOD // BRU</title>
+<title>SIMULATION GRID // BRU</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
 body {
     margin: 0;
     background: black;
-    font-family: Consolas, monospace;
     color: #00ffcc;
+    font-family: Consolas, monospace;
     overflow: hidden;
 }
 
-/* MATRIX BACKGROUND */
-canvas {
-    position: fixed;
-    top: 0; left: 0;
-    z-index: -1;
-}
-
-/* LAYOUT */
 .container {
     display: grid;
     grid-template-columns: 22% 56% 22%;
@@ -30,40 +22,33 @@ canvas {
 
 /* LEFT */
 .left {
-    background: rgba(0,0,0,0.75);
-    border-right: 1px solid #022;
     padding: 10px;
+    border-right: 1px solid #022;
+    background: rgba(0,0,0,0.8);
 }
 .left h3 { color: #00aaff; }
 
 .target {
+    margin-bottom: 10px;
     padding: 8px;
-    margin-bottom: 8px;
-    cursor: pointer;
-    background: rgba(0,255,200,0.08);
     border-left: 4px solid #00ff88;
+    background: rgba(0,255,200,0.08);
+    cursor: pointer;
 }
 
-/* SIGNAL BARS */
-.signal {
-    display: inline-block;
-    margin-top: 4px;
-}
-.bar {
+/* SIGNAL */
+.signal span {
     display: inline-block;
     width: 4px;
     margin-right: 2px;
     background: lime;
     animation: pulse 1s infinite;
 }
-.bar:nth-child(1){height:6px}
-.bar:nth-child(2){height:10px;animation-delay:.2s}
-.bar:nth-child(3){height:14px;animation-delay:.4s}
-.bar:nth-child(4){height:18px;animation-delay:.6s}
-
-@keyframes pulse {
-    50% { opacity: 0.2; }
-}
+.signal span:nth-child(1){height:6px}
+.signal span:nth-child(2){height:10px;animation-delay:.2s}
+.signal span:nth-child(3){height:14px;animation-delay:.4s}
+.signal span:nth-child(4){height:18px;animation-delay:.6s}
+@keyframes pulse { 50% { opacity: 0.2; } }
 
 /* CENTER */
 .center {
@@ -77,101 +62,89 @@ canvas {
     font-size: 13px;
 }
 #cmd {
-    border: none;
-    outline: none;
     background: black;
+    border: none;
     color: #00ffcc;
     font-family: Consolas, monospace;
     font-size: 14px;
+    outline: none;
 }
 
 /* RIGHT */
 .right {
-    background: rgba(0,0,0,0.75);
-    border-left: 1px solid #300;
     padding: 10px;
+    border-left: 1px solid #300;
+    background: rgba(0,0,0,0.8);
 }
 .right h3 { color: #ff0044; }
+
+.video {
+    margin-top: 10px;
+    padding: 6px;
+    background: #020202;
+    border: 1px solid #222;
+    font-size: 12px;
+}
 
 /* LOG COLORS */
 .info { color: #00aaff; }
 .warn { color: #ffaa00; }
 .good { color: #00ff55; }
 .bad  { color: #ff0033; }
+.dim  { color: #777; }
 </style>
 </head>
 
 <body>
 
-<canvas id="matrix"></canvas>
-
 <div class="container">
 
 <!-- LEFT -->
 <div class="left">
-<h3>🎯 TARGET GRID</h3>
+<h3>🌐 FICTIONAL TARGETS</h3>
 
-<div class="target">📡 HOME_NET_5G
-<div class="signal"><span class="bar"></span><span class="bar"></span><span class="bar"></span><span class="bar"></span></div>
+<div class="target">🏳 NOVARIS REPUBLIC CORE
+<div class="signal"><span></span><span></span><span></span><span></span></div>
 </div>
 
-<div class="target">🏦 NATIONAL BANK NODE
-<div class="signal"><span class="bar"></span><span class="bar"></span><span class="bar"></span></div>
+<div class="target">🏦 HELIX GLOBAL BANK
+<div class="signal"><span></span><span></span><span></span></div>
 </div>
 
-<div class="target">🛰 SECRET AGENCY CORE
-<div class="signal"><span class="bar"></span><span class="bar"></span><span class="bar"></span><span class="bar"></span></div>
+<div class="target">🧬 GENEX DNA VAULT
+<div class="signal"><span></span><span></span><span></span><span></span></div>
 </div>
 
-<div class="target">🌐 WEB SERVER CLUSTER
-<div class="signal"><span class="bar"></span><span class="bar"></span></div>
+<div class="target">🛰 ORBITAL AGENCY NODE
+<div class="signal"><span></span><span></span></div>
 </div>
 </div>
 
 <!-- CENTER -->
 <div class="center">
 <div id="terminal">
-TECHGOD OS v9.9<br>
-Logged in as: <span class="good">BRU</span><br>
-Clearance: GODMODE<br>
-Type <span class="warn">help</span> to view commands.<br><br>
+SIMULATION GRID v1.0<br>
+Operator: <span class="good">BRU</span><br>
+Mode: <span class="warn">FICTIONAL / CINEMATIC</span><br>
+Type <span class="warn">help</span> to list commands.<br><br>
 </div>
-<input id="cmd" placeholder="bru@techgod:~$" autofocus>
+<input id="cmd" placeholder="bru@simgrid:~$" autofocus>
 </div>
 
 <!-- RIGHT -->
 <div class="right">
-<h3>🧠 SYSTEM STATUS</h3>
-<p>Neural Engine: ONLINE</p>
-<p>Exploit Tree: LOADED</p>
-<p>Trace Level: ZERO</p>
-<p class="warn">⚠ Simulation Mode Active</p>
+<h3>📺 NEWS FEED (SIM)</h3>
+<div class="video">
+[ Fictional Broadcast ]<br>
+“Earlier today, authorities in the Novaris region confirmed a major incident.
+No further details have been released.”<br><br>
+<span class="dim">Archived footage – dramatization</span>
+</div>
 </div>
 
 </div>
 
 <script>
-/* MATRIX */
-const canvas = document.getElementById("matrix");
-const ctx = canvas.getContext("2d");
-canvas.width = innerWidth;
-canvas.height = innerHeight;
-const chars = "01";
-const size = 14;
-const cols = canvas.width / size;
-const drops = Array(cols).fill(1);
-setInterval(()=>{
-    ctx.fillStyle="rgba(0,0,0,0.05)";
-    ctx.fillRect(0,0,canvas.width,canvas.height);
-    ctx.fillStyle="#00ff55";
-    ctx.font=size+"px monospace";
-    drops.forEach((y,i)=>{
-        ctx.fillText(chars[Math.random()>0.5?1:0],i*size,y*size);
-        drops[i]=y*size>canvas.height&&Math.random()>0.975?0:y+1;
-    });
-},33);
-
-/* TERMINAL */
 const term = document.getElementById("terminal");
 const cmd = document.getElementById("cmd");
 
@@ -183,7 +156,7 @@ function log(t,c="info"){
 cmd.addEventListener("keydown",e=>{
     if(e.key==="Enter"){
         const v = cmd.value.trim().toLowerCase();
-        log("bru@techgod:~$ "+v,"warn");
+        log("bru@simgrid:~$ "+v,"warn");
         cmd.value="";
         run(v);
     }
@@ -191,28 +164,35 @@ cmd.addEventListener("keydown",e=>{
 
 function run(v){
     if(v==="help"){
-        log("AVAILABLE COMMANDS:","good");
-        log("scan   → scan all targets");
-        log("breach → simulate system breach");
-        log("status → system status");
+        log("COMMANDS:", "good");
+        log("scan        → scan fictional targets");
+        log("dna-load    → simulate DNA algorithm");
+        log("event       → trigger fictional incident");
+        log("status      → system state");
     }
     else if(v==="scan"){
-        ["Scanning networks…","Banks detected…","Agencies responding…","Web nodes mapped…"]
+        ["Mapping nodes…","Decrypting layers…","Access tokens loaded…"]
         .forEach((s,i)=>setTimeout(()=>log(s),i*600));
     }
-    else if(v==="breach"){
+    else if(v==="dna-load"){
+        ["Sequencing DNA…","Running bio-algorithms…","Genome pattern matched…"]
+        .forEach((s,i)=>setTimeout(()=>log(s,"info"),i*600));
+        setTimeout(()=>log("DNA MODULE COMPLETE","good"),2000);
+    }
+    else if(v==="event"){
         let i=5;
         const c=setInterval(()=>{
-            log("SIMULATED BREACH IN "+i,"bad");
+            log("SIMULATED EVENT IN "+i,"bad");
             i--;
             if(i<0){
                 clearInterval(c);
-                log("⚠ SYSTEM OVERRIDDEN (SIMULATION)","good");
+                log("⚠ FICTIONAL INCIDENT REGISTERED","good");
+                log("NEWS FEED UPDATED","warn");
             }
         },700);
     }
     else if(v==="status"){
-        log("All systems operational.","good");
+        log("All systems running in simulation mode.","good");
     }
     else{
         log("Unknown command. Type help.","bad");
