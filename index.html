@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>BLACKNET // WIFI CONTROL</title>
+<title>TECHGOD // BRU</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
@@ -14,9 +14,17 @@ body {
     overflow: hidden;
 }
 
+/* MATRIX BACKGROUND */
+canvas {
+    position: fixed;
+    top: 0; left: 0;
+    z-index: -1;
+}
+
+/* LAYOUT */
 .container {
     display: grid;
-    grid-template-columns: 25% 50% 25%;
+    grid-template-columns: 22% 56% 22%;
     height: 100vh;
 }
 
@@ -28,55 +36,54 @@ body {
 }
 .left h3 { color: #00aaff; }
 
-.wifi {
+.target {
     padding: 8px;
     margin-bottom: 8px;
     cursor: pointer;
     background: rgba(0,255,200,0.08);
     border-left: 4px solid #00ff88;
 }
-.wifi:hover {
-    background: rgba(0,255,200,0.2);
+
+/* SIGNAL BARS */
+.signal {
+    display: inline-block;
+    margin-top: 4px;
 }
-.pass { color: #ff3355; font-size: 12px; }
+.bar {
+    display: inline-block;
+    width: 4px;
+    margin-right: 2px;
+    background: lime;
+    animation: pulse 1s infinite;
+}
+.bar:nth-child(1){height:6px}
+.bar:nth-child(2){height:10px;animation-delay:.2s}
+.bar:nth-child(3){height:14px;animation-delay:.4s}
+.bar:nth-child(4){height:18px;animation-delay:.6s}
+
+@keyframes pulse {
+    50% { opacity: 0.2; }
+}
 
 /* CENTER */
 .center {
-    position: relative;
     padding: 10px;
+    display: flex;
+    flex-direction: column;
 }
 #terminal {
-    height: 100%;
+    flex: 1;
     overflow-y: auto;
     font-size: 13px;
 }
-
-/* LOADER */
-.loader {
-    position: absolute;
-    top: 10px;
-    right: 15px;
-    width: 70px;
-    height: 70px;
-    display: none;
+#cmd {
+    border: none;
+    outline: none;
+    background: black;
+    color: #00ffcc;
+    font-family: Consolas, monospace;
+    font-size: 14px;
 }
-.loader span {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    border-radius: 50%;
-    border-top: 2px solid #00ffcc;
-    animation: spin 2s linear infinite;
-}
-.loader span:nth-child(2) {
-    border-top-color: blue;
-    animation-duration: 3s;
-}
-.loader span:nth-child(3) {
-    border-top-color: lime;
-    animation-duration: 4s;
-}
-@keyframes spin { 100% { transform: rotate(360deg); } }
 
 /* RIGHT */
 .right {
@@ -85,25 +92,6 @@ body {
     padding: 10px;
 }
 .right h3 { color: #ff0044; }
-
-input {
-    width: 100%;
-    padding: 8px;
-    background: black;
-    border: 1px solid #333;
-    color: #00ffcc;
-    font-family: monospace;
-}
-
-button {
-    width: 100%;
-    padding: 10px;
-    margin-top: 10px;
-    background: linear-gradient(90deg, red, cyan, blue);
-    border: none;
-    font-weight: bold;
-    cursor: pointer;
-}
 
 /* LOG COLORS */
 .info { color: #00aaff; }
@@ -115,108 +103,120 @@ button {
 
 <body>
 
+<canvas id="matrix"></canvas>
+
 <div class="container">
 
-<!-- LEFT: STORED WIFI -->
+<!-- LEFT -->
 <div class="left">
-<h3>📡 STORED Wi‑Fi</h3>
-<div id="wifiList"></div>
+<h3>🎯 TARGET GRID</h3>
+
+<div class="target">📡 HOME_NET_5G
+<div class="signal"><span class="bar"></span><span class="bar"></span><span class="bar"></span><span class="bar"></span></div>
+</div>
+
+<div class="target">🏦 NATIONAL BANK NODE
+<div class="signal"><span class="bar"></span><span class="bar"></span><span class="bar"></span></div>
+</div>
+
+<div class="target">🛰 SECRET AGENCY CORE
+<div class="signal"><span class="bar"></span><span class="bar"></span><span class="bar"></span><span class="bar"></span></div>
+</div>
+
+<div class="target">🌐 WEB SERVER CLUSTER
+<div class="signal"><span class="bar"></span><span class="bar"></span></div>
+</div>
 </div>
 
 <!-- CENTER -->
 <div class="center">
-<div class="loader" id="loader">
-    <span></span><span></span><span></span>
-</div>
 <div id="terminal">
-BLACKNET OS INITIALIZED...
-AWAITING TARGET SELECTION...
+TECHGOD OS v9.9<br>
+Logged in as: <span class="good">BRU</span><br>
+Clearance: GODMODE<br>
+Type <span class="warn">help</span> to view commands.<br><br>
 </div>
+<input id="cmd" placeholder="bru@techgod:~$" autofocus>
 </div>
 
-<!-- RIGHT: SEARCH -->
+<!-- RIGHT -->
 <div class="right">
-<h3>🔍 Wi‑Fi Search</h3>
-<input id="search" placeholder="Search Wi‑Fi name" oninput="filterWifi()">
-<button onclick="countdown()">SYSTEM BREACH</button>
+<h3>🧠 SYSTEM STATUS</h3>
+<p>Neural Engine: ONLINE</p>
+<p>Exploit Tree: LOADED</p>
+<p>Trace Level: ZERO</p>
+<p class="warn">⚠ Simulation Mode Active</p>
 </div>
 
 </div>
 
 <script>
-const terminal = document.getElementById("terminal");
-const loader = document.getElementById("loader");
-const wifiList = document.getElementById("wifiList");
-
-/* STORED WIFI DATA */
-const networks = [
-    { name: "HOME_NET_5G", pass: "x9kT2pQ1" },
-    { name: "CITY_PUBLIC_WIFI", pass: "8F4dA22Q" },
-    { name: "BANK_SECURE_AP", pass: "BNK-9921" },
-    { name: "PRIVATE_OFFICE", pass: "PRV-771A" }
-];
-
-/* RENDER WIFI */
-function render(list) {
-    wifiList.innerHTML = "";
-    list.forEach(n => {
-        wifiList.innerHTML += `
-            <div class="wifi" onclick="hack('${n.name}','${n.pass}')">
-                ${n.name}<br>
-                <span class="pass">KEY: ${n.pass}</span>
-            </div>
-        `;
+/* MATRIX */
+const canvas = document.getElementById("matrix");
+const ctx = canvas.getContext("2d");
+canvas.width = innerWidth;
+canvas.height = innerHeight;
+const chars = "01";
+const size = 14;
+const cols = canvas.width / size;
+const drops = Array(cols).fill(1);
+setInterval(()=>{
+    ctx.fillStyle="rgba(0,0,0,0.05)";
+    ctx.fillRect(0,0,canvas.width,canvas.height);
+    ctx.fillStyle="#00ff55";
+    ctx.font=size+"px monospace";
+    drops.forEach((y,i)=>{
+        ctx.fillText(chars[Math.random()>0.5?1:0],i*size,y*size);
+        drops[i]=y*size>canvas.height&&Math.random()>0.975?0:y+1;
     });
-}
-render(networks);
+},33);
 
-/* SEARCH */
-function filterWifi() {
-    const q = document.getElementById("search").value.toLowerCase();
-    render(networks.filter(n => n.name.toLowerCase().includes(q)));
-}
+/* TERMINAL */
+const term = document.getElementById("terminal");
+const cmd = document.getElementById("cmd");
 
-/* TERMINAL LOG */
-function log(msg, cls="info") {
-    terminal.innerHTML += `<div class="${cls}">${msg}</div>`;
-    terminal.scrollTop = terminal.scrollHeight;
+function log(t,c="info"){
+    term.innerHTML += `<div class="${c}">${t}</div>`;
+    term.scrollTop = term.scrollHeight;
 }
 
-/* CLICK WIFI */
-function hack(name, pass) {
-    loader.style.display = "block";
-    log("TARGET LOCKED → " + name, "warn");
+cmd.addEventListener("keydown",e=>{
+    if(e.key==="Enter"){
+        const v = cmd.value.trim().toLowerCase();
+        log("bru@techgod:~$ "+v,"warn");
+        cmd.value="";
+        run(v);
+    }
+});
 
-    const steps = [
-        "Scanning channels...",
-        "Capturing handshake...",
-        "Bypassing encryption...",
-        "Injecting exploit tree...",
-        "Decrypting credentials..."
-    ];
-
-    steps.forEach((s,i)=>{
-        setTimeout(()=>log(s,"info"), i*600);
-    });
-
-    setTimeout(()=>{
-        loader.style.display = "none";
-        log("ACCESS GRANTED", "good");
-        log("PASSWORD → " + pass, "bad");
-    }, 3500);
-}
-
-/* COUNTDOWN */
-function countdown() {
-    let i = 10;
-    const c = setInterval(()=>{
-        log("SYSTEM BREACH IN " + i, "bad");
-        i--;
-        if (i < 0) {
-            clearInterval(c);
-            log("🔥 SYSTEM OVERRIDDEN 🔥", "good");
-        }
-    }, 800);
+function run(v){
+    if(v==="help"){
+        log("AVAILABLE COMMANDS:","good");
+        log("scan   → scan all targets");
+        log("breach → simulate system breach");
+        log("status → system status");
+    }
+    else if(v==="scan"){
+        ["Scanning networks…","Banks detected…","Agencies responding…","Web nodes mapped…"]
+        .forEach((s,i)=>setTimeout(()=>log(s),i*600));
+    }
+    else if(v==="breach"){
+        let i=5;
+        const c=setInterval(()=>{
+            log("SIMULATED BREACH IN "+i,"bad");
+            i--;
+            if(i<0){
+                clearInterval(c);
+                log("⚠ SYSTEM OVERRIDDEN (SIMULATION)","good");
+            }
+        },700);
+    }
+    else if(v==="status"){
+        log("All systems operational.","good");
+    }
+    else{
+        log("Unknown command. Type help.","bad");
+    }
 }
 </script>
 
