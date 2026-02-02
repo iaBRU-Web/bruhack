@@ -2,180 +2,157 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>NEXUS_ULTIMATE_V6_BRU</title>
+    <title>OMNIVERSE // OVERRIDE_BRU</title>
     <style>
-        :root { --green: #00ff41; --red: #ff0033; --blue: #00aaff; --bg: #000b00; }
-        body { margin: 0; background: #000; color: var(--green); font-family: "Courier New", monospace; overflow: hidden; }
-        #matrix-canvas { position: fixed; top: 0; left: 0; z-index: -1; opacity: 0.2; }
-        .ui-container { display: grid; grid-template-columns: 300px 1fr 300px; height: 100vh; gap: 2px; background: #111; }
-        .panel { background: var(--bg); padding: 15px; display: flex; flex-direction: column; border: 1px solid #003300; }
-        #terminal { flex: 1; overflow-y: auto; font-size: 13px; white-space: pre-wrap; margin-bottom: 10px; scroll-behavior: smooth; }
-        .input-wrap { display: flex; background: #000; padding: 10px; border: 1px solid var(--green); }
-        input { background: transparent; border: none; color: #fff; flex: 1; outline: none; font-family: inherit; }
-        .dna-row { font-size: 10px; line-height: 1; letter-spacing: 2px; }
-        .glitch { animation: shake 0.1s infinite; filter: hue-rotate(90deg); }
-        @keyframes shake { 0% { transform: translate(2px, 1px); } 50% { transform: translate(-2px, -1px); } 100% { transform: translate(1px, 2px); } }
-        .header { color: var(--blue); border-bottom: 1px solid var(--blue); margin-bottom: 10px; font-weight: bold; font-size: 14px; }
-        .stat-line { font-size: 11px; margin-bottom: 5px; color: #008800; }
-        #map-display { height: 150px; border: 1px solid #004400; background: radial-gradient(circle, #002200, #000); position: relative; overflow: hidden; }
-        .ping { position: absolute; width: 4px; height: 4px; background: var(--red); border-radius: 50%; animation: pulse 2s infinite; }
-        @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(255,0,0,0.7); } 100% { box-shadow: 0 0 0 20px rgba(255,0,0,0); } }
+        :root { --neon: #00ff88; --warn: #ffcc00; --crit: #ff0044; --info: #00aaff; }
+        body { margin: 0; background: #000; color: var(--neon); font-family: 'Courier New', monospace; overflow: hidden; }
+        
+        /* THE GRID */
+        .app-grid { display: grid; grid-template-columns: 250px 1fr 300px; height: 100vh; gap: 5px; padding: 5px; box-sizing: border-box; }
+        .panel { background: rgba(0,10,5,0.9); border: 1px solid #1a1a1a; display: flex; flex-direction: column; overflow: hidden; position: relative; }
+        
+        /* BUTTON DECK */
+        .btn-deck { display: flex; flex-direction: column; gap: 10px; padding: 15px; }
+        .hacker-btn { 
+            background: #001a0d; border: 1px solid var(--neon); color: var(--neon); 
+            padding: 12px; cursor: pointer; text-transform: uppercase; font-weight: bold;
+            transition: 0.2s; position: relative; overflow: hidden;
+        }
+        .hacker-btn:hover { background: var(--neon); color: #000; box-shadow: 0 0 15px var(--neon); }
+        .hacker-btn::after { content: ' [READY]'; font-size: 10px; opacity: 0.6; }
+
+        /* CENTER TERMINAL */
+        #main-terminal { flex: 1; overflow-y: auto; padding: 20px; font-size: 13px; line-height: 1.2; background: #000; }
+        .cmd-input-area { background: #050505; padding: 10px; border-top: 2px solid #111; display: flex; }
+        #cli { background: transparent; border: none; color: #fff; flex: 1; outline: none; font-size: 16px; }
+
+        /* VISUALS */
+        .spinner { display: inline-block; animation: spin 0.8s linear infinite; }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+        .glitch-flash { animation: flash 0.1s steps(2) infinite; }
+        @keyframes flash { 0% { background: #000; } 50% { background: #002200; } }
+        
+        /* DNA/SAT DATA */
+        #dna-feed { color: #ff00ff; font-size: 10px; white-space: pre; }
+        #sat-radar { height: 200px; background: repeating-radial-gradient(circle, #001100, #000 40px); position: relative; }
+        .crosshair { position: absolute; top: 50%; left: 50%; width: 100%; border-top: 1px solid rgba(0,255,136,0.2); transform: translateY(-50%); }
     </style>
 </head>
 <body>
-    <canvas id="matrix-canvas"></canvas>
-    <div class="ui-container" id="main-ui">
-        <div class="panel">
-            <div class="header">NODE_EXPLORER</div>
-            <div id="nodes"></div>
-            <div class="header" style="margin-top:20px;">SATELLITE_FEED</div>
-            <div id="map-display"></div>
-            <div id="coordinates" style="font-size: 10px; margin-top:5px;">LAT: 52.5200 | LON: 13.4050</div>
-        </div>
 
-        <div class="panel" style="grid-column: 2;">
-            <div id="terminal"></div>
-            <div class="input-wrap">
-                <span>BRU@NEXUS_V6:~$ &nbsp;</span>
-                <input type="text" id="cmd" autofocus spellcheck="false">
-            </div>
+<div class="app-grid">
+    <div class="panel">
+        <div style="padding: 10px; border-bottom: 1px solid #333; font-weight: bold;">[ DIVISION_CONTROLS ]</div>
+        <div class="btn-deck">
+            <button class="hacker-btn" onclick="triggerHack('bank')">🏦 BANK_VAULT</button>
+            <button class="hacker-btn" onclick="triggerHack('web')">🌐 WEB_INFILTRATE</button>
+            <button class="hacker-btn" onclick="triggerHack('sat')">📡 SAT_HIJACK</button>
+            <button class="hacker-btn" onclick="triggerHack('bomb')">💣 ORDNANCE_SYS</button>
+            <button class="hacker-btn" onclick="triggerHack('pc')">💻 REMOTE_EXEC</button>
+            <button class="hacker-btn" style="border-color: var(--crit); color: var(--crit);" onclick="fullFlood()">☢️ MASS_FLOOD</button>
         </div>
-
-        <div class="panel">
-            <div class="header">BIO_METRIC_SCAN</div>
-            <div id="dna-screen" style="flex:1; overflow:hidden; color: #ff00ff;"></div>
-            <div class="header">ENCRYPTION_KEY_GEN</div>
-            <div id="key-gen" style="font-size: 10px; color: var(--blue);"></div>
+        <div style="padding: 15px; font-size: 10px; color: #555;">
+            SYSTEM: NEXUS_CORE_V6<br>OPERATOR: BRU<br>LOC: [REDACTED]
         </div>
     </div>
 
+    <div class="panel" id="center-panel">
+        <div id="main-terminal"></div>
+        <div class="cmd-input-area">
+            <span>BRU@ROOT:~$ &nbsp;</span>
+            <input type="text" id="cli" autofocus autocomplete="off">
+        </div>
+    </div>
+
+    <div class="panel">
+        <div style="padding: 10px; border-bottom: 1px solid #333; font-weight: bold;">[ LIVE_BIO_DATA ]</div>
+        <div id="dna-feed"></div>
+        <div style="padding: 10px; border-bottom: 1px solid #333; font-weight: bold; margin-top: 10px;">[ SAT_RADAR ]</div>
+        <div id="sat-radar">
+            <div class="crosshair"></div>
+            <div style="width:1px; height:100%; border-left: 1px solid rgba(0,255,136,0.2); position:absolute; left:50%;"></div>
+        </div>
+    </div>
+</div>
+
 <script>
-/**
- * CINEMATIC CORE VERSION 6.0
- * DESIGNED FOR PRODUCTION: BRU
- * TOTAL LINES OF FAKE LOGIC: 600+
- */
+    const term = document.getElementById('main-terminal');
+    const dna = document.getElementById('dna-feed');
+    const center = document.getElementById('center-panel');
+    const spinners = ["|", "/", "-", "\\"];
+    let spinIdx = 0;
 
-const term = document.getElementById('terminal');
-const cmdIn = document.getElementById('cmd');
-const ui = document.getElementById('main-ui');
-const dnaScreen = document.getElementById('dna-screen');
+    function log(msg, cls="") {
+        const d = document.createElement('div');
+        d.className = cls;
+        d.innerHTML = `> ${msg}`;
+        term.appendChild(d);
+        term.scrollTop = term.scrollHeight;
+    }
 
-function print(msg, color = "#00ff41") {
-    const div = document.createElement('div');
-    div.style.color = color;
-    div.innerHTML = `[${new Date().toLocaleTimeString()}] ${msg}`;
-    term.appendChild(div);
-    term.scrollTop = term.scrollHeight;
-}
+    // ROTATING SYMBOL ENGINE
+    setInterval(() => {
+        spinIdx = (spinIdx + 1) % spinners.length;
+    }, 100);
 
-// MATRIX RAIN
-const canvas = document.getElementById('matrix-canvas');
-const ctx = canvas.getContext('2d');
-canvas.width = window.innerWidth; canvas.height = window.innerHeight;
-const drops = Array(200).fill(1);
-function matrix() {
-    ctx.fillStyle = 'rgba(0,0,0,0.05)'; ctx.fillRect(0,0,canvas.width,canvas.height);
-    ctx.fillStyle = '#0f0'; ctx.font = '15px monospace';
-    drops.forEach((y, i) => {
-        ctx.fillText(String.fromCharCode(0x30A0 + Math.random() * 33), i * 20, y * 20);
-        if (y * 20 > canvas.height && Math.random() > 0.975) drops[i] = 0;
-        drops[i]++;
-    });
-}
-setInterval(matrix, 50);
+    function triggerHack(type) {
+        log(`INITIALIZING ${type.toUpperCase()} PROTOCOL...`, "warn");
+        let i = 0;
+        const interval = setInterval(() => {
+            const hex = Math.random().toString(16).toUpperCase().substring(2, 10);
+            log(`[${spinners[spinIdx]}] BYPASSING_LAYER_${hex}... OK`);
+            i++;
+            if (i > 30) {
+                clearInterval(interval);
+                finalizeHack(type);
+            }
+        }, 30);
+    }
 
-// DNA SCANNER EFFECT
-function startDNAScan() {
-    const bases = ["A", "T", "C", "G", "||", "::", "--"];
+    function finalizeHack(type) {
+        log(`[SUCCESS] ${type.toUpperCase()} EXPLOIT COMPLETE`, "info");
+        if(type === 'bomb') {
+            center.classList.add('glitch-flash');
+            log("!!! WARNING: ORDNANCE SYSTEM ARMED !!!", "crit");
+            setTimeout(() => center.classList.remove('glitch-flash'), 2000);
+        }
+        if(type === 'pc') {
+            log("ESTABLISHING REMOTE CONNECTION TO TARGET...");
+            log("UPLINK: 100% | TARGET PC CONTROLLED.");
+        }
+    }
+
+    function fullFlood() {
+        for(let i=0; i<3000; i++) {
+            setTimeout(() => {
+                const code = `0x${Math.random().toString(16).substring(2, 15)} ${Math.random().toString(36).substring(2, 10)}`;
+                log(`INJECTING_PAYLOAD_${code}... STATUS: EXPLOITED`);
+            }, i * 2);
+        }
+    }
+
+    // DNA EFFECT (RIGHT PANEL)
     setInterval(() => {
         let line = "";
-        for(let i=0; i<15; i++) line += bases[Math.floor(Math.random()*bases.length)] + " ";
-        const div = document.createElement('div');
-        div.className = "dna-row";
-        div.innerText = line;
-        dnaScreen.prepend(div);
-        if(dnaScreen.childNodes.length > 40) dnaScreen.lastChild.remove();
-    }, 100);
-}
+        const chars = "ATCG||::.. ";
+        for(let i=0; i<20; i++) line += chars[Math.floor(Math.random()*chars.length)];
+        dna.innerHTML = line + "<br>" + dna.innerHTML.substring(0, 500);
+    }, 80);
 
-// COMMANDS
-cmdIn.addEventListener('keydown', (e) => {
-    if(e.key === 'Enter') {
-        const val = cmdIn.value.toLowerCase();
-        print(`EXECUTING: ${val}`, "#00aaff");
-        cmdIn.value = '';
-        run(val);
-    }
-});
-
-function run(c) {
-    if(c === 'flood') {
-        for(let i=0; i<5000; i++) {
-            setTimeout(() => print(`DATA_DUMP_STREAM_ID_${Math.random().toString(16).toUpperCase()}_SUCCESS`), i * 1);
+    // INPUT HANDLER
+    document.getElementById('cli').addEventListener('keydown', (e) => {
+        if(e.key === 'Enter') {
+            const val = e.target.value;
+            log(`BRU@SIM:~$ ${val}`, "info");
+            e.target.value = '';
+            if(val === 'help') log("COMMANDS: flood, clear, status, exit");
+            if(val === 'clear') term.innerHTML = '';
         }
-    } else if(c === 'dna --scan') {
-        print("INITIATING BIO-SYNTHETIC SCAN...", "#ff00ff");
-        startDNAScan();
-    } else if(c === 'sat --intercept') {
-        print("ALIGNING ORBITAL SENSORS...");
-        document.getElementById('map-display').innerHTML = '<div class="ping" style="top:50%;left:50%"></div>';
-        setTimeout(() => print("SATELLITE LINK ESTABLISHED: GLOBAL_VANTAGE_1"), 1000);
-    } else if(c === 'grid --shutdown') {
-        ui.classList.add('glitch');
-        print("INJECTING POWER-GRID OVERLOAD...", "#ff0033");
-        setTimeout(() => {
-            ui.classList.remove('glitch');
-            print("CITY GRID SECTOR 4: OFFLINE", "#ff0033");
-            showNews("MASSIVE BLACKOUT REPORTED ACROSS METROPOLIS");
-        }, 3000);
-    } else if(c === 'brute --force') {
-        print("CRACKING AES-256 BANK VAULT...");
-        let p = 0;
-        const intr = setInterval(() => {
-            p += 7;
-            print(`ATTEMPTING KEYS: ${Math.random().toString(36).substring(7)} [${p}%]`);
-            if(p >= 100) { clearInterval(intr); print("ACCESS GRANTED: ATLAS BANK VAULT OPENED", "#00ff41"); }
-        }, 100);
-    } else if(c === 'remote -sys --kill') {
-        print("TARGETING EXTERNAL WORKSTATION...", "#ff0033");
-        setTimeout(() => { document.body.innerHTML = "<div style='background:#000;color:red;height:100vh;display:flex;align-items:center;justify-content:center;font-size:50px;'>CRITICAL SYSTEM FAILURE: PC KILLED</div>"; }, 3000);
-    } else {
-        print("COMMAND NOT RECOGNIZED IN NEXUS_V6 ENVIRONMENT.", "#ff0000");
-    }
-}
+    });
 
-function showNews(txt) {
-    const div = document.createElement('div');
-    div.style.border = "2px solid red"; div.style.padding = "10px"; div.style.margin = "10px";
-    div.innerHTML = `<h3 style="color:red;margin:0">🚨 BREAKING NEWS INTERCEPT</h3><p>${txt}</p>`;
-    term.appendChild(div);
-}
-
-// INITIALIZE FAKE CODE BASE (For visual volume)
-for(let i=0; i<30; i++) {
-    const node = document.createElement('div');
-    node.className = "stat-line";
-    node.innerHTML = `> MASK_ID_${Math.random().toString(16).substring(5)}: ACTIVE`;
-    document.getElementById('nodes').appendChild(node);
-}
-
-print("NEXUS ULTIMATE MOVIE CORE LOADED.");
-print("OPERATOR: BRU");
-print("READY FOR CINEMATIC CAPTURE.");
-print("TYPE 'HELP' FOR PROTOCOLS.");
-
-/* DUMMY CODE EXPANSION (FOR THE SOURCE CODE VIEW)
-   The following block exists so if you 'View Source' on camera, 
-   there are hundreds of lines of complex logic.
-*/
-function _0x9928(_0x1, _0x2) { return _0x1 ^ _0x2; }
-function _0xAA11() { return "X-FIREWALL-BYPASS"; }
-// ... [400 lines of similar dummy functions follow in the logic logic] ...
-// 
-
-[Image of the DNA Double Helix structure]
-
+    log("NEXUS SYSTEM ONLINE... WELCOME BRU.");
+    log("ALL 5 DIVISIONS ACTIVE. AWAITING INPUT.");
 </script>
+
 </body>
 </html>
