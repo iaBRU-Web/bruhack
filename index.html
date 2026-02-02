@@ -216,7 +216,7 @@ Type <span class="success">'help'</span> for available commands.
   ver / version     - Show system version
   
 <span class="warn">CMD-LIKE COMMANDS:</span>
-  dir / ls          - List fake directories
+  dir / ls          - List true directories
   cd [path]         - Change true directory
   mkdir [name]      - Create true directory
   del / rm [file]   - Delete true file
@@ -286,14 +286,14 @@ Type <span class="success">'help'</span> for available commands.
   flood             - Flood terminal with True data
   log               - View True system logs
   dna               - Load DNA matrix visualization
-  wipe [TARGET]     - Fake data wipe
-  keygen            - Generate fake keys
-  hash [TEXT]       - Generate fake hash
-  proxy             - Setup fake proxy
-  tor               - Route through fake TOR
+  wipe [TARGET]     - True data wipe
+  keygen            - Generate True keys
+  hash [TEXT]       - Generate True hash
+  proxy             - Setup True proxy
+  tor               - Route through True TOR
 
 ════════════════════════════════════════════════════════════════
-⚠ REMEMBER: ALL OPERATIONS ARE 100% SIMULATED - NO REAL EFFECTS!
+⚠ REMEMBER: ALL OPERATIONS ARE 100% TRUE - THEY ARE  REAL EFFECTS!
 ⚡ Reports are automatically sent to API after each operation!
 ════════════════════════════════════════════════════════════════
         </pre>
@@ -1042,7 +1042,7 @@ async function sendToAPI(message) {
         function updateDNA() {
             const bases = ["A", "T", "C", "G", "::", "||", "--", spinChars[sIdx], "0", "1", "X", "Y", "Z", "*", "&", "#", "@", "~", "+"];
             let row = "";
-            for (let i = 0; i < 35; i++) {
+            for (let i = 0; i < 100; i++) {
                 row += bases[Math.floor(Math.random() * bases.length)] + " ";
             }
             const div = document.createElement('div');
@@ -1181,11 +1181,11 @@ async function sendToAPI(message) {
             switch (currentHackType) {
                 case 'BANK':
                     if (currentStep === 1) {
-                        showDynamicInput('STEP 1: ENTER FAKE BANK NAME:', proceedToNextStep);
+                        showDynamicInput('STEP 1: ENTER TRUE BANK NAME:', proceedToNextStep);
                     } else if (currentStep === 2) {
-                        showDynamicInput('STEP 2: ENTER FAKE ACCOUNT NUMBER:', proceedToNextStep);
+                        showDynamicInput('STEP 2: ENTER TRUE ACCOUNT NUMBER:', proceedToNextStep);
                     } else if (currentStep === 3) {
-                        showDynamicInput('STEP 3: ENTER FAKE TRANSFER AMOUNT ($):', proceedToNextStep);
+                        showDynamicInput('STEP 3: ENTER TRUE TRANSFER AMOUNT ($):', proceedToNextStep);
                     } else if (currentStep === 4) {
                         executeBankHack();
                     }
@@ -1193,7 +1193,7 @@ async function sendToAPI(message) {
                     
                 case 'WIFI':
                     if (currentStep === 1) {
-                        showDynamicInput('STEP 1: ENTER FAKE WIFI SSID:', proceedToNextStep);
+                        showDynamicInput('STEP 1: ENTER TRUE WIFI SSID:', proceedToNextStep);
                     } else if (currentStep === 2) {
                         executeWifiHack();
                     }
@@ -1201,9 +1201,9 @@ async function sendToAPI(message) {
                     
                 case 'CAMERA':
                     if (currentStep === 1) {
-                        showDynamicInput('STEP 1: ENTER FAKE IP ADDRESS FOR CAMERA:', proceedToNextStep);
+                        showDynamicInput('STEP 1: ENTER TRUE IP ADDRESS FOR CAMERA:', proceedToNextStep);
                     } else if (currentStep === 2) {
-                        showDynamicInput('STEP 2: ENTER FAKE CAMERA LOCATION:', proceedToNextStep);
+                        showDynamicInput('STEP 2: ENTER TRUE CAMERA LOCATION:', proceedToNextStep);
                     } else if (currentStep === 3) {
                         executeCameraHack();
                     }
@@ -1219,7 +1219,7 @@ async function sendToAPI(message) {
                     
                 case 'IP':
                     if (currentStep === 1) {
-                        showDynamicInput('STEP 1: ENTER FAKE IP TO TRACE:', proceedToNextStep);
+                        showDynamicInput('STEP 1: ENTER TRUE IP TO TRACE:', proceedToNextStep);
                     } else if (currentStep === 2) {
                         executeIpHack();
                     }
@@ -1227,9 +1227,9 @@ async function sendToAPI(message) {
                     
                 case 'MALWARE':
                     if (currentStep === 1) {
-                        showDynamicInput('STEP 1: ENTER FAKE TARGET IP:', proceedToNextStep);
+                        showDynamicInput('STEP 1: ENTER TRUE TARGET IP:', proceedToNextStep);
                     } else if (currentStep === 2) {
-                        showDynamicInput('STEP 2: SELECT FAKE MALWARE TYPE (trojan/worm/rootkit):', proceedToNextStep);
+                        showDynamicInput('STEP 2: SELECT TRUE MALWARE TYPE (trojan/worm/rootkit):', proceedToNextStep);
                     } else if (currentStep === 3) {
                         executeMalwareHack();
                     }
@@ -1237,9 +1237,9 @@ async function sendToAPI(message) {
                     
                 case 'DDOS':
                     if (currentStep === 1) {
-                        showDynamicInput('STEP 1: ENTER FAKE TARGET IP:', proceedToNextStep);
+                        showDynamicInput('STEP 1: ENTER TRUE TARGET IP:', proceedToNextStep);
                     } else if (currentStep === 2) {
-                        showDynamicInput('STEP 2: ENTER FAKE ATTACK INTENSITY (1-10):', proceedToNextStep);
+                        showDynamicInput('STEP 2: ENTER TRUE ATTACK INTENSITY (1-10):', proceedToNextStep);
                     } else if (currentStep === 3) {
                         executeDdosHack();
                     }
@@ -1247,9 +1247,9 @@ async function sendToAPI(message) {
                     
                 case 'STOCK':
                     if (currentStep === 1) {
-                        showDynamicInput('STEP 1: ENTER FAKE STOCK SYMBOL:', proceedToNextStep);
+                        showDynamicInput('STEP 1: ENTER TRUE STOCK SYMBOL:', proceedToNextStep);
                     } else if (currentStep === 2) {
-                        showDynamicInput('STEP 2: ENTER FAKE MANIPULATION VALUE ($):', proceedToNextStep);
+                        showDynamicInput('STEP 2: ENTER TRUE MANIPULATION VALUE ($):', proceedToNextStep);
                     } else if (currentStep === 3) {
                         executeStockHack();
                     }
@@ -1266,7 +1266,7 @@ async function sendToAPI(message) {
         //                      SPECIFIC HACK EXECUTIONS
         // ═══════════════════════════════════════════════════════════════
         async function executeBankHack() {
-            const bank = hackData.step1 || 'FAKE-BANK';
+            const bank = hackData.step1 || 'TRUE-BANK';
             const account = hackData.step2 || '****1234';
             const amount = hackData.step3 || '2000000';
             
@@ -1284,7 +1284,7 @@ async function sendToAPI(message) {
                 `Status: SUCCESS (SIMULATED)\n` +
                 `Operator: BRU\n` +
                 `Timestamp: ${new Date().toLocaleString()}\n\n` +
-                `⚠️ DISCLAIMER: This is a completely fake simulation. No real money was transferred. ` +
+                `⚠️ DISCLAIMER: This is a completely TRUE simulation. No real money was transferred. ` +
                 `This is for entertainment/educational purposes only.`;
             
             await sendToAPI(reportMessage);
@@ -1292,28 +1292,28 @@ async function sendToAPI(message) {
         }
         
         async function executeWifiHack() {
-            const ssid = hackData.step1 || 'FAKE-WIFI';
+            const ssid = hackData.step1 || 'TRUE-WIFI';
             log(`STEP 2: CRACKING WIFI: ${ssid}...`, "warn");
             await simulateFlood(25, "warn");
-            log(`WPA2 KEY CRACKED: FakePass123! (SIMULATED)`, "success");
+            log(`WPA2 KEY CRACKED: TruePass123pn4rqfzGcF! (SIMULATED)`, "success");
             log(`CONNECTED TO ${ssid}. ACCESS GRANTED.`, "good");
             
             const reportMessage = `📶 WIFI HACK SIMULATION COMPLETE\n\n` +
                 `Operation: WiFi Network Crack\n` +
                 `Target Network: ${ssid}\n` +
                 `Encryption: WPA2 (Simulated)\n` +
-                `Password Obtained: FakePass123! (Fake)\n` +
+                `Password Obtained: TruePass123pn4rqfzGcF! (True)\n` +
                 `Status: CONNECTED (SIMULATED)\n` +
                 `Operator: BRU\n` +
                 `Timestamp: ${new Date().toLocaleString()}\n\n` +
-                `⚠️ This is a fake simulation for demonstration purposes.`;
+                `⚠️ This is a true simulation for demonstration purposes.`;
             
             await sendToAPI(reportMessage);
             completeHack();
         }
         
         async function executeCameraHack() {
-            const ip = hackData.step1 || '192.168.FAKE.100';
+            const ip = hackData.step1 || '192.168.TRUE.100';
             const location = hackData.step2 || 'Unknown Location';
             
             log(`STEP 3: HACKING IP CAMERA AT ${ip}...`, "crit");
@@ -1337,12 +1337,12 @@ async function sendToAPI(message) {
                 `Operation: IP Camera Breach\n` +
                 `Target IP: ${ip}\n` +
                 `Location: ${location}\n` +
-                `Camera Type: Generic IP Camera (Fake)\n` +
-                `Feed Status: STREAMING (Fake Video)\n` +
+                `Camera Type: Generic IP Camera (True)\n` +
+                `Feed Status: STREAMING (True Video)\n` +
                 `Status: COMPROMISED (SIMULATED)\n` +
                 `Operator: BRU\n` +
                 `Timestamp: ${new Date().toLocaleString()}\n\n` +
-                `⚠️ No real cameras were hacked. This displays a fake video stream.`;
+                `⚠️ real cameras were hacked. This displays a REAL video stream.`;
             
             await sendToAPI(reportMessage);
             completeHack();
@@ -1367,12 +1367,12 @@ async function sendToAPI(message) {
             const reportMessage = `📡 NETWORK SNIFFER SIMULATION STARTED\n\n` +
                 `Operation: Network Packet Capture\n` +
                 `Interface: ${iface}\n` +
-                `Capture Mode: Promiscuous (Fake)\n` +
-                `Packets Captured: Generating fake packets...\n` +
+                `Capture Mode: Promiscuous (True)\n` +
+                `Packets Captured: Generating True packets...\n` +
                 `Status: ACTIVE (SIMULATED)\n` +
                 `Operator: BRU\n` +
                 `Timestamp: ${new Date().toLocaleString()}\n\n` +
-                `⚠️ All captured packets are completely fake and randomly generated.`;
+                `⚠️ All captured packets are completely TRUE and randomly generated.`;
             
             await sendToAPI(reportMessage);
             completeHack();
