@@ -2,162 +2,438 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>OMNIVERSE // OVERRIDE_BRU_V7</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NEXUS_OMNIVERSE // SIMULATION_CORE_V12 // BRU_INTERFACE</title>
     <style>
-        :root { --neon: #00ff88; --warn: #ffcc00; --crit: #ff0044; --info: #00aaff; }
-        body { margin: 0; background: #000; color: var(--neon); font-family: 'Courier New', monospace; overflow: hidden; }
-        .app-grid { display: grid; grid-template-columns: 280px 1fr 300px; height: 100vh; gap: 5px; padding: 5px; box-sizing: border-box; }
-        .panel { background: rgba(0,10,5,0.9); border: 1px solid #1a1a1a; display: flex; flex-direction: column; overflow: hidden; }
-        .btn-deck { display: flex; flex-direction: column; gap: 8px; padding: 10px; overflow-y: auto; }
-        .hacker-btn { background: #001a0d; border: 1px solid var(--neon); color: var(--neon); padding: 10px; cursor: pointer; text-transform: uppercase; font-size: 11px; font-weight: bold; transition: 0.2s; }
-        .hacker-btn:hover { background: var(--neon); color: #000; box-shadow: 0 0 10px var(--neon); }
-        #main-terminal { flex: 1; overflow-y: auto; padding: 15px; font-size: 12px; line-height: 1.1; background: #000; border: 1px solid #111; }
-        .cmd-input-area { background: #050505; padding: 10px; border: 1px solid var(--neon); display: flex; margin-top: 5px; }
-        #cli { background: transparent; border: none; color: #fff; flex: 1; outline: none; font-size: 14px; }
-        .dna-feed { color: #ff00ff; font-size: 9px; line-height: 1; white-space: pre; overflow: hidden; }
-        .loading-bar { color: var(--warn); font-weight: bold; }
-        .success-flash { color: var(--info); font-weight: bold; animation: glow 1s infinite; }
-        @keyframes glow { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
-        /* SOURCE CODE VISUAL FILLER */
-        .source-filler { display: none; }
+        :root {
+            --neon-green: #00ff88;
+            --neon-blue: #00e5ff;
+            --neon-red: #ff0044;
+            --neon-purple: #ff00ff;
+            --warn-yellow: #ffcc00;
+            --bg-black: #000;
+            --panel-bg: rgba(0, 8, 4, 0.95);
+            --border-dark: #111;
+            --text-dim: #777;
+        }
+        body {
+            margin: 0;
+            background: var(--bg-black);
+            color: var(--neon-green);
+            font-family: 'Courier New', monospace;
+            overflow: hidden;
+        }
+        /* MATRIX RAIN BACKGROUND */
+        canvas#matrix {
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            opacity: 0.8;
+        }
+        /* GRID LAYOUT - Enhanced with more columns for sidebars */
+        .grid {
+            display: grid;
+            grid-template-columns: 250px 1fr 300px; /* Left: Divisions, Center: Terminal, Right: Search/Map/DNA */
+            height: 100vh;
+            gap: 4px;
+            padding: 4px;
+            box-sizing: border-box;
+            background: rgba(0,0,0,0.65);
+        }
+        .panel {
+            background: var(--panel-bg);
+            border: 1px solid var(--border-dark);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        /* LEFT PANEL: Hacking Divisions */
+        .left-panel {
+            padding: 10px;
+            border-right: 1px solid #022;
+        }
+        .left-panel h3 {
+            color: var(--neon-blue);
+            text-shadow: 0 0 5px var(--neon-blue);
+        }
+        .btn-deck {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .h-btn {
+            background: #001a0d;
+            border: 1px solid var(--neon-green);
+            color: var(--neon-green);
+            padding: 12px;
+            cursor: pointer;
+            text-transform: uppercase;
+            font-size: 11px;
+            font-weight: bold;
+            text-align: left;
+            transition: 0.3s;
+        }
+        .h-btn:hover {
+            background: var(--neon-green);
+            color: var(--bg-black);
+            box-shadow: 0 0 20px var(--neon-green);
+        }
+        .h-btn.red {
+            border-color: var(--neon-red);
+            color: var(--neon-red);
+        }
+        .h-btn.red:hover {
+            background: var(--neon-red);
+            color: var(--bg-black);
+            box-shadow: 0 0 20px var(--neon-red);
+        }
+        /* CENTER PANEL: Terminal */
+        #term {
+            flex: 1;
+            overflow-y: auto;
+            padding: 15px;
+            font-size: 12px;
+            line-height: 1.1;
+            background: var(--bg-black);
+            border: 1px solid #1a1a1a;
+        }
+        .input-box {
+            background: var(--bg-black);
+            border: 1px solid var(--neon-green);
+            padding: 10px;
+            display: flex;
+            margin-top: 4px;
+        }
+        #cli {
+            background: transparent;
+            border: none;
+            color: #fff;
+            flex: 1;
+            outline: none;
+            font-size: 14px;
+        }
+        /* RIGHT PANEL: Search Sidebar, DNA, Map */
+        .right-panel {
+            padding: 10px;
+            border-left: 1px solid #300;
+        }
+        .right-panel h3 {
+            color: var(--neon-red);
+            text-shadow: 0 0 5px var(--neon-red);
+        }
+        /* Search Bar */
+        .search-bar {
+            background: #001a0d;
+            border: 1px solid var(--neon-blue);
+            padding: 8px;
+            margin-bottom: 10px;
+        }
+        #search-input {
+            background: transparent;
+            border: none;
+            color: var(--neon-blue);
+            width: 100%;
+            outline: none;
+            font-size: 12px;
+        }
+        /* DNA Scroll */
+        .dna-header {
+            padding: 10px;
+            background: #110011;
+            color: var(--neon-purple);
+            font-weight: bold;
+            border-bottom: 1px solid var(--neon-purple);
+            text-align: center;
+        }
+        #dna-scroll {
+            flex: 1;
+            padding: 10px;
+            font-size: 10px;
+            line-height: 0.9;
+            color: var(--neon-purple);
+            overflow: hidden;
+            white-space: pre;
+            max-height: 150px;
+        }
+        /* Global Map */
+        .map {
+            height: 180px;
+            background: radial-gradient(circle, #022, #000);
+            position: relative;
+            margin-bottom: 10px;
+        }
+        .dot {
+            width: 8px;
+            height: 8px;
+            background: var(--neon-red);
+            border-radius: 50%;
+            position: absolute;
+            animation: blink 1s infinite;
+        }
+        @keyframes blink { 50% { opacity: 0.3; } }
+        /* Signal Bars */
+        .signal span {
+            display: inline-block;
+            width: 4px;
+            margin-right: 2px;
+            background: lime;
+            animation: pulse 1s infinite;
+        }
+        .signal span:nth-child(1){height:6px}
+        .signal span:nth-child(2){height:10px;animation-delay:.2s}
+        .signal span:nth-child(3){height:14px;animation-delay:.4s}
+        .signal span:nth-child(4){height:18px;animation-delay:.6s}
+        @keyframes pulse { 50% { opacity: 0.2; } }
+        /* Effects */
+        .glitch { animation: glitch 0.15s infinite; }
+        @keyframes glitch {
+            0% { transform: translate(0,0); }
+            50% { transform: translate(2px,-1px); }
+            100% { transform: translate(0,0); }
+        }
+        .shake { animation: shake 0.3s; }
+        @keyframes shake {
+            0% { transform: translate(0); }
+            25% { transform: translate(3px, -2px); }
+            50% { transform: translate(-3px, 2px); }
+            75% { transform: translate(2px, 1px); }
+        }
+        /* Log Colors */
+        .bank-txt { color: var(--neon-blue); font-weight: bold; text-shadow: 0 0 5px var(--neon-blue); }
+        .progress-bar { color: var(--warn-yellow); letter-spacing: 2px; }
+        .good { color: #00ff55; }
+        .bad { color: var(--neon-red); }
+        .warn { color: var(--warn-yellow); }
+        .info { color: var(--neon-blue); }
+        .dim { color: var(--text-dim); }
+        .success { color: var(--neon-green); }
+        .crit { color: var(--neon-red); }
     </style>
 </head>
 <body>
-
-<div class="app-grid">
-    <div class="panel">
-        <div style="padding: 10px; border-bottom: 1px solid #333; font-size: 12px;">[ 🛰️ OMNI_CONTROL ]</div>
-        <div class="btn-deck">
-            <button class="hacker-btn" onclick="initiateHack('WIFI')">📶 WIFI_SNIFFER</button>
-            <button class="hacker-btn" onclick="initiateHack('BANK')">🏦 BANK_OVERRIDE</button>
-            <button class="hacker-btn" onclick="initiateHack('SITE')">🌐 WEB_DEFACER</button>
-            <button class="hacker-btn" onclick="initiateHack('SAT')">📡 SAT_HIJACK</button>
-            <button class="hacker-btn" onclick="initiateHack('PC')">💻 REMOTE_KILL</button>
-            <button class="hacker-btn" style="border-color:var(--crit); color:var(--crit)" onclick="initiateHack('BOMB')">💣 ORDNANCE_SYS</button>
+    <canvas id="matrix"></canvas>
+    <div class="grid" id="ui">
+        <!-- LEFT PANEL: Hacking Divisions (Enhanced with more options) -->
+        <div class="panel left-panel">
+            <h3>[ HACKING_DIVISIONS_V12 ]</h3>
+            <div class="btn-deck">
+                <button class="h-btn" onclick="runHack('BANK')">🏦 INTERACTIVE BANK TRANSFER</button>
+                <button class="h-btn" onclick="runHack('WIFI')">📶 WIFI: NEXUS_NET_Alpha</button>
+                <button class="h-btn" onclick="runHack('SITE')">🌐 WEB: SHADOW_SITE_INFILTRATE</button>
+                <button class="h-btn" onclick="runHack('SAT')">📡 SAT: QUANTUM_ORBIT_LINK</button>
+                <button class="h-btn" onclick="runHack('PC')">💻 REMOTE: OVERLOAD_PC</button>
+                <button class="h-btn red" onclick="runHack('BOMB')">💣 ORDNANCE: SIM_DETONATE</button>
+                <button class="h-btn" onclick="runHack('AGENCY')">🕵️ AGENCY: COVERT_ACCESS</button>
+                <button class="h-btn" onclick="runHack('BIO')">🧬 BIO: GENOME_HACK</button>
+            </div>
         </div>
-        <div style="padding:10px; font-size:10px; color:#444;">
-            DICTIONARY: LOADED<br>BRUTE_FORCE: ENABLED<br>IP_SPOOF: ACTIVE
+        <!-- CENTER PANEL: Terminal -->
+        <div class="panel">
+            <div id="term">
+                SIMULATION CORE v12.0<br>
+                Operator: <span class="good">BRU</span><br>
+                Status: <span class="warn">FICTIONAL MODE ENABLED</span><br>
+                Type <span class="warn">help</span> for commands.<br><br>
+            </div>
+            <div class="input-box">
+                <span>BRU@ROOT:~$ &nbsp;</span>
+                <input type="text" id="cli" autofocus autocomplete="off">
+            </div>
+        </div>
+        <!-- RIGHT PANEL: Search Sidebar, DNA Scroll, Global Map -->
+        <div class="panel right-panel">
+            <h3>🔍 SEARCH SIDEBAR (SIM)</h3>
+            <div class="search-bar">
+                <input type="text" id="search-input" placeholder="Search Wi-Fi / Networks / Targets..." onkeydown="handleSearch(event)">
+            </div>
+            <div class="dna-header">🧬 BIO_SYNC_LOADER</div>
+            <div id="dna-scroll"></div>
+            <h3>🌍 GLOBAL MAP (SIM)</h3>
+            <div class="map">
+                <div class="dot" style="top:25%;left:20%"></div>
+                <div class="dot" style="top:50%;left:45%"></div>
+                <div class="dot" style="top:70%;left:65%"></div>
+                <div class="dot" style="top:40%;left:80%"></div>
+            </div>
+            <div class="dim">
+                ARCHIVED NEWS SIMULATION<br>
+                “Fictional breach detected in Sector Zeta. Training exercise ongoing.”
+            </div>
         </div>
     </div>
+    <script>
+        // MATRIX RAIN
+        const matrixCanvas = document.getElementById('matrix');
+        const ctx = matrixCanvas.getContext('2d');
+        matrixCanvas.width = window.innerWidth;
+        matrixCanvas.height = window.innerHeight;
+        const chars = "01▓▒░<>/{}[]$#NEXUSOMNIVERSEBRU";
+        const drops = Array(Math.floor(matrixCanvas.width / 10)).fill(1);
+        function drawMatrix() {
+            ctx.fillStyle = "rgba(0,0,0,0.08)";
+            ctx.fillRect(0, 0, matrixCanvas.width, matrixCanvas.height);
+            ctx.fillStyle = "#00ff88";
+            ctx.font = "10px monospace";
+            drops.forEach((y, i) => {
+                const text = chars[Math.floor(Math.random() * chars.length)];
+                ctx.fillText(text, i * 10, y * 10);
+                drops[i] = y * 10 > matrixCanvas.height || Math.random() > 0.95 ? 0 : y + 1;
+            });
+        }
+        setInterval(drawMatrix, 50);
 
-    <div class="panel">
-        <div id="main-terminal"></div>
-        <div class="cmd-input-area">
-            <span>BRU@NEXUS:~$ &nbsp;</span>
-            <input type="text" id="cli" autofocus autocomplete="off">
-        </div>
-    </div>
+        // TERMINAL ELEMENTS
+        const term = document.getElementById('term');
+        const cli = document.getElementById('cli');
+        const dnaScroll = document.getElementById('dna-scroll');
+        const ui = document.getElementById('ui');
+        const searchInput = document.getElementById('search-input');
+        const spinChars = ["|", "/", "-", "\\"];
+        let sIdx = 0;
+        setInterval(() => { sIdx = (sIdx + 1) % 4; }, 100);
 
-    <div class="panel">
-        <div style="padding: 10px; border-bottom: 1px solid #333; font-size: 12px;">[ 🧬 BIO_GENETIC_SEQ ]</div>
-        <div id="dna" class="dna-feed"></div>
-    </div>
-</div>
+        // DNA SCROLL UPDATE (Enhanced with more variety)
+        function updateDNA() {
+            const bases = ["A", "T", "C", "G", "::", "||", "--", spinChars[sIdx], "0", "1", "X", "Y", "Z"];
+            let row = "";
+            for (let i = 0; i < 25; i++) row += bases[Math.floor(Math.random() * bases.length)] + " ";
+            const div = document.createElement('div');
+            div.innerText = row;
+            dnaScroll.prepend(div);
+            if (dnaScroll.childNodes.length > 60) dnaScroll.lastChild.remove();
+        }
+        setInterval(updateDNA, 50);
 
-<script>
-/** * BRU_CORE_OS_V7 - 600+ LINES OF CINEMATIC LOGIC
- * INTEGRATED TARGET: canal-box-6263-2g
- * INTEGRATED KEY: pn4rqfzGcF
- */
+        // LOG FUNCTION
+        function log(msg, cls = "") {
+            const d = document.createElement('div');
+            d.className = cls;
+            d.innerHTML = `[${spinChars[sIdx]}] ${msg}`;
+            term.appendChild(d);
+            term.scrollTop = term.scrollHeight;
+        }
 
-const term = document.getElementById('main-terminal');
-const cli = document.getElementById('cli');
-const dnaBox = document.getElementById('dna');
-const spin = ["|", "/", "-", "\\"];
-let sIdx = 0;
+        // SIMULATED SLEEP
+        function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
 
-// Massive Database of Fictional Targets for Code Density
-const WIFI_DB = ["canal-box-6263-2g", "NETGEAR_GLOBAL_X", "TP-LINK_ALPHA", "SECURE_GOV_88", "HOTEL_FREE_WIFI"];
-const BANK_DB = ["ATLAS_PRIVATE", "SWISS_VAULT_9", "FEDERAL_RESERVE_SIM", "BIT-CORE_EXCHANGE"];
-const SITE_DB = ["global-news-sim.com", "central-intel.gov.sim", "darknet-market-v4.net"];
+        // SIMULATED FLOOD
+        async function simulateFlood(lines) {
+            for (let i = 0; i < lines; i++) {
+                await sleep(20);
+                log(`BYPASSING_LAYER_0x${Math.random().toString(16).toUpperCase().substring(2, 8)}... OK`, "info");
+            }
+        }
 
-function log(msg, cls="") {
-    const d = document.createElement('div');
-    d.className = cls;
-    d.innerHTML = `[${new Date().toLocaleTimeString()}] > ${msg}`;
-    term.appendChild(d);
-    term.scrollTop = term.scrollHeight;
-}
+        // ENHANCED HACK FUNCTIONS (All fake data for movie simulation)
+        async function runHack(type) {
+            ui.classList.add('glitch');
+            await sleep(300);
+            ui.classList.remove('glitch');
 
-// 1. ROTATOR SYMBOL ENGINE
-setInterval(() => { sIdx = (sIdx + 1) % 4; }, 100);
+            if (type === 'BANK') {
+                log("INITIATING SIMULATED BANK EXPLOIT...", "bank-txt");
+                await sleep(800);
+                const targetAcc = prompt("ENTER SIMULATED TARGET ACCOUNT (FAKE):") || "SIM-ACC-987654321";
+                const amount = prompt("ENTER SIMULATED TRANSFER AMOUNT ($):") || "1000000";
+                log(`CONNECTING TO FAKE SWIFT_RELAY... TARGET: [${targetAcc}] SIGNAL: 87%`, "bank-txt");
+                await simulateFlood(15);
+                log(`UPLINK SIMULATED. SENDING FAKE $${amount}... ENCRYPTION: AES-FAKE-256`, "warn");
+                for (let i = 0; i <= 100; i += 5) {
+                    await sleep(120);
+                    log(`STAGING PACKETS: [${'#'.repeat(i/5)}${'.'.repeat(20-i/5)}] ${i}% HASH: 0xFAKE${Math.random().toString(16).toUpperCase().substring(2,6)}`, "progress-bar");
+                }
+                log(`SIM SUCCESS: $${amount} TRANSFERRED TO FAKE ACCOUNT ${targetAcc}`, "success");
+                log("WIPING SIMULATED FOOTPRINT... COMPLETE.", "warn");
+            } else if (type === 'WIFI') {
+                log("SCANNING FAKE WI-FI: NEXUS_NET_Alpha SIGNAL: 92dB", "info");
+                await simulateFlood(10);
+                log("CRACKING SIM WPA3... KEY FOUND: FAKE-pn4rqfzGcF-FAKE", "success");
+            } else if (type === 'SITE') {
+                log("DEFACING SIM WEBSITE: SHADOW_SITE... INJECTING FAKE PAYLOAD", "warn");
+                await sleep(1000);
+                log("SIM ACCESS GRANTED. DATA EXTRACTED: FAKE-HASH-ABCD1234", "good");
+            } else if (type === 'SAT') {
+                log("LINKING TO FAKE SATELLITE: QUANTUM_ORBIT... LATENCY: 150ms", "info");
+                await simulateFlood(20);
+                log("ORBITAL SIM LINK ESTABLISHED. DOWNLOADING FAKE TELEMETRY.", "success");
+            } else if (type === 'PC') {
+                log("SENDING FAKE KERNEL OVERLOAD TO REMOTE PC...", "bad");
+                await sleep(1500);
+                log("SIM REMOTE SYSTEM DOWN. FAKE IP: 192.168.FAKE.99", "crit");
+            } else if (type === 'BOMB') {
+                ui.classList.add('shake');
+                log("!!! SIM THERMAL DETONATION ARMED !!! COUNTDOWN: 5s", "crit");
+                for (let i = 5; i > 0; i--) {
+                    await sleep(1000);
+                    log(`DETONATION IN ${i}...`, "bad");
+                }
+                log("FAKE DETONATION CONFIRMED IN SIM SECTOR 7. NO REAL IMPACT.", "crit");
+                ui.classList.remove('shake');
+            } else if (type === 'AGENCY') {
+                log("ACCESSING FAKE SECRET AGENCY GRID... CLEARANCE: LEVEL-OMEGA", "warn");
+                await simulateFlood(25);
+                log("SIM AGENCY DATA: FAKE-AGENT-ID-007, MISSION: SHADOW_OP", "good");
+            } else if (type === 'BIO') {
+                log("LOADING FAKE GENOME VAULT... SEQUENCE MATCH: 98.7%", "info");
+                await sleep(1000);
+                log("BIO SIM ALGORITHM STABILIZED. FAKE DNA HASH: GATC-FAKE-XYZ", "success");
+            }
+        }
 
-// 2. DNA SCROLLER (RIGHT PANEL)
-setInterval(() => {
-    let row = "";
-    const chars = "ATCG||::--.. ";
-    for(let i=0; i<25; i++) row += chars[Math.floor(Math.random()*chars.length)];
-    dnaBox.innerHTML = row + "<br>" + dnaBox.innerHTML.substring(0, 800);
-}, 50);
+        // CLI INPUT HANDLER
+        cli.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                const cmd = cli.value.toLowerCase();
+                log(`BRU@ROOT:~$ ${cmd}`, "success");
+                cli.value = '';
+                if (cmd === 'flood') simulateFlood(500);
+                else if (cmd === 'help') {
+                    log("[HELP] Available SIM Commands:");
+                    log("flood    → Simulate data flood");
+                    log("scan     → Analyze selected asset");
+                    log("dna      → Load fake genome algorithm");
+                    log("breach   → Trigger simulated incident");
+                    log("status   → Check sim system state");
+                } else if (cmd === 'scan') {
+                    log("Running fake scan... Targets locked: 4 nodes, Signal: 85%", "good");
+                } else if (cmd === 'dna') {
+                    log("Loading fake DNA matrix... Pattern: 100% stabilized", "info");
+                } else if (cmd === 'breach') {
+                    log("Initiating simulated breach... Alert level: HIGH", "bad");
+                } else if (cmd === 'status') {
+                    log("All modules in FICTIONAL simulation mode. No real systems affected.", "good");
+                } else {
+                    log("Unknown sim command. Try 'help'.", "bad");
+                }
+            }
+        });
 
-// 3. MAIN HACKING ENGINE
-async function initiateHack(type) {
-    log(`INITIALIZING ${type}_EXPLORER_V7...`, "loading-bar");
-    
-    // CODE RAIN
-    for(let i=0; i<40; i++) {
-        await new Promise(r => setTimeout(r, 20));
-        const hex = Math.random().toString(16).toUpperCase().substring(2, 10);
-        log(`[${spin[sIdx]}] SCANNING_MEMORY_BLOCK: 0x${hex}...`);
-    }
+        // SEARCH BAR HANDLER (Fake search results)
+        function handleSearch(e) {
+            if (e.key === 'Enter') {
+                const query = searchInput.value.toLowerCase();
+                log(`Searching SIM database for: ${query}`, "info");
+                searchInput.value = '';
+                // Fake results based on query
+                if (query.includes('wifi')) {
+                    log("FAKE WI-FI FOUND: Nexus_Net_Beta, Pass: SIM-FAKE-abc123, Strength: 95%", "good");
+                } else if (query.includes('bank')) {
+                    log("FAKE BANK NODE: Atlas_Sim_Bank, Account: SIM-123456, Balance: $FAKE-1M", "bank-txt");
+                } else if (query.includes('agency')) {
+                    log("FAKE AGENCY GRID: Orbital_Sim_Agency, Access: GRANTED, Files: 42 FAKE", "warn");
+                } else if (query.includes('sat')) {
+                    log("FAKE SAT LINK: Quantum_Sim_Sat, Orbit: GEO-FAKE, Signal: 88%", "info");
+                } else if (query.includes('site')) {
+                    log("FAKE WEBSITE SCAN: Shadow_Sim_Site, Vuln: FAKE-SQL-INJ, Data: Extracted", "success");
+                } else {
+                    log("No SIM matches. Refine query (e.g., wifi, bank, agency).", "bad");
+                }
+            }
+        }
 
-    if(type === 'WIFI') {
-        log("NETWORKS FOUND IN RANGE:");
-        WIFI_DB.forEach(n => log(`   - SSID: ${n} [SIGNAL: -45dBm]`, "info"));
-        log(`TARGETING: canal-box-6263-2g...`);
-        await simulateProgress(50);
-        log(`KEY FOUND: pn4rqfzGcF`, "success-flash");
-        log("CONNECTION ESTABLISHED. TUNNELING TRAFFIC...");
-    } else if(type === 'BANK') {
-        log(`TARGETING: ${BANK_DB[Math.floor(Math.random()*BANK_DB.length)]}...`);
-        await simulateProgress(80);
-        log("VAULT_ROOT_ACCESS: GRANTED", "success-flash");
-        log("TRANSFERRING SIMULATED CREDITS: $500,000,000.00");
-    } else if(type === 'BOMB') {
-        log("!!! EMERGENCY: ACCESSING WEAPONRY SYSTEM !!!", "crit");
-        await simulateProgress(100);
-        log("SYSTEM ARMED. DETONATION TIMER SET TO 00:30.", "crit");
-        showNews("CITIZENS ADVISED TO EVACUATE SECTOR 7 IMMEDIATELY.");
-    } else if(type === 'PC') {
-        log("SENDING SHUTDOWN PACKET TO REMOTE PC...");
-        await simulateProgress(30);
-        log("HARDWARE TERMINATED. NO SIGNAL.", "crit");
-    }
-}
-
-async function simulateProgress(lines) {
-    for(let i=0; i<lines; i++) {
-        await new Promise(r => setTimeout(r, 10));
-        const code = Math.random().toString(36).substring(2, 15);
-        log(`BRUTE_FORCE_ATTEMPT: ${code}... [FAILED]`);
-    }
-}
-
-function showNews(m) {
-    log("<div style='border:1px solid red; padding:5px;'>🔴 BREAKING: " + m + "</div>");
-}
-
-cli.addEventListener('keydown', (e) => {
-    if(e.key === 'Enter') {
-        const cmd = cli.value.toLowerCase();
-        log(`BRU@ROOT:~$ ${cmd}`, "info");
-        cli.value = '';
-        if(cmd === 'flood') initiateHack('WIFI');
-    }
-});
-
-log("OMNIVERSE_OVERRIDE_V7 [READY]");
-log("OPERATOR: BRU");
-log("TYPE 'HELP' OR USE BUTTON DECK.");
-
-/** * DUMMY SOURCE CODE BLOCKS 
- * (Ensures script is visually "long" if you scroll the code view)
- */
-function _0x8821(){ return "FAKE_PAYLOAD_A"; }
-function _0x8822(){ return "FAKE_PAYLOAD_B"; }
-function _0x8823(){ return "FAKE_PAYLOAD_C"; }
-// ... (Imagine 400 more lines of this below)
-const _0xFILL = Array(500).fill("DUMMY_DATA_NODE");
-</script>
+        // INITIAL LOGS
+        log("NEXUS_OMNIVERSE CORE V12 LOADED. INTERACTIVE_MODULES: ACTIVE.");
+        log("OPERATOR: BRU. SIMULATION AWAITING INPUT. ALL DATA FAKE FOR MOVIE USE.");
+    </script>
 </body>
 </html>
