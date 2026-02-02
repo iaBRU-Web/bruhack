@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NEXUS_OMNIVERSE // SIMULATION_CORE_V18 // BRU_INTERFACE</title>
+    <title>NEXUS_OMNIVERSE // SIMULATION_CORE_V19 // BRU_INTERFACE</title>
     <style>
         :root {
             --neon-green: #00ff88;
@@ -302,7 +302,7 @@
         .crit { color: var(--neon-red); }
         .orange-txt { color: var(--neon-orange); text-shadow: 0 0 5px var(--neon-orange); }
         .pink-txt { color: var(--neon-pink); text-shadow: 0 0 5px var(--neon-pink); }
-        /* Camera Overlay */
+        /* Camera Overlay - Enhanced with scan lines and static */
         #camera-overlay {
             position: fixed;
             top: 20%;
@@ -318,16 +318,45 @@
             padding: 20px;
             box-shadow: 0 0 40px var(--neon-red);
             animation: camera-scan 1s infinite;
+            overflow: hidden;
         }
-        @keyframes camera-scan {
-            0% { border-color: var(--neon-red); box-shadow: 0 0 10px var(--neon-red); }
-            50% { border-color: #ff6666; box-shadow: 0 0 30px #ff6666; }
-            100% { border-color: var(--neon-red); box-shadow: 0 0 10px var(--neon-red); }
+        #camera-overlay::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(to bottom, transparent 0, transparent 2px, rgba(255,255,255,0.05) 2px, rgba(255,255,255,0.05) 4px);
+            pointer-events: none;
+            animation: scan-lines 2s linear infinite;
+        }
+        @keyframes scan-lines {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-4px); }
+        }
+        #camera-overlay::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAABISURBVBhXY2BgYGBgAAALAAH3d7A3AAAAAElFTkSuQmCC') repeat;
+            opacity: 0.1;
+            pointer-events: none;
+            animation: static-noise 0.1s infinite;
+        }
+        @keyframes static-noise {
+            0% { opacity: 0.1; }
+            50% { opacity: 0.15; }
+            100% { opacity: 0.1; }
         }
         #camera-video {
             width: 100%;
             height: 80%;
             border: 1px solid var(--neon-green);
+            filter: contrast(120%) brightness(90%);
         }
         #close-camera {
             margin-top: 10px;
@@ -381,7 +410,7 @@
     <div class="grid" id="ui">
         <!-- LEFT PANEL: Hacking Divisions -->
         <div class="panel left-panel">
-            <h3>[ HACKING_DIVISIONS_V18 ]</h3>
+            <h3>[ HACKING_DIVISIONS_V19 ]</h3>
             <div class="btn-deck">
                 <button class="h-btn" onclick="initHack('BANK')">🏦 INTERACTIVE BANK TRANSFER</button>
                 <button class="h-btn" onclick="initHack('WIFI')">📶 WIFI: NETWORK_CRACK</button>
@@ -408,12 +437,16 @@
                 <button class="h-btn" onclick="initHack('IOT')">🏠 IOT: SMART_HOME_BREACH</button>
                 <button class="h-btn red" onclick="initHack('CAMERA')">📹 CAMERA: IP_CAM_HACK</button>
                 <button class="h-btn" onclick="initHack('IP')">🌐 IP: TRACE_AND_EXPLOIT</button>
+                <button class="h-btn pink" onclick="initHack('MALWARE')">🛡️ MALWARE: DEPLOY_FAKE</button>
+                <button class="h-btn pink" onclick="initHack('SPYWARE')">🔍 SPYWARE: INSTALL_SIM</button>
+                <button class="h-btn pink" onclick="initHack('ROOTKIT')">🛠️ ROOTKIT: SYSTEM_INFECT</button>
+                <button class="h-btn" onclick="initHack('BOTNET')">🤖 BOTNET: CONTROL_NET</button>
             </div>
         </div>
         <!-- CENTER PANEL: Terminal -->
         <div class="panel">
             <div id="term">
-                SIMULATION CORE v18.0<br>
+                SIMULATION CORE v19.0<br>
                 Operator: <span class="good">BRU</span><br>
                 Status: <span class="warn">FICTIONAL MODE ENABLED</span><br>
                 Type <span class="warn">help</span> for commands.<br><br>
@@ -529,6 +562,10 @@ ai_hack - Fake AI hack
 quantum_break - Fake quantum break
 drone_control - Fake drone control
 iot_breach - Fake IOT breach
+malware_deploy - Fake malware deploy
+spyware_install - Fake spyware install
+rootkit_infect - Fake rootkit infect
+botnet_control - Fake botnet control
 
 All commands are simulated - no real effects!
         </pre>
@@ -639,9 +676,8 @@ All commands are simulated - no real effects!
                 hackData[`step${currentStep - 1}`] = value;
                 log(`STEP ${currentStep - 1} INPUT: ${value} - PROCESSED.`, "info");
             }
-            // ... (Previous cases remain) ...
             switch (currentHackType) {
-                // ... (Existing cases) ...
+                // ... (Previous cases remain the same) ...
                 case 'CAMERA':
                     if (currentStep === 1) {
                         showDynamicInput('STEP 1: ENTER SIM IP ADDRESS FOR CAMERA:', proceedToNextStep);
@@ -654,6 +690,34 @@ All commands are simulated - no real effects!
                         showDynamicInput('STEP 1: ENTER SIM IP TO TRACE:', proceedToNextStep);
                     } else if (currentStep === 2) {
                         executeIpHack();
+                    }
+                    break;
+                case 'MALWARE':
+                    if (currentStep === 1) {
+                        showDynamicInput('STEP 1: ENTER SIM TARGET IP FOR MALWARE:', proceedToNextStep);
+                    } else if (currentStep === 2) {
+                        executeMalwareHack();
+                    }
+                    break;
+                case 'SPYWARE':
+                    if (currentStep === 1) {
+                        showDynamicInput('STEP 1: ENTER SIM TARGET DEVICE FOR SPYWARE:', proceedToNextStep);
+                    } else if (currentStep === 2) {
+                        executeSpywareHack();
+                    }
+                    break;
+                case 'ROOTKIT':
+                    if (currentStep === 1) {
+                        showDynamicInput('STEP 1: ENTER SIM SYSTEM IP FOR ROOTKIT:', proceedToNextStep);
+                    } else if (currentStep === 2) {
+                        executeRootkitHack();
+                    }
+                    break;
+                case 'BOTNET':
+                    if (currentStep === 1) {
+                        showDynamicInput('STEP 1: ENTER SIM BOTNET SIZE:', proceedToNextStep);
+                    } else if (currentStep === 2) {
+                        executeBotnetHack();
                     }
                     break;
                 // Add more if needed
@@ -676,6 +740,12 @@ All commands are simulated - no real effects!
         function closeCamera() {
             cameraOverlay.style.display = 'none';
             log(`CAMERA FEED CLOSED. CONNECTION TERMINATED.`, "dim");
+            completeCameraCleanup();
+        }
+
+        function completeCameraCleanup() {
+            // Optional: Reset iframe src to stop video
+            document.getElementById('camera-video').src = '';
         }
 
         // EXECUTE IP HACK
@@ -687,9 +757,42 @@ All commands are simulated - no real effects!
             completeHack();
         }
 
-        // ... (Other execute functions remain) ...
+        // NEW FAKE TOOLS EXECUTE
+        async function executeMalwareHack() {
+            const ip = hackData.step1 || '192.168.MAL.IP';
+            log(`STEP 2: DEPLOYING MALWARE TO ${ip}...`, "bad");
+            await simulateFlood(22, "bad");
+            log(`MALWARE INSTALLED. SYSTEM COMPROMISED.`, "crit");
+            completeHack();
+        }
 
-        // CLI INPUT HANDLER - Enhanced with more commands
+        async function executeSpywareHack() {
+            const device = hackData.step1 || 'TARGET-DEVICE-FAKE';
+            log(`STEP 2: INSTALLING SPYWARE ON ${device}...`, "warn");
+            await simulateFlood(18, "warn");
+            log(`SPYWARE ACTIVE. MONITORING STARTED.`, "success");
+            completeHack();
+        }
+
+        async function executeRootkitHack() {
+            const ip = hackData.step1 || '192.168.ROOT.IP';
+            log(`STEP 2: INFECTING SYSTEM AT ${ip} WITH ROOTKIT...`, "crit");
+            await simulateFlood(25, "crit");
+            log(`ROOTKIT EMBEDDED. KERNEL CONTROLLED.`, "bad");
+            completeHack();
+        }
+
+        async function executeBotnetHack() {
+            const size = hackData.step1 || '5000 BOTS';
+            log(`STEP 2: ACTIVATING BOTNET OF ${size}...`, "info");
+            await simulateFlood(30, "info");
+            log(`BOTNET ONLINE. READY FOR COMMANDS.`, "good");
+            completeHack();
+        }
+
+        // ... (Other execute functions remain the same) ...
+
+        // CLI INPUT HANDLER
         cli.addEventListener('keydown', (e) => {
             if (e.key === 'Enter') {
                 const cmd = cli.value.toLowerCase().trim();
@@ -715,8 +818,36 @@ All commands are simulated - no real effects!
                     } else {
                         log("Usage: ip_trace [IP]", "bad");
                     }
+                } else if (baseCmd === 'malware_deploy') {
+                    if (arg) {
+                        hackData.step1 = arg;
+                        executeMalwareHack();
+                    } else {
+                        log("Usage: malware_deploy [IP]", "bad");
+                    }
+                } else if (baseCmd === 'spyware_install') {
+                    if (arg) {
+                        hackData.step1 = arg;
+                        executeSpywareHack();
+                    } else {
+                        log("Usage: spyware_install [DEVICE]", "bad");
+                    }
+                } else if (baseCmd === 'rootkit_infect') {
+                    if (arg) {
+                        hackData.step1 = arg;
+                        executeRootkitHack();
+                    } else {
+                        log("Usage: rootkit_infect [IP]", "bad");
+                    }
+                } else if (baseCmd === 'botnet_control') {
+                    if (arg) {
+                        hackData.step1 = arg;
+                        executeBotnetHack();
+                    } else {
+                        log("Usage: botnet_control [SIZE]", "bad");
+                    }
                 } 
-                // ... (Other commands) ...
+                // ... (Other commands remain) ...
                 else {
                     log("Unknown sim command. Try 'help'.", "bad");
                 }
@@ -727,7 +858,7 @@ All commands are simulated - no real effects!
             kaliHelp.style.display = 'none';
         }
 
-        // SEARCH BAR HANDLER - Added IP search
+        // SEARCH BAR HANDLER
         function handleSearch(e) {
             if (e.key === 'Enter') {
                 const query = searchInput.value.toLowerCase();
@@ -743,9 +874,9 @@ All commands are simulated - no real effects!
         }
 
         // INITIAL LOGS
-        log("NEXUS_OMNIVERSE CORE V18 LOADED. ENHANCED ANIMATIONS & FEATURES: ACTIVE.");
+        log("NEXUS_OMNIVERSE CORE V19 LOADED. ENHANCED ANIMATIONS & FEATURES: ACTIVE.");
         log("OPERATOR: BRU. SIMULATION AWAITING INPUT. ALL DATA FAKE FOR MOVIE USE.");
-        log("NEW: CAMERA HACK, IP TRACE, ANIMATED BUTTONS, FASTER MATRIX, KALI HELP MODAL!", "pink-txt");
+        log("NEW: ENHANCED CAMERA VISUALS WITH SCAN LINES & STATIC, MORE FAKE TOOLS!", "pink-txt");
     </script>
 </body>
 </html>
