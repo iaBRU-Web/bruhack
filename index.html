@@ -18,28 +18,32 @@
             --neon-orange: #ff9900;
             --neon-pink: #ff69b4;
         }
-        body {
+        * {
             margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
             background: var(--bg-black);
             color: var(--neon-green);
             font-family: 'Courier New', monospace;
             overflow: hidden;
+            height: 100vh;
         }
-        /* MATRIX RAIN BACKGROUND - Enhanced with more colors */
+        /* MATRIX RAIN BACKGROUND */
         canvas#matrix {
             position: fixed;
             inset: 0;
             z-index: -1;
             opacity: 0.8;
         }
-        /* GRID LAYOUT - Added more dynamic effects */
+        /* GRID LAYOUT */
         .grid {
             display: grid;
-            grid-template-columns: 280px 1fr 320px;
+            grid-template-columns: 320px 1fr 350px;
             height: 100vh;
             gap: 4px;
             padding: 4px;
-            box-sizing: border-box;
             background: rgba(0,0,0,0.65);
         }
         .panel {
@@ -53,32 +57,59 @@
         .panel:hover {
             box-shadow: 0 0 15px var(--neon-blue);
         }
-        /* LEFT PANEL: Hacking Divisions */
+        /* LEFT PANEL */
         .left-panel {
-            padding: 10px;
+            padding: 12px;
             border-right: 1px solid #022;
+            overflow-y: auto;
         }
         .left-panel h3 {
             color: var(--neon-blue);
             text-shadow: 0 0 5px var(--neon-blue);
+            margin-bottom: 10px;
+            font-size: 13px;
+            text-align: center;
+        }
+        .search-bar-left {
+            background: #001a0d;
+            border: 1px solid var(--neon-green);
+            padding: 8px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        .search-bar-left input {
+            background: transparent;
+            border: none;
+            color: var(--neon-green);
+            width: 100%;
+            outline: none;
+            font-size: 11px;
+            font-family: 'Courier New', monospace;
+        }
+        .search-bar-left span {
+            color: var(--neon-green);
+            margin-right: 5px;
         }
         .btn-deck {
             display: flex;
             flex-direction: column;
-            gap: 8px;
+            gap: 6px;
         }
         .h-btn {
             background: #001a0d;
             border: 1px solid var(--neon-green);
             color: var(--neon-green);
-            padding: 12px;
+            padding: 10px 8px;
             cursor: pointer;
             text-transform: uppercase;
-            font-size: 11px;
+            font-size: 10px;
             font-weight: bold;
             text-align: left;
             transition: 0.3s;
             animation: pulse-btn 2s infinite;
+            position: relative;
+            overflow: hidden;
         }
         @keyframes pulse-btn {
             0% { box-shadow: 0 0 5px var(--neon-green); }
@@ -121,16 +152,44 @@
             color: var(--bg-black);
             box-shadow: 0 0 20px var(--neon-orange);
         }
-        /* CENTER PANEL: Terminal */
+        .h-btn.pink {
+            border-color: var(--neon-pink);
+            color: var(--neon-pink);
+            animation: pulse-btn-pink 2s infinite;
+        }
+        @keyframes pulse-btn-pink {
+            0% { box-shadow: 0 0 5px var(--neon-pink); }
+            50% { box-shadow: 0 0 15px var(--neon-pink); }
+            100% { box-shadow: 0 0 5px var(--neon-pink); }
+        }
+        .h-btn.pink:hover {
+            background: var(--neon-pink);
+            color: var(--bg-black);
+            box-shadow: 0 0 20px var(--neon-pink);
+        }
+        /* CENTER PANEL */
+        .center-panel {
+            display: flex;
+            flex-direction: column;
+        }
         #term {
             flex: 1;
             overflow-y: auto;
             padding: 15px;
-            font-size: 12px;
-            line-height: 1.1;
+            font-size: 11px;
+            line-height: 1.4;
             background: var(--bg-black);
             border: 1px solid #1a1a1a;
             box-shadow: inset 0 0 10px var(--neon-purple);
+        }
+        #term::-webkit-scrollbar {
+            width: 8px;
+        }
+        #term::-webkit-scrollbar-track {
+            background: #000;
+        }
+        #term::-webkit-scrollbar-thumb {
+            background: var(--neon-green);
         }
         .input-box {
             background: var(--bg-black);
@@ -145,7 +204,172 @@
             color: #fff;
             flex: 1;
             outline: none;
-            font-size: 14px;
+            font-size: 13px;
+            font-family: 'Courier New', monospace;
+        }
+        /* RIGHT PANEL */
+        .right-panel {
+            padding: 12px;
+            border-left: 1px solid #300;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .right-panel::-webkit-scrollbar {
+            width: 6px;
+        }
+        .right-panel::-webkit-scrollbar-track {
+            background: #000;
+        }
+        .right-panel::-webkit-scrollbar-thumb {
+            background: var(--neon-red);
+        }
+        .right-panel h3 {
+            color: var(--neon-red);
+            text-shadow: 0 0 5px var(--neon-red);
+            font-size: 12px;
+            margin-bottom: 5px;
+        }
+        .search-bar {
+            background: #001a0d;
+            border: 1px solid var(--neon-blue);
+            padding: 8px;
+            display: flex;
+            align-items: center;
+        }
+        .search-bar input {
+            background: transparent;
+            border: none;
+            color: var(--neon-blue);
+            width: 100%;
+            outline: none;
+            font-size: 11px;
+            font-family: 'Courier New', monospace;
+        }
+        .search-bar span {
+            color: var(--neon-blue);
+            margin-right: 5px;
+        }
+        /* DNA SCROLL */
+        .dna-header {
+            padding: 8px;
+            background: #110011;
+            color: var(--neon-purple);
+            font-weight: bold;
+            border-bottom: 1px solid var(--neon-purple);
+            text-align: center;
+            font-size: 11px;
+        }
+        #dna-scroll {
+            padding: 10px;
+            font-size: 9px;
+            line-height: 1.1;
+            color: var(--neon-purple);
+            overflow: hidden;
+            white-space: pre;
+            max-height: 150px;
+            background: rgba(17, 0, 17, 0.5);
+        }
+        /* LOADING INDICATORS */
+        .loading-section {
+            background: rgba(0, 0, 0, 0.8);
+            border: 1px solid var(--warn-yellow);
+            padding: 10px;
+            margin: 10px 0;
+        }
+        .loading-bar {
+            width: 100%;
+            height: 20px;
+            background: #001a0d;
+            border: 1px solid var(--neon-green);
+            position: relative;
+            overflow: hidden;
+            margin: 5px 0;
+        }
+        .loading-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--neon-green), var(--neon-blue));
+            width: 0%;
+            transition: width 0.3s;
+            animation: shimmer 1s infinite;
+        }
+        @keyframes shimmer {
+            0% { opacity: 0.7; }
+            50% { opacity: 1; }
+            100% { opacity: 0.7; }
+        }
+        .loading-text {
+            color: var(--warn-yellow);
+            font-size: 10px;
+            margin: 3px 0;
+        }
+        /* GLOBAL MAP */
+        .map {
+            height: 200px;
+            background: radial-gradient(circle, #022, #000);
+            position: relative;
+            margin: 10px 0;
+            overflow: hidden;
+            border: 1px solid var(--neon-red);
+        }
+        .dot {
+            width: 8px;
+            height: 8px;
+            background: var(--neon-red);
+            border-radius: 50%;
+            position: absolute;
+            animation: blink 1s infinite, move-dot 5s linear infinite alternate;
+            box-shadow: 0 0 10px var(--neon-red);
+        }
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+        @keyframes move-dot {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(5px, 5px); }
+        }
+        /* SIGNAL BARS */
+        .signal {
+            display: flex;
+            align-items: flex-end;
+            gap: 3px;
+            margin: 10px 0;
+        }
+        .signal span {
+            display: inline-block;
+            width: 5px;
+            background: lime;
+            animation: pulse-signal 1s infinite;
+        }
+        .signal span:nth-child(1){height:8px}
+        .signal span:nth-child(2){height:12px;animation-delay:.2s}
+        .signal span:nth-child(3){height:16px;animation-delay:.4s}
+        .signal span:nth-child(4){height:20px;animation-delay:.6s}
+        .signal span:nth-child(5){height:24px;animation-delay:.8s}
+        @keyframes pulse-signal { 50% { opacity: 0.3; } }
+        /* TOOLS SECTION */
+        .tools-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4px;
+        }
+        .tool-btn {
+            background: #001a0d;
+            border: 1px solid var(--neon-blue);
+            color: var(--neon-blue);
+            padding: 8px 4px;
+            cursor: pointer;
+            font-size: 9px;
+            font-weight: bold;
+            text-align: center;
+            transition: 0.3s;
+        }
+        .tool-btn:hover {
+            background: var(--neon-blue);
+            color: var(--bg-black);
+            box-shadow: 0 0 15px var(--neon-blue);
         }
         /* DYNAMIC INPUT OVERLAY */
         #dynamic-input {
@@ -153,14 +377,14 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            background: rgba(0, 0, 0, 0.9);
+            background: rgba(0, 0, 0, 0.95);
             border: 2px solid var(--neon-green);
-            padding: 20px;
-            z-index: 10;
+            padding: 25px;
+            z-index: 100;
             display: none;
             flex-direction: column;
-            gap: 10px;
-            width: 400px;
+            gap: 12px;
+            width: 450px;
             box-shadow: 0 0 30px var(--neon-green);
             animation: pulse-glow 2s infinite;
         }
@@ -171,111 +395,205 @@
         }
         #dynamic-input label {
             color: var(--neon-blue);
+            font-size: 12px;
         }
         #dynamic-input input {
             background: #001a0d;
             border: 1px solid var(--neon-green);
             color: var(--neon-green);
-            padding: 8px;
+            padding: 10px;
             font-size: 12px;
+            font-family: 'Courier New', monospace;
         }
         #dynamic-input button {
             background: var(--neon-green);
             color: var(--bg-black);
             border: none;
-            padding: 10px;
+            padding: 12px;
             cursor: pointer;
             font-weight: bold;
+            font-size: 12px;
         }
         #dynamic-input button:hover {
             background: var(--warn-yellow);
         }
-        /* RIGHT PANEL: Search Sidebar, DNA, Map, Tools */
-        .right-panel {
-            padding: 10px;
-            border-left: 1px solid #300;
+        /* CAMERA OVERLAY */
+        #camera-overlay {
+            position: fixed;
+            top: 10%;
+            left: 15%;
+            width: 70%;
+            height: 75%;
+            background: rgba(0, 0, 0, 0.98);
+            border: 3px solid var(--neon-red);
+            z-index: 200;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            box-shadow: 0 0 50px var(--neon-red);
         }
-        .right-panel h3 {
-            color: var(--neon-red);
-            text-shadow: 0 0 5px var(--neon-red);
-        }
-        /* Search Bar */
-        .search-bar {
-            background: #001a0d;
-            border: 1px solid var(--neon-blue);
-            padding: 8px;
-            margin-bottom: 10px;
-        }
-        #search-input {
-            background: transparent;
-            border: none;
-            color: var(--neon-blue);
+        #camera-overlay::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
             width: 100%;
-            outline: none;
-            font-size: 12px;
+            height: 100%;
+            background: repeating-linear-gradient(to bottom, transparent 0, transparent 2px, rgba(255,0,68,0.03) 2px, rgba(255,0,68,0.03) 4px);
+            pointer-events: none;
+            animation: scan-lines 2s linear infinite;
+            z-index: 1;
         }
-        /* DNA Scroll */
-        .dna-header {
-            padding: 10px;
-            background: #110011;
-            color: var(--neon-purple);
+        @keyframes scan-lines {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-4px); }
+        }
+        #camera-header {
+            color: var(--neon-red);
+            font-size: 16px;
             font-weight: bold;
-            border-bottom: 1px solid var(--neon-purple);
+            margin-bottom: 10px;
+            z-index: 2;
+            text-shadow: 0 0 10px var(--neon-red);
+        }
+        #camera-info {
+            color: var(--neon-green);
+            font-size: 11px;
+            margin-bottom: 15px;
+            z-index: 2;
             text-align: center;
         }
-        #dna-scroll {
-            flex: 1;
-            padding: 10px;
-            font-size: 10px;
-            line-height: 0.9;
-            color: var(--neon-purple);
-            overflow: hidden;
-            white-space: pre;
-            max-height: 150px;
-            animation: dna-flow 10s linear infinite;
+        #camera-video {
+            width: 100%;
+            height: calc(100% - 100px);
+            border: 2px solid var(--neon-green);
+            z-index: 2;
+            background: #000;
         }
-        @keyframes dna-flow {
-            0% { transform: translateY(0); }
-            100% { transform: translateY(-50%); }
-        }
-        /* Global Map */
-        .map {
-            height: 180px;
-            background: radial-gradient(circle, #022, #000);
-            position: relative;
-            margin-bottom: 10px;
-            overflow: hidden;
-        }
-        .dot {
-            width: 8px;
-            height: 8px;
+        #close-camera {
+            margin-top: 15px;
             background: var(--neon-red);
-            border-radius: 50%;
+            color: #fff;
+            border: none;
+            padding: 12px 30px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 13px;
+            z-index: 2;
+        }
+        #close-camera:hover {
+            background: #ff3366;
+            box-shadow: 0 0 20px var(--neon-red);
+        }
+        /* NETWORK SNIFFER OVERLAY */
+        #sniffer-overlay {
+            position: fixed;
+            top: 15%;
+            left: 20%;
+            width: 60%;
+            height: 70%;
+            background: rgba(0, 0, 0, 0.98);
+            border: 3px solid var(--neon-orange);
+            z-index: 200;
+            display: none;
+            flex-direction: column;
+            padding: 20px;
+            box-shadow: 0 0 40px var(--neon-orange);
+        }
+        #sniffer-header {
+            color: var(--neon-orange);
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            text-shadow: 0 0 10px var(--neon-orange);
+        }
+        #sniffer-content {
+            flex: 1;
+            background: #000;
+            border: 1px solid var(--neon-green);
+            padding: 10px;
+            overflow-y: auto;
+            color: var(--neon-green);
+            font-size: 10px;
+            white-space: pre-wrap;
+            font-family: 'Courier New', monospace;
+        }
+        #sniffer-content::-webkit-scrollbar {
+            width: 6px;
+        }
+        #sniffer-content::-webkit-scrollbar-thumb {
+            background: var(--neon-orange);
+        }
+        #close-sniffer {
+            margin-top: 15px;
+            background: var(--neon-orange);
+            color: #000;
+            border: none;
+            padding: 12px 30px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 13px;
+        }
+        #close-sniffer:hover {
+            background: #ffaa33;
+            box-shadow: 0 0 20px var(--neon-orange);
+        }
+        /* HELP MODAL */
+        #kali-help {
+            position: fixed;
+            top: 5%;
+            left: 10%;
+            width: 80%;
+            height: 90%;
+            background: rgba(0, 0, 0, 0.98);
+            border: 3px solid var(--neon-blue);
+            z-index: 150;
+            display: none;
+            overflow-y: auto;
+            padding: 30px;
+            color: var(--neon-green);
+            font-size: 11px;
+            box-shadow: 0 0 40px var(--neon-blue);
+        }
+        #kali-help h2 {
+            color: var(--neon-purple);
+            margin-bottom: 20px;
+            font-size: 18px;
+        }
+        #close-help {
             position: absolute;
-            animation: blink 1s infinite, move-dot 5s linear infinite alternate;
+            top: 15px;
+            right: 15px;
+            background: var(--neon-blue);
+            color: #000;
+            border: none;
+            padding: 8px 16px;
+            cursor: pointer;
+            font-weight: bold;
         }
-        @keyframes move-dot {
-            0% { transform: translate(0, 0); }
-            100% { transform: translate(5px, 5px); }
+        #close-help:hover {
+            background: #00b3cc;
         }
-        /* Signal Bars */
-        .signal span {
-            display: inline-block;
-            width: 4px;
-            margin-right: 2px;
-            background: lime;
-            animation: pulse 1s infinite;
-        }
-        .signal span:nth-child(1){height:6px}
-        .signal span:nth-child(2){height:10px;animation-delay:.2s}
-        .signal span:nth-child(3){height:14px;animation-delay:.4s}
-        .signal span:nth-child(4){height:18px;animation-delay:.6s}
-        @keyframes pulse { 50% { opacity: 0.2; } }
-        /* Effects */
+        /* LOG COLORS */
+        .bank-txt { color: var(--neon-blue); font-weight: bold; text-shadow: 0 0 5px var(--neon-blue); }
+        .progress-bar { color: var(--warn-yellow); letter-spacing: 2px; }
+        .good { color: #00ff55; }
+        .bad { color: var(--neon-red); }
+        .warn { color: var(--warn-yellow); }
+        .info { color: var(--neon-blue); }
+        .dim { color: var(--text-dim); }
+        .success { color: var(--neon-green); }
+        .crit { color: var(--neon-red); font-weight: bold; }
+        .orange-txt { color: var(--neon-orange); }
+        .pink-txt { color: var(--neon-pink); }
+        .purple-txt { color: var(--neon-purple); }
+        /* EFFECTS */
         .glitch { animation: glitch 0.15s infinite; }
         @keyframes glitch {
             0% { transform: translate(0,0); }
-            50% { transform: translate(2px,-1px); }
+            33% { transform: translate(2px,-1px); }
+            66% { transform: translate(-2px,1px); }
             100% { transform: translate(0,0); }
         }
         .shake { animation: shake 0.3s; }
@@ -285,175 +603,19 @@
             50% { transform: translate(-3px, 2px); }
             75% { transform: translate(2px, 1px); }
         }
-        /* Log Colors */
-        .bank-txt { color: var(--neon-blue); font-weight: bold; text-shadow: 0 0 5px var(--neon-blue); }
-        .progress-bar { color: var(--warn-yellow); letter-spacing: 2px; animation: progress-glow 1s infinite; }
-        @keyframes progress-glow {
-            0% { text-shadow: 0 0 5px var(--warn-yellow); }
-            50% { text-shadow: 0 0 15px var(--warn-yellow); }
-            100% { text-shadow: 0 0 5px var(--warn-yellow); }
-        }
-        .good { color: #00ff55; }
-        .bad { color: var(--neon-red); }
-        .warn { color: var(--warn-yellow); }
-        .info { color: var(--neon-blue); }
-        .dim { color: var(--text-dim); }
-        .success { color: var(--neon-green); }
-        .crit { color: var(--neon-red); }
-        .orange-txt { color: var(--neon-orange); text-shadow: 0 0 5px var(--neon-orange); }
-        .pink-txt { color: var(--neon-pink); text-shadow: 0 0 5px var(--neon-pink); }
-        /* Camera Overlay - Enhanced with scan lines and static */
-        #camera-overlay {
-            position: fixed;
-            top: 20%;
-            left: 20%;
-            width: 60%;
-            height: 60%;
-            background: rgba(0, 0, 0, 0.95);
-            border: 2px solid var(--neon-red);
-            z-index: 20;
-            display: none;
-            flex-direction: column;
-            align-items: center;
-            padding: 20px;
-            box-shadow: 0 0 40px var(--neon-red);
-            animation: camera-scan 1s infinite;
-            overflow: hidden;
-        }
-        #camera-overlay::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: repeating-linear-gradient(to bottom, transparent 0, transparent 2px, rgba(255,255,255,0.05) 2px, rgba(255,255,255,0.05) 4px);
-            pointer-events: none;
-            animation: scan-lines 2s linear infinite;
-        }
-        @keyframes scan-lines {
-            0% { transform: translateY(0); }
-            100% { transform: translateY(-4px); }
-        }
-        #camera-overlay::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAABISURBVBhXY2BgYGBgAAALAAH3d7A3AAAAAElFTkSuQmCC') repeat;
-            opacity: 0.1;
-            pointer-events: none;
-            animation: static-noise 0.1s infinite;
-        }
-        @keyframes static-noise {
-            0% { opacity: 0.1; }
-            50% { opacity: 0.15; }
-            100% { opacity: 0.1; }
-        }
-        #camera-video {
-            width: 100%;
-            height: 80%;
-            border: 1px solid var(--neon-green);
-            filter: contrast(120%) brightness(90%) sepia(0.2) hue-rotate(180deg); /* Enhanced fake camera effect */
-        }
-        #close-camera {
-            margin-top: 10px;
-            background: var(--neon-red);
-            color: var(--bg-black);
-            border: none;
-            padding: 10px 20px;
-            cursor: pointer;
-            font-weight: bold;
-        }
-        #close-camera:hover {
-            background: #ff3333;
-        }
-        /* Kali-Like Help Modal */
-        #kali-help {
-            position: fixed;
-            top: 10%;
-            left: 10%;
-            width: 80%;
-            height: 80%;
-            background: rgba(0, 0, 0, 0.95);
-            border: 2px solid var(--neon-blue);
-            z-index: 15;
-            display: none;
-            overflow-y: auto;
-            padding: 20px;
-            color: var(--neon-green);
-            font-size: 12px;
-            box-shadow: 0 0 30px var(--neon-blue);
-        }
-        #kali-help h2 {
-            color: var(--neon-purple);
-        }
-        #close-help {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background: var(--neon-blue);
-            color: var(--bg-black);
-            border: none;
-            padding: 5px 10px;
-            cursor: pointer;
-        }
-        #close-help:hover {
-            background: #00b3cc;
-        }
-        /* Network Sniffer Overlay */
-        #sniffer-overlay {
-            position: fixed;
-            top: 30%;
-            left: 30%;
-            width: 40%;
-            height: 40%;
-            background: rgba(0, 0, 0, 0.95);
-            border: 2px solid var(--neon-orange);
-            z-index: 20;
-            display: none;
-            flex-direction: column;
-            align-items: center;
-            padding: 20px;
-            box-shadow: 0 0 40px var(--neon-orange);
-            animation: sniffer-packet 1s infinite;
-            overflow: auto;
-        }
-        @keyframes sniffer-packet {
-            0% { border-color: var(--neon-orange); box-shadow: 0 0 10px var(--neon-orange); }
-            50% { border-color: #ffcc66; box-shadow: 0 0 30px #ffcc66; }
-            100% { border-color: var(--neon-orange); box-shadow: 0 0 10px var(--neon-orange); }
-        }
-        #sniffer-content {
-            width: 100%;
-            height: 80%;
-            color: var(--neon-green);
-            font-size: 12px;
-            white-space: pre-wrap;
-        }
-        #close-sniffer {
-            margin-top: 10px;
-            background: var(--neon-orange);
-            color: var(--bg-black);
-            border: none;
-            padding: 10px 20px;
-            cursor: pointer;
-            font-weight: bold;
-        }
-        #close-sniffer:hover {
-            background: #ff9933;
-        }
     </style>
 </head>
 <body>
     <canvas id="matrix"></canvas>
     <div class="grid" id="ui">
-        <!-- LEFT PANEL: Hacking Divisions -->
+        <!-- LEFT PANEL -->
         <div class="panel left-panel">
             <h3>[ HACKING_DIVISIONS_V20 ]</h3>
-            <div class="btn-deck">
+            <div class="search-bar-left">
+                <span>🔍</span>
+                <input type="text" id="search-left" placeholder="Filter operations..." autocomplete="off">
+            </div>
+            <div class="btn-deck" id="operations-list">
                 <button class="h-btn" onclick="initHack('BANK')">🏦 INTERACTIVE BANK TRANSFER</button>
                 <button class="h-btn" onclick="initHack('WIFI')">📶 WIFI: NETWORK_CRACK</button>
                 <button class="h-btn" onclick="initHack('SITE')">🌐 WEB: SITE_INFILTRATE</button>
@@ -484,170 +646,261 @@
                 <button class="h-btn pink" onclick="initHack('ROOTKIT')">🛠️ ROOTKIT: SYSTEM_INFECT</button>
                 <button class="h-btn" onclick="initHack('BOTNET')">🤖 BOTNET: CONTROL_NET</button>
                 <button class="h-btn orange" onclick="initHack('SNIFFER')">📡 SNIFFER: NETWORK_SNIFF</button>
+                <button class="h-btn" onclick="initHack('DATABASE')">🗄️ DATABASE: SQL_INJECT</button>
+                <button class="h-btn" onclick="initHack('VPN')">🔐 VPN: TUNNEL_BREACH</button>
+                <button class="h-btn red" onclick="initHack('NUCLEAR')">☢️ NUCLEAR: CONTROL_SIM</button>
+                <button class="h-btn" onclick="initHack('ATM')">🏧 ATM: CASH_DISPENSE</button>
+                <button class="h-btn" onclick="initHack('SOCIAL_MEDIA')">📱 SOCIAL_MEDIA: ACCOUNT_HIJACK</button>
             </div>
         </div>
-        <!-- CENTER PANEL: Terminal -->
-        <div class="panel">
+        
+        <!-- CENTER PANEL -->
+        <div class="panel center-panel">
             <div id="term">
-                SIMULATION CORE v20.0<br>
-                Operator: <span class="good">BRU</span><br>
-                Status: <span class="warn">FICTIONAL MODE ENABLED</span><br>
-                Type <span class="warn">help</span> for commands.<br><br>
+<span class="purple-txt">╔═══════════════════════════════════════════════════════════════╗</span>
+<span class="purple-txt">║</span>          NEXUS_OMNIVERSE SIMULATION CORE v20.0              <span class="purple-txt">║</span>
+<span class="purple-txt">╚═══════════════════════════════════════════════════════════════╝</span>
+
+<span class="good">Operator:</span> BRU
+<span class="warn">Status:</span> FICTIONAL MODE ENABLED - ALL ACTIONS SIMULATED
+<span class="info">Location:</span> Kigali, Rwanda
+<span class="dim">Network:</span> FAKE-NEXUS-NET (192.168.FAKE.1)
+
+<span class="warn">⚠ DISCLAIMER: This is a FAKE hacking simulation for entertainment/education only!</span>
+<span class="dim">All operations are simulated and have no real-world effects.</span>
+
+Type <span class="success">'help'</span> for available commands.
+<span class="purple-txt">════════════════════════════════════════════════════════════════</span>
+
             </div>
             <div class="input-box">
-                <span>BRU@ROOT:~$ &nbsp;</span>
+                <span style="color: var(--neon-green);">BRU@NEXUS:~$ &nbsp;</span>
                 <input type="text" id="cli" autofocus autocomplete="off">
             </div>
         </div>
-        <!-- RIGHT PANEL: Search Sidebar, DNA, Map, Tools -->
+        
+        <!-- RIGHT PANEL -->
         <div class="panel right-panel">
-            <h3>🔍 SEARCH SIDEBAR (SIM)</h3>
+            <h3>🔍 INTELLIGENCE SEARCH</h3>
             <div class="search-bar">
-                <input type="text" id="search-input" placeholder="Search Wi-Fi / Networks / Targets / IPs..." onkeydown="handleSearch(event)">
+                <span>🔎</span>
+                <input type="text" id="search-input" placeholder="Target search: IPs, Networks, Devices..." onkeydown="handleSearch(event)">
             </div>
+            
             <div class="dna-header">🧬 BIO_SYNC_LOADER</div>
             <div id="dna-scroll"></div>
-            <h3>🌍 GLOBAL MAP (SIM)</h3>
-            <div class="map">
+            
+            <div class="loading-section">
+                <div class="loading-text">SYSTEM UPLINK: <span id="uplink-percent">87%</span></div>
+                <div class="loading-bar">
+                    <div class="loading-fill" id="uplink-bar" style="width: 87%;"></div>
+                </div>
+                <div class="loading-text">ENCRYPTION LEVEL: <span id="encrypt-percent">92%</span></div>
+                <div class="loading-bar">
+                    <div class="loading-fill" id="encrypt-bar" style="width: 92%;"></div>
+                </div>
+                <div class="loading-text">NEURAL SYNC: <span id="neural-percent">78%</span></div>
+                <div class="loading-bar">
+                    <div class="loading-fill" id="neural-bar" style="width: 78%;"></div>
+                </div>
+            </div>
+            
+            <h3>🌍 GLOBAL THREAT MAP</h3>
+            <div class="map" id="threat-map">
                 <div class="dot" style="top:25%;left:20%"></div>
                 <div class="dot" style="top:50%;left:45%"></div>
                 <div class="dot" style="top:70%;left:65%"></div>
                 <div class="dot" style="top:40%;left:80%"></div>
                 <div class="dot" style="top:10%;left:50%"></div>
                 <div class="dot" style="top:80%;left:30%"></div>
+                <div class="dot" style="top:15%;left:70%"></div>
+                <div class="dot" style="top:60%;left:15%"></div>
             </div>
-            <div class="dim">
-                ARCHIVED NEWS SIMULATION<br>
-                “Fictional breach detected in Sector Zeta. Training exercise ongoing.”
+            
+            <div style="font-size: 10px; color: var(--text-dim); margin: 10px 0;">
+                <div class="warn">📰 ARCHIVED NEWS SIMULATION</div>
+                <div style="margin-top: 5px;">
+                    "Fictional breach detected in Sector Zeta.<br>
+                    Training exercise ongoing. No real threats."
+                </div>
             </div>
-            <h3>🛠️ SIM CYBERSECURITY TOOLS</h3>
-            <div class="btn-deck" style="gap: 4px; font-size: 10px;">
-                <button class="h-btn" onclick="runTool('NMAP')">🕵️‍♂️ NMAP_SIM: PORT_SCAN</button>
-                <button class="h-btn" onclick="runTool('METASPLOIT')">💥 METASPLOIT_SIM: EXPLOIT_FRAME</button>
-                <button class="h-btn" onclick="runTool('WIRESHARK')">📡 WIRESHARK_SIM: PACKET_CAPTURE</button>
-                <button class="h-btn" onclick="runTool('JOHN')">🔑 JOHN_SIM: PASS_CRACK</button>
-                <button class="h-btn" onclick="runTool('HYDRA')">🚀 HYDRA_SIM: BRUTE_FORCE</button>
-                <button class="h-btn" onclick="runTool('BURP')">🌐 BURP_SIM: WEB_PROXY</button>
-                <button class="h-btn" onclick="runTool('NESSUS')">🛡️ NESSUS_SIM: VULN_SCAN</button>
-                <button class="h-btn" onclick="runTool('SQLMAP')">🗄️ SQLMAP_SIM: DB_INJECT</button>
-                <button class="h-btn orange" onclick="runTool('SET')">🎣 SET_SIM: SOCIAL_ENGINEER</button>
-                <button class="h-btn" onclick="runTool('MALTEGO')">🕸️ MALTEGO_SIM: OSINT_GRAPH</button>
-                <button class="h-btn" onclick="runTool('AIRCRACK')">📶 AIRCRACK_SIM: WIFI_TOOLS</button>
-                <button class="h-btn" onclick="runTool('HASHCAT')">🔓 HASHCAT_SIM: GPU_CRACK</button>
+            
+            <div style="display: flex; align-items: center; gap: 8px; margin: 10px 0;">
+                <span style="font-size: 11px; color: var(--neon-green);">SIGNAL STRENGTH:</span>
+                <div class="signal">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
+            
+            <h3>🛠️ CYBERSECURITY TOOLS</h3>
+            <div class="tools-grid">
+                <button class="tool-btn" onclick="runTool('NMAP')">🕵️ NMAP</button>
+                <button class="tool-btn" onclick="runTool('METASPLOIT')">💥 METASPLOIT</button>
+                <button class="tool-btn" onclick="runTool('WIRESHARK')">📡 WIRESHARK</button>
+                <button class="tool-btn" onclick="runTool('JOHN')">🔑 JOHN</button>
+                <button class="tool-btn" onclick="runTool('HYDRA')">🚀 HYDRA</button>
+                <button class="tool-btn" onclick="runTool('BURP')">🌐 BURP</button>
+                <button class="tool-btn" onclick="runTool('NESSUS')">🛡️ NESSUS</button>
+                <button class="tool-btn" onclick="runTool('SQLMAP')">🗄️ SQLMAP</button>
+                <button class="tool-btn" onclick="runTool('SET')">🎣 SET</button>
+                <button class="tool-btn" onclick="runTool('MALTEGO')">🕸️ MALTEGO</button>
+                <button class="tool-btn" onclick="runTool('AIRCRACK')">📶 AIRCRACK</button>
+                <button class="tool-btn" onclick="runTool('HASHCAT')">🔓 HASHCAT</button>
             </div>
         </div>
     </div>
+    
     <!-- DYNAMIC INPUT OVERLAY -->
     <div id="dynamic-input">
         <label id="dynamic-label"></label>
-        <input type="text" id="dynamic-field">
-        <button id="dynamic-submit">EXECUTE SIM STEP</button>
+        <input type="text" id="dynamic-field" autocomplete="off">
+        <button id="dynamic-submit">EXECUTE SIM STEP ▶</button>
     </div>
+    
     <!-- CAMERA OVERLAY -->
     <div id="camera-overlay">
-        <h3 style="color: var(--neon-red);">SIM CAMERA FEED (FAKE)</h3>
-        <iframe id="camera-video" src="https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&mute=1" frameborder="0" allowfullscreen></iframe> <!-- Fake video example -->
-        <button id="close-camera" onclick="closeCamera()">CLOSE CAMERA</button>
+        <div id="camera-header">📹 IP CAMERA FEED - SIMULATED BREACH</div>
+        <div id="camera-info">
+            TARGET: <span id="camera-target">192.168.FAKE.100</span> | 
+            LOCATION: <span id="camera-location">UNKNOWN</span> | 
+            STATUS: <span style="color: var(--neon-red);">HACKED (FAKE)</span>
+        </div>
+        <iframe id="camera-video" 
+                src="" 
+                frameborder="0" 
+                allowfullscreen 
+                allow="autoplay; encrypted-media">
+        </iframe>
+        <button id="close-camera" onclick="closeCamera()">✖ CLOSE FEED</button>
     </div>
+    
     <!-- NETWORK SNIFFER OVERLAY -->
     <div id="sniffer-overlay">
-        <h3 style="color: var(--neon-orange);">SIM NETWORK SNIFFER (FAKE PACKETS)</h3>
+        <div id="sniffer-header">📡 NETWORK PACKET SNIFFER - LIVE CAPTURE (FAKE)</div>
         <pre id="sniffer-content"></pre>
-        <button id="close-sniffer" onclick="closeSniffer()">CLOSE SNIFFER</button>
+        <button id="close-sniffer" onclick="closeSniffer()">✖ STOP CAPTURE</button>
     </div>
-    <!-- KALI-LIKE HELP MODAL -->
+    
+    <!-- HELP MODAL -->
     <div id="kali-help">
-        <button id="close-help" onclick="closeHelp()">X</button>
-        <h2>KALI-LIKE SIM COMMAND HELP</h2>
-        <pre>
-Welcome to BRU SIM Kali-Help (FAKE COMMANDS FOR SIMULATION)
+        <button id="close-help" onclick="closeHelp()">✖ CLOSE</button>
+        <h2>🔰 NEXUS_OMNIVERSE COMMAND REFERENCE</h2>
+        <pre style="color: var(--neon-green); line-height: 1.6;">
+════════════════════════════════════════════════════════════════
+                    SIMULATION COMMANDS - ALL FAKE!
+════════════════════════════════════════════════════════════════
 
-Basic Commands:
-help - Show this help
-status - System status
-scan - Fake scan networks
-flood - Simulate flood
-dna - Load DNA matrix
-breach - Simulate breach
-ping - Fake ping
-traceroute - Fake trace
-nmap - Fake port scan
-exploit - Fake exploit
-decrypt - Fake decrypt
-encrypt - Fake encrypt
-backdoor - Fake backdoor
-phish - Fake phishing
-brute - Fake brute force
-inject - Fake SQL inject
-ddos - Fake DDOS
-virus - Fake virus deploy
-ransom - Fake ransomware
-crypto - Fake crypto mine
-firewall - Fake bypass
-email - Fake email spoof
-packet - Fake packet capture
-vuln - Fake vuln scan
-proxy - Fake proxy setup
-tor - Fake TOR route
-hash - Fake hash crack
-keygen - Fake key gen
-wipe - Fake data wipe
-log - View fake logs
-netstat - Show fake connections
-whoami - Operator info
-exit - Fake exit
+<span class="warn">BASIC COMMANDS:</span>
+  help              - Display this help menu
+  status            - Show system status
+  clear             - Clear terminal screen
+  whoami            - Display operator information
+  exit              - Exit simulation (fake)
 
-Social Engineering:
-social_phish - Fake social phish
-vishing - Fake vishing
-pretext - Fake pretext
-baiting - Fake baiting
-quidproquo - Fake quid pro quo
+<span class="warn">NETWORK OPERATIONS:</span>
+  scan              - Scan for fake networks
+  ping [IP]         - Ping fake target
+  traceroute [IP]   - Trace fake route
+  nmap [IP]         - Port scan fake target
+  netstat           - Show fake network connections
 
-Advanced:
-camera_hack [IP] - Fake camera hack on IP
-ip_trace [IP] - Fake IP trace
-ai_hack - Fake AI hack
-quantum_break - Fake quantum break
-drone_control - Fake drone control
-iot_breach - Fake IOT breach
-malware_deploy [IP] - Fake malware deploy
-spyware_install [DEVICE] - Fake spyware install
-rootkit_infect [IP] - Fake rootkit infect
-botnet_control [SIZE] - Fake botnet control
-sniffer_start - Fake network sniffer start
-sniffer_stop - Stop sniffer
+<span class="warn">HACKING OPERATIONS:</span>
+  exploit [TARGET]  - Run fake exploit
+  breach            - Simulate system breach
+  decrypt [FILE]    - Fake decryption
+  encrypt [FILE]    - Fake encryption
+  backdoor [IP]     - Install fake backdoor
+  brute [TARGET]    - Fake brute force attack
+  inject [URL]      - Fake SQL injection
+  ddos [IP]         - Fake DDOS attack
+  
+<span class="warn">MALWARE & PAYLOADS:</span>
+  virus [TARGET]    - Deploy fake virus
+  ransom [TARGET]   - Deploy fake ransomware
+  malware_deploy [IP] - Deploy fake malware
+  spyware_install [DEVICE] - Install fake spyware
+  rootkit_infect [IP] - Infect with fake rootkit
+  
+<span class="warn">SOCIAL ENGINEERING:</span>
+  phish [EMAIL]     - Send fake phishing email
+  vishing [NUMBER]  - Initiate fake vishing call
+  pretext [TARGET]  - Execute fake pretexting
+  baiting [TARGET]  - Set fake baiting trap
 
-All commands are simulated - no real effects!
+<span class="warn">ADVANCED OPERATIONS:</span>
+  camera_hack [IP]  - Hack fake IP camera
+  ip_trace [IP]     - Trace fake IP address
+  ai_hack           - Hack fake AI system
+  quantum_break     - Break fake quantum encryption
+  drone_control     - Control fake drone
+  iot_breach        - Breach fake IoT devices
+  botnet_control [SIZE] - Control fake botnet
+  sniffer_start     - Start network packet sniffer
+  sniffer_stop      - Stop network sniffer
+
+<span class="warn">CRYPTOCURRENCY:</span>
+  crypto [WALLET]   - Mine fake cryptocurrency
+  wallet_crack [ADDR] - Crack fake wallet
+
+<span class="warn">UTILITIES:</span>
+  flood             - Flood terminal with fake data
+  log               - View fake system logs
+  dna               - Load DNA matrix visualization
+  wipe [TARGET]     - Fake data wipe
+  keygen            - Generate fake keys
+  hash [TEXT]       - Generate fake hash
+  proxy             - Setup fake proxy
+  tor               - Route through fake TOR
+
+════════════════════════════════════════════════════════════════
+⚠ REMEMBER: ALL OPERATIONS ARE 100% SIMULATED - NO REAL EFFECTS!
+════════════════════════════════════════════════════════════════
         </pre>
     </div>
+    
     <script>
-        // MATRIX RAIN
+        // ═══════════════════════════════════════════════════════════════
+        //                      MATRIX RAIN BACKGROUND
+        // ═══════════════════════════════════════════════════════════════
         const matrixCanvas = document.getElementById('matrix');
         const ctx = matrixCanvas.getContext('2d');
         matrixCanvas.width = window.innerWidth;
         matrixCanvas.height = window.innerHeight;
-        const colors = ["#00ff88", "#00e5ff", "#ff0044", "#ff00ff"];
-        const chars = "01▓▒░<>/{}[]$#NEXUSOMNIVERSEBRUAIQUANTUM";
+        const colors = ["#00ff88", "#00e5ff", "#ff0044", "#ff00ff", "#ffcc00"];
+        const chars = "01▓▒░<>/{}[]$#NEXUSOMNIVERSEBRUAIQUANTUM@%&*";
         const drops = Array(Math.floor(matrixCanvas.width / 10)).fill(1);
+        
         function drawMatrix() {
             ctx.fillStyle = "rgba(0,0,0,0.08)";
             ctx.fillRect(0, 0, matrixCanvas.width, matrixCanvas.height);
             drops.forEach((y, i) => {
                 ctx.fillStyle = colors[Math.floor(Math.random() * colors.length)];
                 const text = chars[Math.floor(Math.random() * chars.length)];
+                ctx.font = '12px Courier New';
                 ctx.fillText(text, i * 10, y * 10);
                 drops[i] = y * 10 > matrixCanvas.height || Math.random() > 0.95 ? 0 : y + 1;
             });
         }
         setInterval(drawMatrix, 40);
-
-        // TERMINAL ELEMENTS
+        
+        window.addEventListener('resize', () => {
+            matrixCanvas.width = window.innerWidth;
+            matrixCanvas.height = window.innerHeight;
+        });
+        
+        // ═══════════════════════════════════════════════════════════════
+        //                      GLOBAL VARIABLES
+        // ═══════════════════════════════════════════════════════════════
         const term = document.getElementById('term');
         const cli = document.getElementById('cli');
         const dnaScroll = document.getElementById('dna-scroll');
         const ui = document.getElementById('ui');
         const searchInput = document.getElementById('search-input');
+        const searchLeft = document.getElementById('search-left');
         const dynamicInput = document.getElementById('dynamic-input');
         const dynamicLabel = document.getElementById('dynamic-label');
         const dynamicField = document.getElementById('dynamic-field');
@@ -656,54 +909,104 @@ All commands are simulated - no real effects!
         const snifferOverlay = document.getElementById('sniffer-overlay');
         const snifferContent = document.getElementById('sniffer-content');
         const kaliHelp = document.getElementById('kali-help');
+        
         const spinChars = ["|", "/", "-", "\\"];
         let sIdx = 0;
         setInterval(() => { sIdx = (sIdx + 1) % 4; }, 100);
+        
         let snifferInterval;
-
-        // DNA SCROLL UPDATE
+        let currentHackType = '';
+        let hackData = {};
+        let currentStep = 0;
+        
+        // ═══════════════════════════════════════════════════════════════
+        //                      DNA SCROLL ANIMATION
+        // ═══════════════════════════════════════════════════════════════
         function updateDNA() {
-            const bases = ["A", "T", "C", "G", "::", "||", "--", spinChars[sIdx], "0", "1", "X", "Y", "Z", "*", "&", "#", "@"];
+            const bases = ["A", "T", "C", "G", "::", "||", "--", spinChars[sIdx], "0", "1", "X", "Y", "Z", "*", "&", "#", "@", "~", "+"];
             let row = "";
-            for (let i = 0; i < 30; i++) row += bases[Math.floor(Math.random() * bases.length)] + " ";
+            for (let i = 0; i < 35; i++) {
+                row += bases[Math.floor(Math.random() * bases.length)] + " ";
+            }
             const div = document.createElement('div');
             div.innerText = row;
             div.style.color = colors[Math.floor(Math.random() * colors.length)];
             dnaScroll.prepend(div);
-            if (dnaScroll.childNodes.length > 70) dnaScroll.lastChild.remove();
+            if (dnaScroll.childNodes.length > 80) {
+                dnaScroll.lastChild.remove();
+            }
         }
-        setInterval(updateDNA, 40);
-
-        // LOG FUNCTION
+        setInterval(updateDNA, 50);
+        
+        // ═══════════════════════════════════════════════════════════════
+        //                      LOADING BAR ANIMATIONS
+        // ═══════════════════════════════════════════════════════════════
+        function updateLoadingBars() {
+            const uplinkBar = document.getElementById('uplink-bar');
+            const encryptBar = document.getElementById('encrypt-bar');
+            const neuralBar = document.getElementById('neural-bar');
+            const uplinkPercent = document.getElementById('uplink-percent');
+            const encryptPercent = document.getElementById('encrypt-percent');
+            const neuralPercent = document.getElementById('neural-percent');
+            
+            setInterval(() => {
+                const uplink = Math.floor(80 + Math.random() * 20);
+                const encrypt = Math.floor(85 + Math.random() * 15);
+                const neural = Math.floor(70 + Math.random() * 25);
+                
+                uplinkBar.style.width = uplink + '%';
+                encryptBar.style.width = encrypt + '%';
+                neuralBar.style.width = neural + '%';
+                
+                uplinkPercent.textContent = uplink + '%';
+                encryptPercent.textContent = encrypt + '%';
+                neuralPercent.textContent = neural + '%';
+            }, 2000);
+        }
+        updateLoadingBars();
+        
+        // ═══════════════════════════════════════════════════════════════
+        //                      LOG FUNCTION
+        // ═══════════════════════════════════════════════════════════════
         function log(msg, cls = "") {
             const timestamp = new Date().toLocaleTimeString('en-US', { hour12: false });
             const d = document.createElement('div');
             d.className = cls;
-            d.innerHTML = `[${timestamp}] [${spinChars[sIdx]}] ${msg}`;
+            d.innerHTML = `[${timestamp}] ${spinChars[sIdx]} ${msg}`;
             term.appendChild(d);
             term.scrollTop = term.scrollHeight;
         }
-
-        // SIMULATED SLEEP
-        function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
-
-        // SIMULATED FLOOD
+        
+        // ═══════════════════════════════════════════════════════════════
+        //                      UTILITY FUNCTIONS
+        // ═══════════════════════════════════════════════════════════════
+        function sleep(ms) { 
+            return new Promise(r => setTimeout(r, ms)); 
+        }
+        
         async function simulateFlood(lines, cls = "info") {
             for (let i = 0; i < lines; i++) {
-                await sleep(20);
-                log(`BYPASS_LAYER_0x${Math.random().toString(16).toUpperCase().substring(2, 8)}... OK [SIM STEP ${i+1}/${lines}] PROTOCOL: FAKE-TCP/IP`, cls);
+                await sleep(30);
+                const operations = [
+                    "BYPASS_LAYER", "DECRYPT_NODE", "INJECT_PAYLOAD", 
+                    "ROUTE_PACKET", "CRACK_HASH", "EXPLOIT_VULN",
+                    "SCAN_PORT", "BREACH_FIREWALL", "TUNNEL_PROXY"
+                ];
+                const op = operations[Math.floor(Math.random() * operations.length)];
+                const hex = Math.random().toString(16).toUpperCase().substring(2, 10);
+                log(`${op}_0x${hex}... OK [STEP ${i+1}/${lines}] PROTOCOL: FAKE-${Math.floor(Math.random()*9999)}`, cls);
             }
         }
-
-        // DYNAMIC INPUT HANDLER
-        let currentHackType = '';
-        let hackData = {};
-        let currentStep = 0;
+        
+        // ═══════════════════════════════════════════════════════════════
+        //                      DYNAMIC INPUT HANDLER
+        // ═══════════════════════════════════════════════════════════════
         function showDynamicInput(labelText, onSubmit) {
             dynamicLabel.innerText = labelText;
             dynamicField.value = '';
             dynamicInput.style.display = 'flex';
             dynamicField.focus();
+            
             dynamicSubmit.onclick = () => {
                 const value = dynamicField.value;
                 if (value) {
@@ -711,202 +1014,426 @@ All commands are simulated - no real effects!
                     onSubmit(value);
                 }
             };
+            
+            dynamicField.onkeydown = (e) => {
+                if (e.key === 'Enter') {
+                    dynamicSubmit.click();
+                }
+            };
         }
-
-        // INIT HACK
+        
+        // ═══════════════════════════════════════════════════════════════
+        //                      HACK INITIALIZATION
+        // ═══════════════════════════════════════════════════════════════
         function initHack(type) {
             currentHackType = type;
             hackData = {};
             currentStep = 1;
             ui.classList.add('glitch');
-            sleep(300).then(() => ui.classList.remove('glitch'));
+            setTimeout(() => ui.classList.remove('glitch'), 300);
             log(`INIT SIM ${type} HACK - MULTI-STEP SEQUENCE STARTED...`, "warn");
             proceedToNextStep();
         }
-
-        // PROCEED TO NEXT STEP
+        
+        // ═══════════════════════════════════════════════════════════════
+        //                      HACK EXECUTION STEPS
+        // ═══════════════════════════════════════════════════════════════
         function proceedToNextStep(value = null) {
             if (value) {
                 hackData[`step${currentStep - 1}`] = value;
                 log(`STEP ${currentStep - 1} INPUT: ${value} - PROCESSED.`, "info");
             }
+            
             switch (currentHackType) {
-                // ... (Previous cases remain the same) ...
+                case 'BANK':
+                    if (currentStep === 1) {
+                        showDynamicInput('STEP 1: ENTER FAKE BANK NAME:', proceedToNextStep);
+                    } else if (currentStep === 2) {
+                        showDynamicInput('STEP 2: ENTER FAKE ACCOUNT NUMBER:', proceedToNextStep);
+                    } else if (currentStep === 3) {
+                        showDynamicInput('STEP 3: ENTER FAKE TRANSFER AMOUNT ($):', proceedToNextStep);
+                    } else if (currentStep === 4) {
+                        executeBankHack();
+                    }
+                    break;
+                    
+                case 'WIFI':
+                    if (currentStep === 1) {
+                        showDynamicInput('STEP 1: ENTER FAKE WIFI SSID:', proceedToNextStep);
+                    } else if (currentStep === 2) {
+                        executeWifiHack();
+                    }
+                    break;
+                    
                 case 'CAMERA':
                     if (currentStep === 1) {
-                        showDynamicInput('STEP 1: ENTER SIM IP ADDRESS FOR CAMERA:', proceedToNextStep);
+                        showDynamicInput('STEP 1: ENTER FAKE IP ADDRESS FOR CAMERA:', proceedToNextStep);
                     } else if (currentStep === 2) {
+                        showDynamicInput('STEP 2: ENTER FAKE CAMERA LOCATION:', proceedToNextStep);
+                    } else if (currentStep === 3) {
                         executeCameraHack();
                     }
                     break;
-                case 'IP':
-                    if (currentStep === 1) {
-                        showDynamicInput('STEP 1: ENTER SIM IP TO TRACE:', proceedToNextStep);
-                    } else if (currentStep === 2) {
-                        executeIpHack();
-                    }
-                    break;
-                case 'MALWARE':
-                    if (currentStep === 1) {
-                        showDynamicInput('STEP 1: ENTER SIM TARGET IP FOR MALWARE:', proceedToNextStep);
-                    } else if (currentStep === 2) {
-                        executeMalwareHack();
-                    }
-                    break;
-                case 'SPYWARE':
-                    if (currentStep === 1) {
-                        showDynamicInput('STEP 1: ENTER SIM TARGET DEVICE FOR SPYWARE:', proceedToNextStep);
-                    } else if (currentStep === 2) {
-                        executeSpywareHack();
-                    }
-                    break;
-                case 'ROOTKIT':
-                    if (currentStep === 1) {
-                        showDynamicInput('STEP 1: ENTER SIM SYSTEM IP FOR ROOTKIT:', proceedToNextStep);
-                    } else if (currentStep === 2) {
-                        executeRootkitHack();
-                    }
-                    break;
-                case 'BOTNET':
-                    if (currentStep === 1) {
-                        showDynamicInput('STEP 1: ENTER SIM BOTNET SIZE:', proceedToNextStep);
-                    } else if (currentStep === 2) {
-                        executeBotnetHack();
-                    }
-                    break;
+                    
                 case 'SNIFFER':
                     if (currentStep === 1) {
-                        showDynamicInput('STEP 1: ENTER SIM NETWORK INTERFACE (e.g., eth0-FAKE):', proceedToNextStep);
+                        showDynamicInput('STEP 1: ENTER NETWORK INTERFACE (e.g., eth0-FAKE):', proceedToNextStep);
                     } else if (currentStep === 2) {
                         executeSnifferHack();
                     }
                     break;
-                // Add more if needed
+                    
+                case 'IP':
+                    if (currentStep === 1) {
+                        showDynamicInput('STEP 1: ENTER FAKE IP TO TRACE:', proceedToNextStep);
+                    } else if (currentStep === 2) {
+                        executeIpHack();
+                    }
+                    break;
+                    
+                case 'MALWARE':
+                    if (currentStep === 1) {
+                        showDynamicInput('STEP 1: ENTER FAKE TARGET IP:', proceedToNextStep);
+                    } else if (currentStep === 2) {
+                        showDynamicInput('STEP 2: SELECT FAKE MALWARE TYPE (trojan/worm/rootkit):', proceedToNextStep);
+                    } else if (currentStep === 3) {
+                        executeMalwareHack();
+                    }
+                    break;
+                    
+                case 'DDOS':
+                    if (currentStep === 1) {
+                        showDynamicInput('STEP 1: ENTER FAKE TARGET IP:', proceedToNextStep);
+                    } else if (currentStep === 2) {
+                        showDynamicInput('STEP 2: ENTER FAKE ATTACK INTENSITY (1-10):', proceedToNextStep);
+                    } else if (currentStep === 3) {
+                        executeDdosHack();
+                    }
+                    break;
+                    
+                default:
+                    executeGenericHack();
+                    break;
             }
             currentStep++;
         }
-
-        // EXECUTE CAMERA HACK
-        async function executeCameraHack() {
-            const ip = hackData.step1 || '192.168.FAKE.CAM';
-            log(`STEP 2: HACKING CAMERA AT IP ${ip}...`, "crit");
-            await simulateFlood(25, "crit");
-            log(`CAMERA ACCESS GRANTED. STREAMING FAKE FEED...`, "success");
-            cameraOverlay.style.display = 'flex';
-            // Use a fake video URL - replace with any iframe-compatible fake video
-            document.getElementById('camera-video').src = 'https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&mute=1'; // Example fake video
+        
+        // ═══════════════════════════════════════════════════════════════
+        //                      SPECIFIC HACK EXECUTIONS
+        // ═══════════════════════════════════════════════════════════════
+        async function executeBankHack() {
+            const bank = hackData.step1 || 'FAKE-BANK';
+            const account = hackData.step2 || '****1234';
+            const amount = hackData.step3 || '10000';
+            
+            log(`STEP 4: INITIATING TRANSFER FROM ${bank}...`, "bank-txt");
+            await simulateFlood(30, "bank-txt");
+            log(`ACCOUNT ${account} ACCESSED. TRANSFERRING $${amount}...`, "progress-bar");
+            await sleep(2000);
+            log(`TRANSFER COMPLETE! $${amount} MOVED TO OFFSHORE ACCOUNT (FAKE)`, "success");
             completeHack();
         }
-
+        
+        async function executeWifiHack() {
+            const ssid = hackData.step1 || 'FAKE-WIFI';
+            log(`STEP 2: CRACKING WIFI: ${ssid}...`, "warn");
+            await simulateFlood(25, "warn");
+            log(`WPA2 KEY CRACKED: FakePass123! (SIMULATED)`, "success");
+            log(`CONNECTED TO ${ssid}. ACCESS GRANTED.`, "good");
+            completeHack();
+        }
+        
+        async function executeCameraHack() {
+            const ip = hackData.step1 || '192.168.FAKE.100';
+            const location = hackData.step2 || 'Unknown Location';
+            
+            log(`STEP 3: HACKING IP CAMERA AT ${ip}...`, "crit");
+            await simulateFlood(20, "crit");
+            log(`CAMERA CREDENTIALS BYPASSED. ACCESSING STREAM...`, "success");
+            
+            document.getElementById('camera-target').textContent = ip;
+            document.getElementById('camera-location').textContent = location;
+            
+            // Fake camera feeds (using public webcams or fake videos)
+            const fakeFeeds = [
+                'https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&mute=1',
+                'https://www.youtube.com/embed/jNQXAC9IVRw?autoplay=1&mute=1',
+                'https://www.youtube.com/embed/9bZkp7q19f0?autoplay=1&mute=1'
+            ];
+            const randomFeed = fakeFeeds[Math.floor(Math.random() * fakeFeeds.length)];
+            
+            document.getElementById('camera-video').src = randomFeed;
+            cameraOverlay.style.display = 'flex';
+            
+            completeHack();
+        }
+        
         function closeCamera() {
             cameraOverlay.style.display = 'none';
-            log(`CAMERA FEED CLOSED. CONNECTION TERMINATED.`, "dim");
             document.getElementById('camera-video').src = '';
+            log(`CAMERA FEED CLOSED. CONNECTION TERMINATED.`, "dim");
         }
-
-        // EXECUTE IP HACK
-        async function executeIpHack() {
-            const ip = hackData.step1 || '192.168.FAKE.IP';
-            log(`STEP 2: TRACING AND EXPLOITING IP ${ip}...`, "warn");
-            await simulateFlood(20, "warn");
-            log(`IP TRACED: LOCATION FAKE-KIGALI, RW. EXPLOIT SUCCESS.`, "good");
-            completeHack();
-        }
-
-        // EXECUTE SNIFFER HACK
+        
         async function executeSnifferHack() {
             const iface = hackData.step1 || 'eth0-FAKE';
-            log(`STEP 2: STARTING NETWORK SNIFFER ON INTERFACE ${iface}...`, "orange-txt");
+            log(`STEP 2: STARTING NETWORK SNIFFER ON ${iface}...`, "orange-txt");
             await simulateFlood(15, "orange-txt");
-            log(`SNIFFER ACTIVE. CAPTURING FAKE PACKETS...`, "success");
+            log(`SNIFFER ACTIVE. CAPTURING FAKE PACKETS IN REAL-TIME...`, "success");
+            
             snifferOverlay.style.display = 'flex';
-            snifferContent.innerHTML = '';
-            snifferInterval = setInterval(addFakePacket, 500);
+            snifferContent.innerHTML = `═══ PACKET CAPTURE STARTED ON ${iface} ═══\n\n`;
+            snifferInterval = setInterval(addFakePacket, 600);
+            
             completeHack();
         }
-
+        
         function addFakePacket() {
             const fakePackets = [
-                "TCP [SRC: 192.168.1.100:45678] [DST: 8.8.8.8:53] DNS QUERY FAKE.COM",
-                "UDP [SRC: 10.0.0.5:12345] [DST: 172.16.0.1:80] HTTP GET /FAKE",
-                "ICMP [SRC: 192.168.FAKE.1] [DST: 192.168.FAKE.2] PING ECHO",
-                "TCP [SRC: 172.217.5.174:443] [DST: 192.168.1.50:56789] HTTPS DATA",
-                "UDP [SRC: 239.255.255.250:1900] [DST: MULTICAST] SSDP DISCOVERY"
+                `TCP  [${randomIP()}:${randomPort()}] → [${randomIP()}:${randomPort()}] [SYN] Seq=0 Win=65535`,
+                `HTTP [${randomIP()}:80] → [${randomIP()}:${randomPort()}] GET /api/users HTTP/1.1`,
+                `HTTPS [${randomIP()}:443] → [${randomIP()}:${randomPort()}] TLS Handshake`,
+                `DNS  [${randomIP()}:53] → [${randomIP()}:${randomPort()}] Query: fake-site.com`,
+                `UDP  [${randomIP()}:${randomPort()}] → [${randomIP()}:${randomPort()}] Data: 128 bytes`,
+                `ICMP [${randomIP()}] → [${randomIP()}] Echo Request`,
+                `SSH  [${randomIP()}:22] → [${randomIP()}:${randomPort()}] Authentication Attempt`,
+                `FTP  [${randomIP()}:21] → [${randomIP()}:${randomPort()}] USER anonymous`,
+                `SMTP [${randomIP()}:25] → [${randomIP()}:${randomPort()}] MAIL FROM:<fake@email.com>`,
+                `ARP  [${randomIP()}] is at ${randomMAC()}`
             ];
+            
             const packet = fakePackets[Math.floor(Math.random() * fakePackets.length)];
-            snifferContent.innerHTML += packet + '\n';
+            const timestamp = new Date().toLocaleTimeString('en-US', { hour12: false });
+            snifferContent.innerHTML += `[${timestamp}] ${packet}\n`;
             snifferContent.scrollTop = snifferContent.scrollHeight;
         }
-
+        
+        function randomIP() {
+            return `${Math.floor(Math.random()*256)}.${Math.floor(Math.random()*256)}.${Math.floor(Math.random()*256)}.${Math.floor(Math.random()*256)}`;
+        }
+        
+        function randomPort() {
+            return Math.floor(Math.random() * 65535);
+        }
+        
+        function randomMAC() {
+            return Array.from({length: 6}, () => Math.floor(Math.random()*256).toString(16).padStart(2, '0')).join(':');
+        }
+        
         function closeSniffer() {
             snifferOverlay.style.display = 'none';
             clearInterval(snifferInterval);
             log(`SNIFFER STOPPED. PACKET CAPTURE TERMINATED.`, "dim");
         }
-
-        // ... (Other execute functions remain the same) ...
-
-        // CLI INPUT HANDLER - Added sniffer commands
-        cli.addEventListener('keydown', (e) => {
+        
+        async function executeIpHack() {
+            const ip = hackData.step1 || '192.168.FAKE.1';
+            log(`STEP 2: TRACING IP ${ip}...`, "warn");
+            await simulateFlood(18, "warn");
+            log(`IP TRACED: Location: Kigali, RW | ISP: FAKE-TELECOM | Ports: 22,80,443 OPEN`, "good");
+            log(`EXPLOITING OPEN PORTS... ROOT ACCESS GAINED (FAKE)`, "success");
+            completeHack();
+        }
+        
+        async function executeMalwareHack() {
+            const target = hackData.step1 || '192.168.FAKE.50';
+            const type = hackData.step2 || 'trojan';
+            log(`STEP 3: DEPLOYING ${type.toUpperCase()} TO ${target}...`, "pink-txt");
+            await simulateFlood(22, "pink-txt");
+            log(`MALWARE DEPLOYED. BACKDOOR ESTABLISHED (FAKE)`, "success");
+            log(`C&C SERVER: fake-command-server.onion CONNECTED`, "info");
+            completeHack();
+        }
+        
+        async function executeDdosHack() {
+            const target = hackData.step1 || '192.168.FAKE.1';
+            const intensity = hackData.step2 || '5';
+            log(`STEP 3: LAUNCHING DDOS ON ${target} AT LEVEL ${intensity}...`, "crit");
+            log(`ACTIVATING ${intensity * 1000} FAKE BOTS...`, "warn");
+            await simulateFlood(35, "crit");
+            log(`TARGET OVERWHELMED! ${target} IS DOWN (SIMULATED)`, "success");
+            completeHack();
+        }
+        
+        async function executeGenericHack() {
+            log(`EXECUTING ${currentHackType} OPERATION...`, "warn");
+            await simulateFlood(20, "info");
+            log(`${currentHackType} OPERATION COMPLETE (FAKE)`, "success");
+            completeHack();
+        }
+        
+        function completeHack() {
+            ui.classList.add('shake');
+            setTimeout(() => ui.classList.remove('shake'), 300);
+            log(`═══ ${currentHackType} HACK SEQUENCE FINISHED ═══`, "purple-txt");
+        }
+        
+        // ═══════════════════════════════════════════════════════════════
+        //                      TOOL RUNNER
+        // ═══════════════════════════════════════════════════════════════
+        async function runTool(tool) {
+            log(`LAUNCHING TOOL: ${tool}...`, "info");
+            await sleep(500);
+            
+            const toolActions = {
+                'NMAP': async () => {
+                    log(`Running NMAP scan on fake network...`, "good");
+                    await simulateFlood(15, "dim");
+                    log(`Scan complete. 42 hosts found, 156 ports open (FAKE)`, "success");
+                },
+                'METASPLOIT': async () => {
+                    log(`Loading Metasploit Framework (SIM)...`, "crit");
+                    await simulateFlood(12, "dim");
+                    log(`msf6 > exploit(multi/handler) loaded`, "success");
+                },
+                'WIRESHARK': async () => {
+                    log(`Starting Wireshark packet capture...`, "orange-txt");
+                    executeSnifferHack();
+                },
+                'JOHN': async () => {
+                    log(`John the Ripper: Cracking fake password hashes...`, "warn");
+                    await simulateFlood(10, "dim");
+                    log(`Password cracked: "FakeP@ss123"`, "success");
+                },
+                'HYDRA': async () => {
+                    log(`Hydra brute force attack initiated...`, "crit");
+                    await simulateFlood(18, "dim");
+                    log(`Credentials found: admin / fake123`, "success");
+                }
+            };
+            
+            if (toolActions[tool]) {
+                await toolActions[tool]();
+            } else {
+                await simulateFlood(10, "dim");
+                log(`${tool} execution complete (SIMULATED)`, "success");
+            }
+        }
+        
+        // ═══════════════════════════════════════════════════════════════
+        //                      SEARCH HANDLERS
+        // ═══════════════════════════════════════════════════════════════
+        function handleSearch(e) {
+            if (e.key === 'Enter') {
+                const query = searchInput.value.toLowerCase().trim();
+                if (!query) return;
+                
+                log(`INTELLIGENCE SEARCH: "${query}"`, "info");
+                searchInput.value = '';
+                
+                if (query.includes('ip') || /\d+\.\d+\.\d+\.\d+/.test(query)) {
+                    log(`IP TRACE RESULTS: Location: Kigali, RW | ISP: FAKE-ISP | Vulnerabilities: CVE-2024-FAKE`, "good");
+                } else if (query.includes('camera') || query.includes('cam')) {
+                    log(`CAMERA DATABASE: 3 fake IP cameras found nearby`, "warn");
+                    log(`CAM-1: 192.168.1.100 | CAM-2: 192.168.1.101 | CAM-3: 10.0.0.50`, "dim");
+                } else if (query.includes('wifi') || query.includes('network')) {
+                    log(`WIFI NETWORKS DETECTED (FAKE):`, "info");
+                    log(`1. FAKE-WIFI-5G (WPA2) | 2. PUBLIC-NETWORK (Open) | 3. HIDDEN-NET (WPA3)`, "dim");
+                } else if (query.includes('device')) {
+                    log(`IOT DEVICES FOUND: 12 smart devices on fake network`, "good");
+                } else {
+                    log(`No results found for "${query}" in fake database`, "bad");
+                }
+            }
+        }
+        
+        searchLeft.addEventListener('input', (e) => {
+            const filter = e.target.value.toLowerCase();
+            const buttons = document.querySelectorAll('#operations-list .h-btn');
+            
+            buttons.forEach(btn => {
+                const text = btn.textContent.toLowerCase();
+                if (text.includes(filter)) {
+                    btn.style.display = '';
+                } else {
+                    btn.style.display = 'none';
+                }
+            });
+        });
+        
+        // ═══════════════════════════════════════════════════════════════
+        //                      CLI COMMAND HANDLER
+        // ═══════════════════════════════════════════════════════════════
+        cli.addEventListener('keydown', async (e) => {
             if (e.key === 'Enter') {
                 const cmd = cli.value.toLowerCase().trim();
-                log(`BRU@ROOT:~$ ${cmd}`, "success");
+                if (!cmd) return;
+                
+                log(`BRU@NEXUS:~$ ${cmd}`, "success");
                 cli.value = '';
+                
                 const parts = cmd.split(' ');
                 const baseCmd = parts[0];
-                const arg = parts[1];
-                if (baseCmd === 'flood') simulateFlood(500);
-                else if (baseCmd === 'help') {
+                const arg = parts.slice(1).join(' ');
+                
+                // Command routing
+                if (baseCmd === 'help') {
                     kaliHelp.style.display = 'block';
+                } else if (baseCmd === 'clear') {
+                    term.innerHTML = '';
+                } else if (baseCmd === 'status') {
+                    log(`SYSTEM STATUS: ONLINE | ENCRYPTION: AES-256 (FAKE) | UPLINK: ACTIVE`, "good");
+                    log(`OPERATOR: BRU | LOCATION: Kigali, RW | THREAT LEVEL: GREEN`, "info");
+                } else if (baseCmd === 'whoami') {
+                    log(`OPERATOR: BRU | CLEARANCE: LEVEL 10 (FAKE) | ROLE: HACKER SIMULATOR`, "purple-txt");
+                } else if (baseCmd === 'flood') {
+                    await simulateFlood(100);
                 } else if (baseCmd === 'camera_hack') {
                     if (arg) {
                         hackData.step1 = arg;
-                        executeCameraHack();
+                        hackData.step2 = 'CLI Location';
+                        await executeCameraHack();
                     } else {
-                        log("Usage: camera_hack [IP]", "bad");
+                        log(`Usage: camera_hack [IP]`, "bad");
                     }
                 } else if (baseCmd === 'ip_trace') {
                     if (arg) {
                         hackData.step1 = arg;
-                        executeIpHack();
+                        await executeIpHack();
                     } else {
-                        log("Usage: ip_trace [IP]", "bad");
+                        log(`Usage: ip_trace [IP]`, "bad");
                     }
                 } else if (baseCmd === 'sniffer_start') {
-                    executeSnifferHack();
+                    hackData.step1 = 'eth0-FAKE';
+                    await executeSnifferHack();
                 } else if (baseCmd === 'sniffer_stop') {
                     closeSniffer();
-                } 
-                // ... (Other commands) ...
-                else {
-                    log("Unknown sim command. Try 'help'.", "bad");
+                } else if (baseCmd === 'scan') {
+                    log(`Scanning fake networks...`, "info");
+                    await simulateFlood(15, "dim");
+                    log(`Found 5 networks: FAKE-WIFI, PUBLIC-NET, HIDDEN-1, CORP-NETWORK, GUEST-ACCESS`, "good");
+                } else if (baseCmd === 'nmap') {
+                    if (arg) {
+                        log(`Running NMAP on ${arg}...`, "info");
+                        await simulateFlood(12, "dim");
+                        log(`Ports open: 22, 80, 443, 3306, 8080 (FAKE)`, "good");
+                    } else {
+                        log(`Usage: nmap [target]`, "bad");
+                    }
+                } else if (baseCmd === 'exit') {
+                    log(`Exiting simulation... Goodbye! (FAKE EXIT)`, "warn");
+                } else if (baseCmd === 'ping') {
+                    if (arg) {
+                        log(`Pinging ${arg}... Reply: 12ms (FAKE)`, "good");
+                    } else {
+                        log(`Usage: ping [target]`, "bad");
+                    }
+                } else {
+                    log(`Unknown command: '${baseCmd}'. Type 'help' for available commands.`, "bad");
                 }
             }
         });
-
+        
         function closeHelp() {
             kaliHelp.style.display = 'none';
         }
-
-        // SEARCH BAR HANDLER
-        function handleSearch(e) {
-            if (e.key === 'Enter') {
-                const query = searchInput.value.toLowerCase();
-                log(`Searching SIM database for: ${query}`, "info");
-                searchInput.value = '';
-                if (query.includes('ip')) {
-                    log("FAKE IP TRACE: Location: Kigali, RW, Provider: FAKE-ISP, Vulns: OPEN PORTS 80,443", "good");
-                } else if (query.includes('camera')) {
-                    log("FAKE CAMERA FOUND: IP 192.168.CAM.1, Stream: READY TO HACK", "warn");
-                } 
-                // ... (Existing searches) ...
-            }
-        }
-
-        // INITIAL LOGS
-        log("NEXUS_OMNIVERSE CORE V20 LOADED. ENHANCED ANIMATIONS & FEATURES: ACTIVE.");
-        log("OPERATOR: BRU. SIMULATION AWAITING INPUT. ALL DATA FAKE FOR MOVIE USE.");
-        log("NEW: FAKE NETWORK SNIFFER WITH LIVE PACKET CAPTURE, ENHANCED CAMERA EFFECTS!", "pink-txt");
+        
+        // ═══════════════════════════════════════════════════════════════
+        //                      INITIAL SYSTEM LOGS
+        // ═══════════════════════════════════════════════════════════════
+        log("NEXUS_OMNIVERSE CORE V20 LOADED SUCCESSFULLY.", "success");
+        log("ALL SYSTEMS OPERATIONAL. FAKE MODE ACTIVE.", "info");
+        log("ENHANCED FEATURES: Fake camera hacking with iframe streams, network packet sniffer, dual search bars!", "pink-txt");
+        log("Type 'help' or click buttons to start simulations.", "dim");
     </script>
 </body>
 </html>
