@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NEXUS_OMNIVERSE // SIMULATION_CORE_V20 // BRU_INTERFACE</title>
+    <script src="https://cdn.ably.com/lib/ably.min-2.js"></script>
     <style>
         :root {
             --neon-green: #00ff88;
@@ -924,43 +925,36 @@ Type <span class="success">'help'</span> for available commands.
 ════════════════════════════════════════════════════════════════
         </pre>
     </div>
-    
+
     <script>
         // ═══════════════════════════════════════════════════════════════
         //                      API CONFIGURATION
         // ═══════════════════════════════════════════════════════════════
-        const API_CONFIG = {
-            endpoint: 'https://chatbru1.vercel.app',
-            apiKey: 'UNMYag.VcluoA:gkmv1VpeHWmrC7W0NJXRcdQZaRAJP0Z5uAj_dooMjuc'
-        };
+        const ABLY_KEY = 'UNMYag.VcluoA:gkmv1VpeHWmrC7W0NJXRcdQZaRAJP0Z5uAj_dooMjuc';
+        const ably = new Ably.Realtime({ key: ABLY_KEY, clientId: 'SYSTEM_BOT' });
+        const chatChannel = ably.channels.get('BRUCHANNEL');
         
         // ═══════════════════════════════════════════════════════════════
         //                      SEND MESSAGE TO API
         // ═══════════════════════════════════════════════════════════════
-        async function sendToAPI(message) {
+async function sendToAPI(message) {
             const apiStatusEl = document.getElementById('api-status');
             const apiStatusText = document.getElementById('api-status-text');
             
             try {
                 apiStatusEl.className = 'api-status sending';
-                apiStatusText.textContent = '📡 Sending report to server...';
+                apiStatusText.textContent = '📡 Broadcasting to BRUCHANNEL...';
                 
-                log(`Sending operation report to API...`, "info");
+                log(`Broadcasting operation report to Ably...`, "info");
                 
-                const response = await fetch(`${API_CONFIG.endpoint}/api/message`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${API_CONFIG.apiKey}`
-                    },
-                    body: JSON.stringify({
-                        message: message,
-                        timestamp: new Date().toISOString(),
-                        operator: 'BRU',
-                        source: 'NEXUS_OMNIVERSE_V20'
-                    })
+                // THE FIX: We replace 'fetch' with 'chatChannel.publish'
+                await chatChannel.publish('chat', { 
+                    text: `🚨 [BRU_HACK_REPORT]: ${message}` 
                 });
-                
+
+                apiStatusEl.className = 'api-status success';
+                apiStatusText.textContent = '✅ REPORT DELIVERED';
+                log(`✅ ABLY SUCCESS: Broadcast sent to BRUCHANNEL`, "api-success");                
                 if (response.ok) {
                     const data = await response.json();
                     apiStatusEl.className = 'api-status success';
@@ -1914,10 +1908,9 @@ Type <span class="success">'help'</span> for available commands.
         //                      INITIAL SYSTEM LOGS
         // ═══════════════════════════════════════════════════════════════
         log("NEXUS_OMNIVERSE CORE V20 LOADED SUCCESSFULLY.", "success");
-        log("ALL SYSTEMS OPERATIONAL. FAKE MODE ACTIVE.", "info");
-        log("ENHANCED FEATURES: API reporting, CMD commands, camera hacking, network sniffer!", "pink-txt");
-        log("Connected to chatbru1.vercel.app - All operations will be reported.", "api-success");
-        log("Type 'help' or click buttons to start simulations.", "dim");
-    </script>
+        log("ALL SYSTEMS OPERATIONAL. REAL-TIME MODE ACTIVE.", "info");
+        log("ENHANCED FEATURES: Ably Broadcasting, CMD commands, camera hacking!", "pink-txt");
+        log("📡 ABLY_LINK: Connected to BRUCHANNEL - Reporting LIVE.", "api-success");
+        log("Type 'help' or click buttons to start simulations.", "dim");    </script>
 </body>
 </html>
