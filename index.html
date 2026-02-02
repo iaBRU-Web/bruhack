@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NEXUS_OMNIVERSE // SIMULATION_CORE_V12 // BRU_INTERFACE</title>
+    <title>NEXUS_OMNIVERSE // SIMULATION_CORE_V13 // BRU_INTERFACE</title>
     <style>
         :root {
             --neon-green: #00ff88;
@@ -30,10 +30,10 @@
             z-index: -1;
             opacity: 0.8;
         }
-        /* GRID LAYOUT - Enhanced with more columns for sidebars */
+        /* GRID LAYOUT */
         .grid {
             display: grid;
-            grid-template-columns: 250px 1fr 300px; /* Left: Divisions, Center: Terminal, Right: Search/Map/DNA */
+            grid-template-columns: 250px 1fr 300px;
             height: 100vh;
             gap: 4px;
             padding: 4px;
@@ -111,6 +111,43 @@
             flex: 1;
             outline: none;
             font-size: 14px;
+        }
+        /* DYNAMIC INPUT OVERLAY */
+        #dynamic-input {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.9);
+            border: 2px solid var(--neon-green);
+            padding: 20px;
+            z-index: 10;
+            display: none;
+            flex-direction: column;
+            gap: 10px;
+            width: 400px;
+            box-shadow: 0 0 30px var(--neon-green);
+        }
+        #dynamic-input label {
+            color: var(--neon-blue);
+        }
+        #dynamic-input input {
+            background: #001a0d;
+            border: 1px solid var(--neon-green);
+            color: var(--neon-green);
+            padding: 8px;
+            font-size: 12px;
+        }
+        #dynamic-input button {
+            background: var(--neon-green);
+            color: var(--bg-black);
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        #dynamic-input button:hover {
+            background: var(--warn-yellow);
         }
         /* RIGHT PANEL: Search Sidebar, DNA, Map */
         .right-panel {
@@ -213,24 +250,24 @@
 <body>
     <canvas id="matrix"></canvas>
     <div class="grid" id="ui">
-        <!-- LEFT PANEL: Hacking Divisions (Enhanced with more options) -->
+        <!-- LEFT PANEL: Hacking Divisions -->
         <div class="panel left-panel">
-            <h3>[ HACKING_DIVISIONS_V12 ]</h3>
+            <h3>[ HACKING_DIVISIONS_V13 ]</h3>
             <div class="btn-deck">
-                <button class="h-btn" onclick="runHack('BANK')">🏦 INTERACTIVE BANK TRANSFER</button>
-                <button class="h-btn" onclick="runHack('WIFI')">📶 WIFI: NEXUS_NET_Alpha</button>
-                <button class="h-btn" onclick="runHack('SITE')">🌐 WEB: SHADOW_SITE_INFILTRATE</button>
-                <button class="h-btn" onclick="runHack('SAT')">📡 SAT: QUANTUM_ORBIT_LINK</button>
-                <button class="h-btn" onclick="runHack('PC')">💻 REMOTE: OVERLOAD_PC</button>
-                <button class="h-btn red" onclick="runHack('BOMB')">💣 ORDNANCE: SIM_DETONATE</button>
-                <button class="h-btn" onclick="runHack('AGENCY')">🕵️ AGENCY: COVERT_ACCESS</button>
-                <button class="h-btn" onclick="runHack('BIO')">🧬 BIO: GENOME_HACK</button>
+                <button class="h-btn" onclick="initHack('BANK')">🏦 INTERACTIVE BANK TRANSFER</button>
+                <button class="h-btn" onclick="initHack('WIFI')">📶 WIFI: NETWORK_CRACK</button>
+                <button class="h-btn" onclick="initHack('SITE')">🌐 WEB: SITE_INFILTRATE</button>
+                <button class="h-btn" onclick="initHack('SAT')">📡 SAT: ORBIT_HACK</button>
+                <button class="h-btn" onclick="initHack('PC')">💻 REMOTE: PC_OVERLOAD</button>
+                <button class="h-btn red" onclick="initHack('BOMB')">💣 ORDNANCE: SIM_DETONATE</button>
+                <button class="h-btn" onclick="initHack('AGENCY')">🕵️ AGENCY: COVERT_BREACH</button>
+                <button class="h-btn" onclick="initHack('BIO')">🧬 BIO: GENOME_EXTRACT</button>
             </div>
         </div>
         <!-- CENTER PANEL: Terminal -->
         <div class="panel">
             <div id="term">
-                SIMULATION CORE v12.0<br>
+                SIMULATION CORE v13.0<br>
                 Operator: <span class="good">BRU</span><br>
                 Status: <span class="warn">FICTIONAL MODE ENABLED</span><br>
                 Type <span class="warn">help</span> for commands.<br><br>
@@ -240,7 +277,7 @@
                 <input type="text" id="cli" autofocus autocomplete="off">
             </div>
         </div>
-        <!-- RIGHT PANEL: Search Sidebar, DNA Scroll, Global Map -->
+        <!-- RIGHT PANEL: Search Sidebar, DNA, Map -->
         <div class="panel right-panel">
             <h3>🔍 SEARCH SIDEBAR (SIM)</h3>
             <div class="search-bar">
@@ -260,6 +297,12 @@
                 “Fictional breach detected in Sector Zeta. Training exercise ongoing.”
             </div>
         </div>
+    </div>
+    <!-- DYNAMIC INPUT OVERLAY -->
+    <div id="dynamic-input">
+        <label id="dynamic-label"></label>
+        <input type="text" id="dynamic-field">
+        <button id="dynamic-submit">EXECUTE SIM STEP</button>
     </div>
     <script>
         // MATRIX RAIN
@@ -288,11 +331,15 @@
         const dnaScroll = document.getElementById('dna-scroll');
         const ui = document.getElementById('ui');
         const searchInput = document.getElementById('search-input');
+        const dynamicInput = document.getElementById('dynamic-input');
+        const dynamicLabel = document.getElementById('dynamic-label');
+        const dynamicField = document.getElementById('dynamic-field');
+        const dynamicSubmit = document.getElementById('dynamic-submit');
         const spinChars = ["|", "/", "-", "\\"];
         let sIdx = 0;
         setInterval(() => { sIdx = (sIdx + 1) % 4; }, 100);
 
-        // DNA SCROLL UPDATE (Enhanced with more variety)
+        // DNA SCROLL UPDATE
         function updateDNA() {
             const bases = ["A", "T", "C", "G", "::", "||", "--", spinChars[sIdx], "0", "1", "X", "Y", "Z"];
             let row = "";
@@ -324,60 +371,148 @@
             }
         }
 
-        // ENHANCED HACK FUNCTIONS (All fake data for movie simulation)
-        async function runHack(type) {
-            ui.classList.add('glitch');
-            await sleep(300);
-            ui.classList.remove('glitch');
+        // DYNAMIC INPUT HANDLER
+        let currentHackType = '';
+        let hackData = {};
+        function showDynamicInput(labelText, onSubmit) {
+            dynamicLabel.innerText = labelText;
+            dynamicField.value = '';
+            dynamicInput.style.display = 'flex';
+            dynamicField.focus();
+            dynamicSubmit.onclick = () => {
+                const value = dynamicField.value;
+                if (value) {
+                    dynamicInput.style.display = 'none';
+                    onSubmit(value);
+                }
+            };
+        }
 
-            if (type === 'BANK') {
-                log("INITIATING SIMULATED BANK EXPLOIT...", "bank-txt");
-                await sleep(800);
-                const targetAcc = prompt("ENTER SIMULATED TARGET ACCOUNT (FAKE):") || "SIM-ACC-987654321";
-                const amount = prompt("ENTER SIMULATED TRANSFER AMOUNT ($):") || "1000000";
-                log(`CONNECTING TO FAKE SWIFT_RELAY... TARGET: [${targetAcc}] SIGNAL: 87%`, "bank-txt");
-                await simulateFlood(15);
-                log(`UPLINK SIMULATED. SENDING FAKE $${amount}... ENCRYPTION: AES-FAKE-256`, "warn");
-                for (let i = 0; i <= 100; i += 5) {
-                    await sleep(120);
-                    log(`STAGING PACKETS: [${'#'.repeat(i/5)}${'.'.repeat(20-i/5)}] ${i}% HASH: 0xFAKE${Math.random().toString(16).toUpperCase().substring(2,6)}`, "progress-bar");
-                }
-                log(`SIM SUCCESS: $${amount} TRANSFERRED TO FAKE ACCOUNT ${targetAcc}`, "success");
-                log("WIPING SIMULATED FOOTPRINT... COMPLETE.", "warn");
-            } else if (type === 'WIFI') {
-                log("SCANNING FAKE WI-FI: NEXUS_NET_Alpha SIGNAL: 92dB", "info");
-                await simulateFlood(10);
-                log("CRACKING SIM WPA3... KEY FOUND: FAKE-pn4rqfzGcF-FAKE", "success");
-            } else if (type === 'SITE') {
-                log("DEFACING SIM WEBSITE: SHADOW_SITE... INJECTING FAKE PAYLOAD", "warn");
-                await sleep(1000);
-                log("SIM ACCESS GRANTED. DATA EXTRACTED: FAKE-HASH-ABCD1234", "good");
-            } else if (type === 'SAT') {
-                log("LINKING TO FAKE SATELLITE: QUANTUM_ORBIT... LATENCY: 150ms", "info");
-                await simulateFlood(20);
-                log("ORBITAL SIM LINK ESTABLISHED. DOWNLOADING FAKE TELEMETRY.", "success");
-            } else if (type === 'PC') {
-                log("SENDING FAKE KERNEL OVERLOAD TO REMOTE PC...", "bad");
-                await sleep(1500);
-                log("SIM REMOTE SYSTEM DOWN. FAKE IP: 192.168.FAKE.99", "crit");
-            } else if (type === 'BOMB') {
-                ui.classList.add('shake');
-                log("!!! SIM THERMAL DETONATION ARMED !!! COUNTDOWN: 5s", "crit");
-                for (let i = 5; i > 0; i--) {
-                    await sleep(1000);
-                    log(`DETONATION IN ${i}...`, "bad");
-                }
-                log("FAKE DETONATION CONFIRMED IN SIM SECTOR 7. NO REAL IMPACT.", "crit");
-                ui.classList.remove('shake');
-            } else if (type === 'AGENCY') {
-                log("ACCESSING FAKE SECRET AGENCY GRID... CLEARANCE: LEVEL-OMEGA", "warn");
-                await simulateFlood(25);
-                log("SIM AGENCY DATA: FAKE-AGENT-ID-007, MISSION: SHADOW_OP", "good");
-            } else if (type === 'BIO') {
-                log("LOADING FAKE GENOME VAULT... SEQUENCE MATCH: 98.7%", "info");
-                await sleep(1000);
-                log("BIO SIM ALGORITHM STABILIZED. FAKE DNA HASH: GATC-FAKE-XYZ", "success");
+        // INIT HACK - Start the stepped process
+        function initHack(type) {
+            currentHackType = type;
+            hackData = {};
+            ui.classList.add('glitch');
+            sleep(300).then(() => ui.classList.remove('glitch'));
+            log(`INITIALIZING SIM ${type} HACK...`, "warn");
+            switch (type) {
+                case 'WIFI':
+                    showDynamicInput('ENTER SIM WIFI NAME:', (name) => {
+                        hackData.name = name || 'NEXUS_NET_Alpha';
+                        log(`TARGET WIFI: ${hackData.name} - SCANNING...`, "info");
+                        proceedHack();
+                    });
+                    break;
+                case 'BANK':
+                    showDynamicInput('ENTER SIM TARGET ACCOUNT:', (acc) => {
+                        hackData.acc = acc || 'SIM-ACC-987654321';
+                        log(`TARGET ACCOUNT: ${hackData.acc} - CONNECTING...`, "bank-txt");
+                        showDynamicInput('ENTER SIM TRANSFER AMOUNT ($):', (amt) => {
+                            hackData.amt = amt || '1000000';
+                            proceedHack();
+                        });
+                    });
+                    break;
+                case 'SITE':
+                    showDynamicInput('ENTER SIM WEBSITE URL:', (url) => {
+                        hackData.url = url || 'shadow.site.sim';
+                        log(`TARGET SITE: ${hackData.url} - INFILTRATING...`, "warn");
+                        proceedHack();
+                    });
+                    break;
+                case 'SAT':
+                    showDynamicInput('ENTER SIM SATELLITE ID:', (id) => {
+                        hackData.id = id || 'QUANTUM-ORBIT-42';
+                        log(`TARGET SAT: ${hackData.id} - LINKING...`, "info");
+                        proceedHack();
+                    });
+                    break;
+                case 'PC':
+                    showDynamicInput('ENTER SIM REMOTE IP:', (ip) => {
+                        hackData.ip = ip || '192.168.FAKE.99';
+                        log(`TARGET PC: ${hackData.ip} - OVERLOADING...`, "bad");
+                        proceedHack();
+                    });
+                    break;
+                case 'BOMB':
+                    showDynamicInput('ENTER SIM SECTOR CODE:', (code) => {
+                        hackData.code = code || 'SECTOR-ZETA-7';
+                        log(`TARGET SECTOR: ${hackData.code} - ARMING...`, "crit");
+                        proceedHack();
+                    });
+                    break;
+                case 'AGENCY':
+                    showDynamicInput('ENTER SIM AGENCY NAME:', (name) => {
+                        hackData.name = name || 'ORBITAL_AGENCY_SIM';
+                        log(`TARGET AGENCY: ${hackData.name} - BREACHING...`, "warn");
+                        proceedHack();
+                    });
+                    break;
+                case 'BIO':
+                    showDynamicInput('ENTER SIM GENOME ID:', (id) => {
+                        hackData.id = id || 'GENOME-VAULT-X';
+                        log(`TARGET GENOME: ${hackData.id} - EXTRACTING...`, "info");
+                        proceedHack();
+                    });
+                    break;
             }
+        }
+
+        // PROCEED HACK - Simulate the hack after input
+        async function proceedHack() {
+            await simulateFlood(15);
+            switch (currentHackType) {
+                case 'WIFI':
+                    log(`CRACKING SIM WPA3 FOR ${hackData.name}...`, "info");
+                    await sleep(1000);
+                    const fakePass = `FAKE-${Math.random().toString(36).substring(2, 10).toUpperCase()}`;
+                    log(`KEY FOUND: ${fakePass} SIGNAL: 92dB ENCRYPTION: BROKEN`, "success");
+                    break;
+                case 'BANK':
+                    log(`UPLINK TO FAKE SWIFT... SENDING $${hackData.amt} TO ${hackData.acc}`, "bank-txt");
+                    for (let i = 0; i <= 100; i += 5) {
+                        await sleep(120);
+                        log(`TRANSFER: [${'#'.repeat(i/5)}${'.'.repeat(20-i/5)}] ${i}%`, "progress-bar");
+                    }
+                    log(`SIM SUCCESS: TRANSFER COMPLETE. HASH: 0xFAKE1234`, "success");
+                    break;
+                case 'SITE':
+                    log(`DEFACING ${hackData.url}... INJECTING FAKE PAYLOAD`, "warn");
+                    await sleep(1000);
+                    log(`ACCESS GRANTED. DATA: FAKE-EXTRACTED-ABCD`, "good");
+                    break;
+                case 'SAT':
+                    log(`ORBIT LINK TO ${hackData.id}... LATENCY: 150ms`, "info");
+                    await sleep(800);
+                    log(`TELEMETRY DOWNLOADED. FAKE COORDS: 40.7N,74.0W`, "success");
+                    break;
+                case 'PC':
+                    log(`KERNEL OVERLOAD ON ${hackData.ip}...`, "bad");
+                    await sleep(1500);
+                    log(`SIM SYSTEM DOWN. STATUS: OFFLINE`, "crit");
+                    break;
+                case 'BOMB':
+                    ui.classList.add('shake');
+                    log(`DETONATION ARMED IN ${hackData.code}... COUNTDOWN: 5s`, "crit");
+                    for (let i = 5; i > 0; i--) {
+                        await sleep(1000);
+                        log(`EXPLOSION IN ${i}...`, "bad");
+                    }
+                    log(`FAKE DETONATION CONFIRMED. NO REAL DAMAGE.`, "crit");
+                    ui.classList.remove('shake');
+                    break;
+                case 'AGENCY':
+                    log(`COVERT ACCESS TO ${hackData.name}... CLEARANCE: OMEGA`, "warn");
+                    await sleep(1000);
+                    log(`DATA: FAKE-AGENT-007, MISSION: SHADOW_SIM`, "good");
+                    break;
+                case 'BIO':
+                    log(`EXTRACTING FROM ${hackData.id}... MATCH: 98.7%`, "info");
+                    await sleep(1000);
+                    log(`GENOME HASH: GATC-FAKE-XYZ123`, "success");
+                    break;
+            }
+            log("SIMULATION STEP COMPLETE. NO REAL SYSTEMS AFFECTED.", "dim");
         }
 
         // CLI INPUT HANDLER
@@ -408,13 +543,12 @@
             }
         });
 
-        // SEARCH BAR HANDLER (Fake search results)
+        // SEARCH BAR HANDLER
         function handleSearch(e) {
             if (e.key === 'Enter') {
                 const query = searchInput.value.toLowerCase();
                 log(`Searching SIM database for: ${query}`, "info");
                 searchInput.value = '';
-                // Fake results based on query
                 if (query.includes('wifi')) {
                     log("FAKE WI-FI FOUND: Nexus_Net_Beta, Pass: SIM-FAKE-abc123, Strength: 95%", "good");
                 } else if (query.includes('bank')) {
@@ -432,7 +566,7 @@
         }
 
         // INITIAL LOGS
-        log("NEXUS_OMNIVERSE CORE V12 LOADED. INTERACTIVE_MODULES: ACTIVE.");
+        log("NEXUS_OMNIVERSE CORE V13 LOADED. INTERACTIVE_MODULES: ACTIVE.");
         log("OPERATOR: BRU. SIMULATION AWAITING INPUT. ALL DATA FAKE FOR MOVIE USE.");
     </script>
 </body>
